@@ -40,11 +40,11 @@ const CONFIG = {
       commandUrl: ""  // например: "https://agents.example.com/hermes-core/command"
     },
     {
-      id: "hermes-scout",
-      name: "Hermes Scout",
-      avatar: "🔭",
-      statusUrl: "",
-      commandUrl: ""
+      id: "hermes-agent",
+      name: "Hermes Agent",
+      avatar: "🤖",
+      statusUrl: "https://aa7fcaea0903d6.lhr.life/hermes-agent/l8cI1GozLAALAK3-HPa9mF_oCeC7izXx/status",
+      commandUrl: "https://aa7fcaea0903d6.lhr.life/hermes-agent/l8cI1GozLAALAK3-HPa9mF_oCeC7izXx/command"
     },
     {
       id: "hermes-docs",
