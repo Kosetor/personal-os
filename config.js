@@ -38,15 +38,15 @@ const CONFIG = {
       id: "hermes-core",
       name: "Hermes Core",
       avatar: "⚡",
-      statusUrl: "https://fb672b871e77c0.lhr.life/hermes-core/h7k9m2p4x1q8w3r6/status",
-      commandUrl: "https://fb672b871e77c0.lhr.life/hermes-core/h7k9m2p4x1q8w3r6/command"
+      statusUrl: "https://be755141b96f57.lhr.life/hermes-core/h7k9m2p4x1q8w3r6/status",
+      commandUrl: "https://be755141b96f57.lhr.life/hermes-core/h7k9m2p4x1q8w3r6/command"
     },
     {
       id: "hermes-agent",
       name: "Hermes Agent",
       avatar: "🤖",
-      statusUrl: "https://3341079f31e173.lhr.life/hermes-agent/l8cI1GozLAALAK3-HPa9mF_oCeC7izXx/status",
-      commandUrl: "https://3341079f31e173.lhr.life/hermes-agent/l8cI1GozLAALAK3-HPa9mF_oCeC7izXx/command"
+      statusUrl: "https://d01e8f4cc939d1.lhr.life/hermes-agent/l8cI1GozLAALAK3-HPa9mF_oCeC7izXx/status",
+      commandUrl: "https://d01e8f4cc939d1.lhr.life/hermes-agent/l8cI1GozLAALAK3-HPa9mF_oCeC7izXx/command"
     },
     {
       id: "hermes-docs",
