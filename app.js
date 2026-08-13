@@ -13,6 +13,8 @@ const STATUSES = {
 
 const state = { agents: [], history: [] };
 
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 const escapeHtml = (s) =>
   String(s).replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -22,6 +24,38 @@ function avatarHtml(a, size) {
     return `<img class="avatar-img" src="${escapeHtml(a.avatar)}" alt="${escapeHtml(a.name)}">`;
   }
   return `<span style="font-size:${Math.round(size * 0.5)}px">${a.avatar || "🤖"}</span>`;
+}
+
+/* ---------- Темы оформления ---------- */
+
+function initTheme() {
+  const current = document.documentElement.dataset.theme || "dark";
+  document.querySelectorAll(".theme-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.themeBtn === current);
+    btn.addEventListener("click", () => {
+      const t = btn.dataset.themeBtn;
+      document.documentElement.dataset.theme = t;
+      try { localStorage.setItem("pos-theme", t); } catch (e) { /* приватный режим */ }
+      document.querySelectorAll(".theme-btn").forEach((x) =>
+        x.classList.toggle("active", x === btn));
+    });
+  });
+}
+
+/* ---------- Глитч-анимации ---------- */
+
+function glitch(el) {
+  if (reduceMotion || !el) return;
+  el.classList.remove("glitching");
+  void el.offsetWidth; // перезапуск анимации
+  el.classList.add("glitching");
+  setTimeout(() => el.classList.remove("glitching"), 650);
+}
+
+function ambientGlitch() {
+  const panels = document.querySelectorAll(".panel");
+  if (!panels.length) return;
+  glitch(panels[Math.floor(Math.random() * panels.length)]);
 }
 
 /* ---------- Блок 1: агенты ---------- */
@@ -136,6 +170,7 @@ async function sendCommand() {
   }
 
   renderResponse(agent, command, reply, mode);
+  glitch(document.querySelector(".response-panel"));
   pushHistory(agent, command);
   renderAgents();
   $("#commandInput").value = "";
@@ -229,6 +264,8 @@ function init() {
   const pollSec = Math.round((CONFIG.statusPollMs || 15000) / 1000);
   $("#agentsMeta").textContent = "POLL " + pollSec + "S";
 
+  initTheme();
+
   state.agents = CONFIG.agents.map((a) => ({ ...a, status: "inactive", demo: !a.statusUrl }));
   $("#agentSelect").innerHTML = state.agents
     .map((a) => `<option value="${a.id}">${escapeHtml(a.name)}</option>`)
@@ -250,6 +287,8 @@ function init() {
   setInterval(loadWeather, 10 * 60 * 1000);
 
   loadNet();
+
+  setInterval(ambientGlitch, 7000);
 }
 
 document.addEventListener("DOMContentLoaded", init);

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Personal OS — Dashboard</title>
   <meta name="description" content="Персональная ОС: дашборд Hermes-агентов, команды, ответы, погода и время — Благовещенск.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖥️</text></svg>">
+  <script>try { document.documentElement.dataset.theme = localStorage.getItem("pos-theme") || "dark"; } catch (e) {}</script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,6 +16,11 @@
       <span class="brand-name" id="appTitle">Personal OS</span>
       <span class="brand-tag mono">OS//BLG-01</span>
     </div>
+    <nav class="theme-switch" aria-label="Тема оформления">
+      <button type="button" class="theme-btn mono" data-theme-btn="dark">Dark</button>
+      <button type="button" class="theme-btn mono" data-theme-btn="light">Light</button>
+      <button type="button" class="theme-btn mono" data-theme-btn="acid">Acid</button>
+    </nav>
     <div class="clock mono" id="clock" title="Время в Благовещенске">--:--:--</div>
   </header>
   <div class="hazard-bar" aria-hidden="true"></div>

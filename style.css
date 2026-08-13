@@ -1,54 +1,129 @@
 /* ============================================================
    Personal OS — Marathon «Graphic Realism» UI
-   Токены и правила: marathon-graphic-realism-ui-agent-brief
+   Темы: dark (default) / light / acid — через [data-theme]
    ============================================================ */
 
-:root {
-  /* Surfaces — «чистый» футуризм */
+:root,
+:root[data-theme="dark"] {
   --bg-void: #0B0C0E;
   --bg-base: #12141A;
   --bg-panel: #1A1D24;
   --bg-elevated: #242832;
-  --bg-white: #E8EAEF;
-  --bg-frost: #F4F5F7;
+  --elevated-hover: #282D38;
 
-  /* Ink */
   --ink-primary: #0B0C0E;
   --ink-on-dark: #F4F5F7;
   --ink-muted: #8B919C;
   --ink-faint: #5A606C;
 
-  /* Structural lines */
   --line: #2E3440;
   --line-strong: #4A5160;
-  --line-on-light: #C5C9D2;
 
-  /* Accents: 1 primary (volt) + 1 structural (signal) + semantic */
   --signal: #FF3B4A;
   --volt: #C8F542;
   --cyan: #3DE0FF;
   --amber: #FFB020;
+  --ok: #3DDC97;
 
-  /* Hazard / industrial */
   --hazard-a: #0B0C0E;
   --hazard-b: #F5C400;
 
-  /* Semantic */
-  --ok: #3DDC97;
+  /* Контрастная панель (фирменный приём): белая на тёмном */
+  --contrast-bg: #F4F5F7;
+  --contrast-ink: #0B0C0E;
+  --contrast-muted: #5A606C;
+  --contrast-line: #C5C9D2;
 
-  /* Type: 1 UI + 1 display + 1 mono */
+  --clock-c: #C8F542;
+  --data-c: #3DE0FF;
+  --btn-hover: #F4F5F7;
+  --focus: #C8F542;
+  --hatch: rgba(244, 245, 247, 0.025);
+  --glitch-rgb: 61, 224, 255;
+
   --font-ui: "Inter", "IBM Plex Sans", "Helvetica Neue", system-ui, sans-serif;
   --font-display: "Space Grotesk", "Chakra Petch", "Inter", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", "JetBrains Mono", "Roboto Mono", ui-monospace, monospace;
 
-  /* Radius: острые углы */
   --r-sm: 2px;
   --r-md: 4px;
 
-  /* Motion: сдержанный */
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --dur-fast: 120ms;
   --dur-ui: 180ms;
+}
+
+/* ---------- Light ---------- */
+:root[data-theme="light"] {
+  --bg-void: #EDEFF3;
+  --bg-base: #E2E5EA;
+  --bg-panel: #FFFFFF;
+  --bg-elevated: #F0F2F5;
+  --elevated-hover: #E4E8ED;
+
+  --ink-primary: #0B0C0E;
+  --ink-on-dark: #12141A;
+  --ink-muted: #5A606C;
+  --ink-faint: #8B919C;
+
+  --line: #C5C9D2;
+  --line-strong: #9AA1AD;
+
+  --ok: #1E9E6A;
+  --amber: #B87700;
+  --cyan: #0E8FA8;
+
+  /* Контрастная панель инвертируется: тёмная на светлом */
+  --contrast-bg: #12141A;
+  --contrast-ink: #F4F5F7;
+  --contrast-muted: #8B919C;
+  --contrast-line: #2E3440;
+
+  --clock-c: #D7263D;
+  --data-c: #0E7490;
+  --btn-hover: #A9D92E;
+  --focus: #6B9E00;
+  --hatch: rgba(11, 12, 14, 0.035);
+  --glitch-rgb: 14, 116, 144;
+}
+
+/* ---------- Acid (кислотный зелёный) ---------- */
+:root[data-theme="acid"] {
+  --bg-void: #060B06;
+  --bg-base: #0A120A;
+  --bg-panel: #0D180D;
+  --bg-elevated: #122112;
+  --elevated-hover: #182C18;
+
+  --ink-primary: #0B0C0E;
+  --ink-on-dark: #E2FFE2;
+  --ink-muted: #86B086;
+  --ink-faint: #4F7350;
+
+  --line: #1E381E;
+  --line-strong: #2F542F;
+
+  --signal: #00FF85;
+  --volt: #CFFF04;
+  --cyan: #00FFD0;
+  --amber: #F0FF00;
+  --ok: #00E676;
+
+  --hazard-a: #060B06;
+  --hazard-b: #CFFF04;
+
+  /* Контрастная панель: кислотный залив */
+  --contrast-bg: #CFFF04;
+  --contrast-ink: #0B0C0E;
+  --contrast-muted: #445200;
+  --contrast-line: #9EBF00;
+
+  --clock-c: #CFFF04;
+  --data-c: #00FFD0;
+  --btn-hover: #E8FF70;
+  --focus: #CFFF04;
+  --hatch: rgba(207, 255, 4, 0.03);
+  --glitch-rgb: 207, 255, 4;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -58,12 +133,12 @@ body {
   display: flex;
   flex-direction: column;
   background-color: var(--bg-void);
-  /* diagonal speed hatch, opacity <= 8% */
-  background-image: repeating-linear-gradient(45deg, rgba(244, 245, 247, 0.025) 0 2px, transparent 2px 14px);
+  background-image: repeating-linear-gradient(45deg, var(--hatch) 0 2px, transparent 2px 14px);
   color: var(--ink-on-dark);
   font-family: var(--font-ui);
   font-size: 14px;
   line-height: 1.35;
+  transition: background-color var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease);
 }
 
 .mono { font-family: var(--font-mono); }
@@ -74,11 +149,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
   padding: 14px 24px;
   background: var(--bg-base);
   border-bottom: 1px solid var(--line);
 }
-.brand { display: flex; align-items: center; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .brand-mark {
   width: 18px;
   height: 18px;
@@ -92,9 +168,36 @@ body {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
-.brand-tag { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.08em; }
-.clock { font-size: 20px; font-weight: 500; color: var(--volt); letter-spacing: 0.04em; }
+.brand-tag { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.08em; white-space: nowrap; }
+.clock { font-size: 20px; font-weight: 500; color: var(--clock-c); letter-spacing: 0.04em; white-space: nowrap; }
+
+/* Переключатель тем */
+.theme-switch {
+  display: flex;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+.theme-btn {
+  min-height: 32px;
+  padding: 0 12px;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--line);
+  color: var(--ink-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.theme-btn:last-child { border-right: none; }
+.theme-btn:hover { color: var(--ink-on-dark); background: var(--bg-elevated); }
+.theme-btn.active { background: var(--volt); color: var(--ink-primary); }
+.theme-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
 
 .hazard-bar {
   height: 12px;
@@ -123,6 +226,7 @@ body {
 /* ---------- Панели ---------- */
 
 .panel {
+  position: relative;
   background: var(--bg-panel);
   border: 1px solid var(--line);
   border-radius: var(--r-sm);
@@ -168,6 +272,38 @@ body {
   color: var(--ink-faint);
 }
 
+/* ---------- Глитч-анимация блоков ---------- */
+
+.panel.glitching {
+  animation: mgr-glitch-shift 0.3s steps(2, jump-none) 2;
+  border-color: rgba(var(--glitch-rgb), 0.9);
+}
+.panel.glitching::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(var(--glitch-rgb), 0.12) 0 2px, transparent 2px 6px);
+  animation: mgr-glitch-slices 0.3s steps(3, jump-none) 2;
+}
+
+@keyframes mgr-glitch-shift {
+  0%   { transform: translate(0); }
+  20%  { transform: translate(-2px, 1px); }
+  40%  { transform: translate(2px, -1px); }
+  60%  { transform: translate(-1px, -1px); }
+  80%  { transform: translate(1px, 2px); }
+  100% { transform: translate(0); }
+}
+
+@keyframes mgr-glitch-slices {
+  0%   { clip-path: inset(8% 0 64% 0);  transform: translateX(-4px); }
+  25%  { clip-path: inset(46% 0 24% 0); transform: translateX(4px); }
+  50%  { clip-path: inset(70% 0 6% 0);  transform: translateX(-3px); }
+  75%  { clip-path: inset(28% 0 48% 0); transform: translateX(3px); }
+  100% { clip-path: inset(0 0 0 0);     transform: translateX(0); }
+}
+
 /* ---------- Блок 1: агенты ---------- */
 
 .agents { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -182,7 +318,7 @@ body {
   cursor: pointer;
   transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
 }
-.agent-card:hover { border-color: var(--line-strong); border-left-color: var(--ink-muted); }
+.agent-card:hover { border-color: var(--line-strong); border-left-color: var(--ink-muted); background: var(--elevated-hover); }
 .agent-card.st-active    { border-left-color: var(--ok); }
 .agent-card.st-thinking  { border-left-color: var(--amber); }
 .agent-card.st-searching { border-left-color: var(--cyan); }
@@ -233,7 +369,6 @@ body {
   color: var(--amber);
 }
 
-/* staccato hard cuts вместо мягкого pulse */
 @keyframes blink { 50% { opacity: 0.15; } }
 
 /* ---------- Блок 2: команда ---------- */
@@ -260,9 +395,9 @@ select, textarea {
   transition: border-color var(--dur-fast) var(--ease);
 }
 select:focus, textarea:focus {
-  outline: 2px solid var(--volt);
+  outline: 2px solid var(--focus);
   outline-offset: 1px;
-  border-color: var(--volt);
+  border-color: var(--focus);
 }
 
 .btn-primary {
@@ -284,7 +419,7 @@ select:focus, textarea:focus {
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
 }
-.btn-primary:hover { background: var(--bg-frost); border-color: var(--bg-frost); }
+.btn-primary:hover { background: var(--btn-hover); border-color: var(--btn-hover); }
 .btn-primary:active { transform: translateY(1px); }
 .btn-primary:disabled { opacity: 0.5; cursor: default; }
 .btn-primary:disabled:active { transform: none; }
@@ -347,11 +482,10 @@ select:focus, textarea:focus {
   border-radius: var(--r-sm);
   padding: 14px;
 }
-/* фирменный приём: белая панель на тёмном void */
 .info-item--light {
-  background: var(--bg-frost);
-  border-color: var(--line-on-light);
-  color: var(--ink-primary);
+  background: var(--contrast-bg);
+  border-color: var(--contrast-line);
+  color: var(--contrast-ink);
 }
 .info-title {
   font-size: 11px;
@@ -361,11 +495,11 @@ select:focus, textarea:focus {
   color: var(--ink-muted);
   margin-bottom: 8px;
 }
-.info-item--light .info-title { color: #5A606C; }
-.big { font-family: var(--font-mono); font-size: 28px; font-weight: 500; line-height: 1.15; color: var(--cyan); }
-.info-item--light .big { color: var(--ink-primary); }
+.info-item--light .info-title { color: var(--contrast-muted); }
+.big { font-family: var(--font-mono); font-size: 28px; font-weight: 500; line-height: 1.15; color: var(--data-c); }
+.info-item--light .big { color: var(--contrast-ink); }
 .muted { color: var(--ink-muted); font-size: 12px; margin-top: 6px; }
-.info-item--light .muted { color: #3D434E; }
+.info-item--light .muted { color: var(--contrast-muted); }
 .flag { width: 22px; vertical-align: -4px; margin-right: 6px; border-radius: 1px; }
 
 /* ---------- Подвал ---------- */
@@ -383,9 +517,17 @@ select:focus, textarea:focus {
   text-transform: uppercase;
 }
 
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .panel.glitching, .panel.glitching::after { animation: none; }
+  .st-thinking .pip, .st-searching .pip { animation: none; }
+}
+
 @media (max-width: 860px) {
   .grid { grid-template-columns: 1fr; grid-template-areas: "agents" "command" "response" "info"; }
   .info-grid { grid-template-columns: 1fr; }
   .agent-card { width: calc(50% - 6px); }
   .brand-tag { display: none; }
+  .topbar { flex-wrap: wrap; }
+  .theme-btn { padding: 0 8px; }
 }
