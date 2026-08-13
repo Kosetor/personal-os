@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal OS — Dashboard</title>
+  <meta name="description" content="Персональная ОС: дашборд Hermes-агентов, команды, ответы, погода и время — Благовещенск.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖥️</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="logo">◈</span><span id="appTitle">Personal OS</span></div>
+    <div class="clock" id="clock" title="Время в Благовещенске">--:--:--</div>
+  </header>
+
+  <main class="grid">
+    <section class="panel agents-panel">
+      <h2>Агенты</h2>
+      <div class="agents" id="agents"></div>
+      <p class="hint">Нажмите на карточку агента, чтобы выбрать его для команды.</p>
+    </section>
+
+    <section class="panel command-panel">
+      <h2>Обратная связь</h2>
+      <label class="field">
+        <span>Агент</span>
+        <select id="agentSelect"></select>
+      </label>
+      <label class="field">
+        <span>Команда</span>
+        <textarea id="commandInput" rows="5" placeholder="Например: подготовь утреннюю сводку по проектам…"></textarea>
+      </label>
+      <button id="sendBtn" type="button">Отправить команду</button>
+      <p class="hint">Ctrl + Enter — отправить быстро.</p>
+    </section>
+
+    <section class="panel response-panel">
+      <h2>Последний ответ</h2>
+      <div id="responseBox" class="response-empty">Пока нет запросов. Выберите агента и отправьте команду.</div>
+      <div id="history" class="history"></div>
+    </section>
+
+    <section class="panel info-panel">
+      <h2>Инфо</h2>
+      <div class="info-grid">
+        <div class="info-item" id="weather">Загрузка погоды…</div>
+        <div class="info-item" id="netinfo">Определение IP…</div>
+        <div class="info-item" id="localtime">—</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>Personal OS · <span id="footCity">Благовещенск</span></span>
+    <span>статусы обновлены: <span id="updatedAt">—</span></span>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
