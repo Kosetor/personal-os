@@ -254,6 +254,26 @@ function tickClock() {
     <div class="muted">${dFmt.format(now)}</div>`;
 }
 
+/* ---------- Автообновление конфигурации ---------- */
+
+async function refreshConfig() {
+  // Быстрые туннели (localhost.run) меняют поддомен при переподключении —
+  // периодически перечитываем config.js и обновляем URL агентов,
+  // чтобы карточки оставались живыми без ручного Ctrl+F5.
+  try {
+    const r = await fetch("config.js", { cache: "no-store" });
+    const txt = await r.text();
+    const fresh = new Function(txt + "\nreturn CONFIG;")();
+    for (const a of state.agents) {
+      const nc = (fresh.agents || []).find((x) => x.id === a.id);
+      if (!nc) continue;
+      a.statusUrl = nc.statusUrl || "";
+      a.commandUrl = nc.commandUrl || "";
+      a.demo = !a.statusUrl;
+    }
+  } catch (e) { /* Pages ещё пересобирается или нет сети — пропускаем цикл */ }
+}
+
 /* ---------- Инициализация ---------- */
 
 function init() {
