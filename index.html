@@ -10,19 +10,30 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="brand"><span class="logo">◈</span><span id="appTitle">Personal OS</span></div>
-    <div class="clock" id="clock" title="Время в Благовещенске">--:--:--</div>
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name" id="appTitle">Personal OS</span>
+      <span class="brand-tag mono">OS//BLG-01</span>
+    </div>
+    <div class="clock mono" id="clock" title="Время в Благовещенске">--:--:--</div>
   </header>
+  <div class="hazard-bar" aria-hidden="true"></div>
 
   <main class="grid">
-    <section class="panel agents-panel">
-      <h2>Агенты</h2>
+    <section class="panel panel--clip agents-panel">
+      <header class="panel-head">
+        <h2>Агенты</h2>
+        <span class="panel-meta mono" id="agentsMeta">POLL 15S</span>
+      </header>
       <div class="agents" id="agents"></div>
-      <p class="hint">Нажмите на карточку агента, чтобы выбрать его для команды.</p>
+      <p class="hint">Клик по карточке — выбрать агента для команды</p>
     </section>
 
-    <section class="panel command-panel">
-      <h2>Обратная связь</h2>
+    <section class="panel panel--clip command-panel">
+      <header class="panel-head">
+        <h2>Обратная связь</h2>
+        <span class="panel-meta mono">TX // CMD</span>
+      </header>
       <label class="field">
         <span>Агент</span>
         <select id="agentSelect"></select>
@@ -31,29 +42,35 @@
         <span>Команда</span>
         <textarea id="commandInput" rows="5" placeholder="Например: подготовь утреннюю сводку по проектам…"></textarea>
       </label>
-      <button id="sendBtn" type="button">Отправить команду</button>
-      <p class="hint">Ctrl + Enter — отправить быстро.</p>
+      <button id="sendBtn" type="button" class="btn-primary">Отправить команду</button>
+      <p class="hint">Ctrl + Enter — быстрая отправка</p>
     </section>
 
-    <section class="panel response-panel">
-      <h2>Последний ответ</h2>
+    <section class="panel panel--clip response-panel">
+      <header class="panel-head">
+        <h2>Последний ответ</h2>
+        <span class="panel-meta mono">RX // LOG</span>
+      </header>
       <div id="responseBox" class="response-empty">Пока нет запросов. Выберите агента и отправьте команду.</div>
       <div id="history" class="history"></div>
     </section>
 
     <section class="panel info-panel">
-      <h2>Инфо</h2>
+      <header class="panel-head">
+        <h2>Инфо</h2>
+        <span class="panel-meta mono">ENV // UTC+9</span>
+      </header>
       <div class="info-grid">
-        <div class="info-item" id="weather">Загрузка погоды…</div>
+        <div class="info-item info-item--light" id="weather">Загрузка погоды…</div>
         <div class="info-item" id="netinfo">Определение IP…</div>
         <div class="info-item" id="localtime">—</div>
       </div>
     </section>
   </main>
 
-  <footer class="foot">
+  <footer class="foot mono">
     <span>Personal OS · <span id="footCity">Благовещенск</span></span>
-    <span>статусы обновлены: <span id="updatedAt">—</span></span>
+    <span>Sync <span id="updatedAt">—</span></span>
   </footer>
 
   <script src="config.js"></script>

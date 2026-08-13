@@ -21,7 +21,7 @@ function avatarHtml(a, size) {
   if (a.avatar && /^https?:\/\//i.test(a.avatar)) {
     return `<img class="avatar-img" src="${escapeHtml(a.avatar)}" alt="${escapeHtml(a.name)}">`;
   }
-  return `<span style="font-size:${Math.round(size * 0.52)}px">${a.avatar || "🤖"}</span>`;
+  return `<span style="font-size:${Math.round(size * 0.5)}px">${a.avatar || "🤖"}</span>`;
 }
 
 /* ---------- Блок 1: агенты ---------- */
@@ -30,10 +30,11 @@ function renderAgents() {
   $("#agents").innerHTML = state.agents.map((a) => {
     const st = STATUSES[a.status] || STATUSES.inactive;
     return `
-      <div class="agent-card" data-id="${a.id}" title="${escapeHtml(a.name)}">
-        <div class="avatar ${st.cls}">${avatarHtml(a, 64)}</div>
+      <div class="agent-card ${st.cls}" data-id="${a.id}" title="${escapeHtml(a.name)}">
+        <div class="avatar">${avatarHtml(a, 56)}</div>
         <div class="agent-name">${escapeHtml(a.name)}</div>
-        <div class="agent-status ${st.cls}"><span class="dot"></span>${st.label}</div>
+        <div class="agent-id">${escapeHtml(a.id)}</div>
+        <div class="agent-status"><span class="pip"></span>${st.label}</div>
         ${a.demo ? '<span class="demo-tag">демо-режим</span>' : ""}
       </div>`;
   }).join("");
@@ -77,16 +78,15 @@ function renderResponse(agent, command, reply, mode) {
   const time = new Date().toLocaleString("ru-RU", { timeZone: CONFIG.city.tz });
   const replyCls = mode === "pending" ? "pending" : mode === "error" ? "error" : "";
   const replyText = mode === "pending" ? "Агент думает…" : reply;
-  const stCls = (STATUSES[agent.status] || {}).cls || "";
   box.innerHTML = `
     <div class="resp-head">
-      <div class="avatar sm ${stCls}">${avatarHtml(agent, 42)}</div>
+      <div class="avatar sm">${avatarHtml(agent, 42)}</div>
       <div>
         <div class="resp-agent">${escapeHtml(agent.name)}</div>
         <div class="resp-time">${time} · ${escapeHtml(CONFIG.city.name)}</div>
       </div>
     </div>
-    <div class="resp-command"><span>Команда:</span> ${escapeHtml(command)}</div>
+    <div class="resp-command"><span>Команда</span>${escapeHtml(command)}</div>
     <div class="resp-reply ${replyCls}">${escapeHtml(replyText)}</div>`;
 }
 
@@ -95,7 +95,7 @@ function pushHistory(agent, command) {
   state.history = state.history.slice(0, 5);
   $("#history").innerHTML = state.history.map((h) => {
     const short = h.command.length > 80 ? h.command.slice(0, 80) + "…" : h.command;
-    return `<div class="history-item"><b>${escapeHtml(h.agent)}</b> · ${escapeHtml(short)} · ${h.at.toLocaleTimeString("ru-RU")}</div>`;
+    return `<div class="history-item"><b>${escapeHtml(h.agent)}</b> // ${escapeHtml(short)} // ${h.at.toLocaleTimeString("ru-RU")}</div>`;
   }).join("");
 }
 
@@ -225,6 +225,9 @@ function init() {
   document.title = CONFIG.title + " — Dashboard";
   $("#appTitle").textContent = CONFIG.title;
   $("#footCity").textContent = CONFIG.city.name;
+
+  const pollSec = Math.round((CONFIG.statusPollMs || 15000) / 1000);
+  $("#agentsMeta").textContent = "POLL " + pollSec + "S";
 
   state.agents = CONFIG.agents.map((a) => ({ ...a, status: "inactive", demo: !a.statusUrl }));
   $("#agentSelect").innerHTML = state.agents
