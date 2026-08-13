@@ -32,20 +32,8 @@ const CONFIG = {
   //  CORS-заголовок Access-Control-Allow-Origin.
   // ---------------------------------------------------------
   agents: [
-    {
-      id: "hermes-core",
-      name: "Hermes Core",
-      avatar: "⚡",
-      statusUrl: "https://dpi-distribution-blacks-swimming.trycloudflare.com/hermes-core/h7k9m2p4x1q8w3r6/status"
-      commandUrl: "https://dpi-distribution-blacks-swimming.trycloudflare.com/hermes-core/h7k9m2p4x1q8w3r6/command"
-    },
-    {
-      id: "hermes-agent",
-      name: "Hermes Agent",
-      avatar: "🤖",
-      statusUrl: "https://f7c6ac49d6a617.lhr.life/status",
-      commandUrl: "https://f7c6ac49d6a617.lhr.life/command"
-    },
+    statusUrl: "https://edbcef593f7f70.lhr.life/hermes-core/h7k9m2p4x1q8w3r6/status"
+    statusUrl: "https://8e7a44c94e1b35.lhr.life/status"
     {
       id: "hermes-docs",
       name: "Hermes Docs",
