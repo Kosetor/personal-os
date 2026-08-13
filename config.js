@@ -36,8 +36,8 @@ const CONFIG = {
       id: "hermes-core",
       name: "Hermes Core",
       avatar: "⚡",
-      statusUrl: "",  // например: "https://agents.example.com/hermes-core/status"
-      commandUrl: ""  // например: "https://agents.example.com/hermes-core/command"
+      statusUrl: "https://dpi-distribution-blacks-swimming.trycloudflare.com/hermes-core/h7k9m2p4x1q8w3r6/status"
+      commandUrl: "https://dpi-distribution-blacks-swimming.trycloudflare.com/hermes-core/h7k9m2p4x1q8w3r6/command"
     },
     {
       id: "hermes-agent",
