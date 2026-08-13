@@ -38,8 +38,8 @@ const CONFIG = {
       id: "hermes-core",
       name: "Hermes Core",
       avatar: "⚡",
-      statusUrl: "https://df223fc359d520.lhr.life/hermes-core/h7k9m2p4x1q8w3r6/status",
-      commandUrl: "https://df223fc359d520.lhr.life/hermes-core/h7k9m2p4x1q8w3r6/command"
+      statusUrl: "https://5147ee1e9a5cc0.lhr.life/hermes-core/h7k9m2p4x1q8w3r6/status",
+      commandUrl: "https://5147ee1e9a5cc0.lhr.life/hermes-core/h7k9m2p4x1q8w3r6/command"
     },
     {
       id: "hermes-agent",
