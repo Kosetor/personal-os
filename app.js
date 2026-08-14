@@ -19,7 +19,20 @@ const escapeHtml = (s) =>
   String(s).replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
+/* Встроенные векторные иконки агентов. Stroke: currentColor — адаптируются
+   к темам (dark/light/acid). В config.js avatar задаётся как "svg:<ключ>". */
+const SVG_ICONS = {
+  robot: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="20" width="36" height="28" rx="7"/><circle cx="24.5" cy="34" r="2.6" fill="currentColor" stroke="none"/><circle cx="39.5" cy="34" r="2.6" fill="currentColor" stroke="none"/><path d="M25 42h14"/><path d="M32 20v-7"/><circle cx="32" cy="10" r="2.6"/><path d="M14 33h-5M50 33h5"/></svg>`,
+  bolt: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M35.5 8 14 34h13l-4.5 22L48 28H33z"/></svg>`,
+  book: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16c8-4 16-4 24 0v30c-8-4-16-4-24 0z"/><path d="M56 16c-8-4-16-4-24 0v30c8-4 16-4 24 0z"/><path d="M32 16v30"/></svg>`,
+  chip: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M32 10 50 21v22L32 54 14 43V21z"/><circle cx="32" cy="32" r="5.5" fill="currentColor" stroke="none"/><path d="M32 18v9M32 37v9M18 32h9M37 32h9"/></svg>`,
+};
+
 function avatarHtml(a, size) {
+  if (a.avatar && a.avatar.startsWith("svg:")) {
+    const svg = SVG_ICONS[a.avatar.slice(4)];
+    if (svg) return `<span class="avatar-svg" style="width:${size}px;height:${size}px">${svg}</span>`;
+  }
   if (a.avatar && /^https?:\/\//i.test(a.avatar)) {
     return `<img class="avatar-img" src="${escapeHtml(a.avatar)}" alt="${escapeHtml(a.name)}">`;
   }

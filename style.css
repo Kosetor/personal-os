@@ -354,6 +354,8 @@ body {
 }
 .avatar.sm { width: 42px; height: 42px; margin: 0; }
 .avatar-img { width: 100%; height: 100%; object-fit: cover; }
+.avatar-svg { display: grid; place-items: center; }
+.avatar-svg svg { width: 72%; height: 72%; }
 
 .agent-name { font-weight: 600; font-size: 14px; }
 .agent-id {
@@ -705,7 +707,7 @@ select:focus, textarea:focus {
   text-align: center;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
 }
-.lock-icon { font-size: 34px; margin-bottom: 8px; }
+.lock-icon { display: grid; place-items: center; color: var(--signal); margin-bottom: 8px; }
 .lock-card h2 { margin: 0 0 6px; font: 600 20px/1.3 var(--font-display); color: var(--ink-on-dark); }
 .lock-card p { margin: 0 0 16px; color: var(--ink-muted); font-size: 13px; line-height: 1.5; }
 .lock-card input {

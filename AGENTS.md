@@ -15,7 +15,8 @@
 {
   id: "hermes-core",        // уникальный id (латиница, kebab-case)
   name: "Hermes Core",      // отображаемое имя на карточке
-  avatar: "⚡",              // эмодзи ИЛИ URL картинки (https://...)
+  //  avatar     — эмодзи, URL картинки (https://...) или svg:<ключ>
+  //               (встроенная векторная иконка: robot/bolt/book/chip из app.js)
   statusUrl: "",            // GET-эндпоинт статуса
   commandUrl: ""            // POST-эндпоинт приёма команд
 }

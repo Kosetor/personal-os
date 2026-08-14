@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Personal OS — Dashboard</title>
   <meta name="description" content="Персональная ОС: дашборд Hermes-агентов, команды, ответы, погода и время — Благовещенск.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖥️</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M0 0h64v41.6L41.6 64H0z' fill='%23FF3B4A'/></svg>">
   <script>try { document.documentElement.dataset.theme = localStorage.getItem("pos-theme") || "dark"; } catch (e) {}</script>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -91,7 +91,7 @@
 
   <div id="lockScreen" class="lock-screen" aria-hidden="true">
     <div class="lock-card">
-      <div class="lock-icon">🔒</div>
+      <div class="lock-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="34" height="34" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="12" y="28" width="40" height="26" rx="6"/><path d="M22 28v-8a10 10 0 0 1 20 0v8"/><circle cx="32" cy="41" r="3.5" fill="currentColor" stroke="none"/></svg></div>
       <h2>Доступ ограничен</h2>
       <p id="lockMsg">Дашборд защищён кодом доступа. Введи код, чтобы отправлять команды.</p>
       <input id="lockInput" type="password" inputmode="numeric" placeholder="Код доступа" autocomplete="off">
