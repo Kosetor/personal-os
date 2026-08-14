@@ -146,13 +146,6 @@ function initAuth() {
     hideLock();
   });
   inp.addEventListener("keydown", (e) => { if (e.key === "Enter") btn.click(); });
-  const changeBtn = $("#changePinBtn");
-  if (changeBtn) {
-    changeBtn.addEventListener("click", () => {
-      clearPin();
-      showLock("Введи код доступа заново.");
-    });
-  }
   if (!getPin()) showLock("");
 }
 

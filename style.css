@@ -681,22 +681,6 @@ select:focus, textarea:focus {
 
 /* ---------- Авторизация (PIN) ---------- */
 
-.btn-ghost {
-  display: block;
-  margin-top: 10px;
-  background: transparent;
-  border: 1px dashed var(--line-strong);
-  color: var(--ink-muted);
-  font: 11px/1 var(--font-mono);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 9px 14px;
-  cursor: pointer;
-  border-radius: var(--r-sm);
-  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
-}
-.btn-ghost:hover { color: var(--ink-on-dark); border-color: var(--focus); }
-
 .lock-screen {
   position: fixed;
   inset: 0;
