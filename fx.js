@@ -54,13 +54,19 @@
   function init3d() {
     const wrap = document.getElementById("bg3d");
     if (!wrap) return;
-    if (!window.THREE) { document.body.classList.add("no-webgl"); return; }
+    if (!window.THREE) {
+      document.body.classList.add("no-webgl");
+      console.info("[fx] THREE не загружен — CSS-фолбэк");
+      return;
+    }
     try {
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: "low-power" });
     } catch (e) {
       document.body.classList.add("no-webgl");
+      console.info("[fx] WebGL недоступен — CSS-фолбэк:", e && e.message);
       return;
     }
+    console.info("[fx] 3D инициализирован, THREE r" + (THREE.REVISION || "?"));
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.setSize(window.innerWidth, window.innerHeight);
     wrap.appendChild(renderer.domElement);
@@ -156,7 +162,8 @@
     renderer.render(scene, camera);
     if (W >= 860) { // куб-зона скрыта на мобильных
       renderer.autoClear = false;
-      renderer.setViewport((W - 132 - 18) * dpr, (H - 132 - 18) * dpr, 132 * dpr, 132 * dpr);
+      // setViewport: y от НИЖНЕГО-ЛЕВОГО угла (WebGL/THREE конвенция)
+      renderer.setViewport((W - 132 - 18) * dpr, 18 * dpr, 132 * dpr, 132 * dpr);
       renderer.render(cubeScene, cubeCam);
       renderer.setViewport(0, 0, W * dpr, H * dpr);
       renderer.autoClear = true;

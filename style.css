@@ -916,6 +916,36 @@ select:focus, textarea:focus {
 }
 @media (max-width: 860px) { #holoCube { display: none; } }
 
+/* CSS-фолбэк куба (нет WebGL) — зона никогда не пустая */
+.holo-css-cube {
+  display: none;
+  width: 52px;
+  height: 52px;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: css-cube-spin 7s linear infinite;
+}
+.holo-css-cube i {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--cyan);
+  background: color-mix(in srgb, var(--cyan) 6%, transparent);
+}
+.holo-css-cube i:nth-child(1) { transform: translateZ(26px); }
+.holo-css-cube i:nth-child(2) { transform: rotateY(180deg) translateZ(26px); }
+.holo-css-cube i:nth-child(3) { transform: rotateY(90deg) translateZ(26px); }
+.holo-css-cube i:nth-child(4) { transform: rotateY(-90deg) translateZ(26px); }
+.holo-css-cube i:nth-child(5) { transform: rotateX(90deg) translateZ(26px); }
+.holo-css-cube i:nth-child(6) { transform: rotateX(-90deg) translateZ(26px); }
+@keyframes css-cube-spin {
+  from { transform: rotateX(0deg) rotateY(0deg); }
+  to { transform: rotateX(360deg) rotateY(360deg); }
+}
+body.no-webgl .holo-css-cube { display: block; }
+@media (prefers-reduced-motion: reduce) {
+  .holo-css-cube { animation: none; }
+}
+
 /* ---------- 3D-фон (three.js) ---------- */
 
 #bg3d {
