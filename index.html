@@ -49,6 +49,7 @@
         <textarea id="commandInput" rows="5" placeholder="Например: подготовь утреннюю сводку по проектам…"></textarea>
       </label>
       <button id="sendBtn" type="button" class="btn-primary">Отправить команду</button>
+      <button id="changePinBtn" type="button" class="btn-ghost">Сменить код доступа</button>
       <p class="hint">Ctrl + Enter — быстрая отправка</p>
     </section>
 
@@ -88,6 +89,17 @@
     <span>Personal OS · <span id="footCity">Благовещенск</span></span>
     <span>Sync <span id="updatedAt">—</span></span>
   </footer>
+
+  <div id="lockScreen" class="lock-screen" aria-hidden="true">
+    <div class="lock-card">
+      <div class="lock-icon">🔒</div>
+      <h2>Доступ ограничен</h2>
+      <p id="lockMsg">Дашборд защищён кодом доступа. Введи код, чтобы отправлять команды.</p>
+      <input id="lockInput" type="password" inputmode="numeric" placeholder="Код доступа" autocomplete="off">
+      <button id="lockBtn" type="button" class="btn-primary">Войти</button>
+      <p class="hint">Код хранится только в этом браузере</p>
+    </div>
+  </div>
 
   <script src="config.js"></script>
   <script src="app.js"></script>

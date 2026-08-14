@@ -684,3 +684,66 @@ select:focus, textarea:focus {
   .theme-btn { padding: 0 8px; }
   .digest-foot { flex-direction: column; align-items: flex-start; }
 }
+
+/* ---------- Авторизация (PIN) ---------- */
+
+.btn-ghost {
+  display: block;
+  margin-top: 10px;
+  background: transparent;
+  border: 1px dashed var(--line-strong);
+  color: var(--ink-muted);
+  font: 11px/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 9px 14px;
+  cursor: pointer;
+  border-radius: var(--r-sm);
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.btn-ghost:hover { color: var(--ink-on-dark); border-color: var(--focus); }
+
+.lock-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--bg-void) 82%, transparent);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-ui) var(--ease);
+}
+.lock-screen.visible { opacity: 1; pointer-events: auto; }
+
+.lock-card {
+  width: min(92vw, 360px);
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 28px 24px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+.lock-icon { font-size: 34px; margin-bottom: 8px; }
+.lock-card h2 { margin: 0 0 6px; font: 600 20px/1.3 var(--font-display); color: var(--ink-on-dark); }
+.lock-card p { margin: 0 0 16px; color: var(--ink-muted); font-size: 13px; line-height: 1.5; }
+.lock-card input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  color: var(--ink-on-dark);
+  font: 15px/1 var(--font-mono);
+  letter-spacing: 0.35em;
+  text-align: center;
+  outline: none;
+}
+.lock-card input:focus { border-color: var(--focus); }
+.lock-card .btn-primary { width: 100%; }
+.lock-card .hint { margin: 12px 0 0; font-size: 11px; }

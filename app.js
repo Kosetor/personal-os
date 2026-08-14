@@ -104,6 +104,58 @@ async function pollStatuses() {
   $("#updatedAt").textContent = new Date().toLocaleTimeString("ru-RU");
 }
 
+/* ---------- Авторизация: код доступа (PIN) ---------- */
+
+const PIN_KEY = "pos-pin";
+
+function getPin() {
+  try { return localStorage.getItem(PIN_KEY) || ""; } catch (e) { return ""; }
+}
+function savePin(p) {
+  try { localStorage.setItem(PIN_KEY, p); } catch (e) { /* приватный режим */ }
+}
+function clearPin() {
+  try { localStorage.removeItem(PIN_KEY); } catch (e) {}
+}
+
+function showLock(msg) {
+  const lock = $("#lockScreen");
+  if (!lock) return;
+  lock.classList.add("visible");
+  lock.setAttribute("aria-hidden", "false");
+  if (msg) $("#lockMsg").textContent = msg;
+  const inp = $("#lockInput");
+  if (inp) { inp.value = ""; setTimeout(() => inp.focus(), 50); }
+}
+
+function hideLock() {
+  const lock = $("#lockScreen");
+  if (!lock) return;
+  lock.classList.remove("visible");
+  lock.setAttribute("aria-hidden", "true");
+}
+
+function initAuth() {
+  const btn = $("#lockBtn");
+  const inp = $("#lockInput");
+  if (!btn || !inp) return;
+  btn.addEventListener("click", () => {
+    const p = inp.value.trim();
+    if (!p) return;
+    savePin(p);
+    hideLock();
+  });
+  inp.addEventListener("keydown", (e) => { if (e.key === "Enter") btn.click(); });
+  const changeBtn = $("#changePinBtn");
+  if (changeBtn) {
+    changeBtn.addEventListener("click", () => {
+      clearPin();
+      showLock("Введи код доступа заново.");
+    });
+  }
+  if (!getPin()) showLock("");
+}
+
 /* ---------- Блоки 2 и 3: команда и ответ ---------- */
 
 function renderResponse(agent, command, reply, mode) {
@@ -150,10 +202,19 @@ async function sendCommand() {
     try {
       const r = await fetch(agent.commandUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "X-Auth-Token": getPin() },
         body: JSON.stringify({ agent: agent.id, command, ts: new Date().toISOString() })
       });
-      if (!r.ok) throw new Error("HTTP " + r.status);
+      if (r.status === 401 || r.status === 423) {
+        clearPin();
+        showLock(r.status === 423
+          ? "Слишком много неудачных попыток — вход заблокирован на 10 минут."
+          : "Неверный код доступа.");
+        reply = "Требуется авторизация: введи код доступа.";
+        mode = "error";
+      } else if (!r.ok) {
+        throw new Error("HTTP " + r.status);
+      }
       const data = await r.json().catch(() => ({}));
       reply = data.reply || data.message || "Команда принята (агент вернул пустой ответ).";
     } catch (e) {
@@ -338,6 +399,7 @@ function init() {
   $("#agentsMeta").textContent = "POLL " + pollSec + "S";
 
   initTheme();
+  initAuth();
 
   state.agents = CONFIG.agents.map((a) => ({ ...a, status: "inactive", demo: !a.statusUrl }));
   $("#agentSelect").innerHTML = state.agents
