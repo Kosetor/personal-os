@@ -83,7 +83,48 @@ curl -s -X POST https://hermes1-gp66-leopard-11ug.tail4e12e3.ts.net/hermes-core/
 Если статус отвечает, а POST падает с `No such file or directory: 'hermes'` — см. раздел 1,
 это PATH-проблема, а не сеть.
 
-## 5. Безопасность
+## 5. Telegram: как подключить (провайдер режет Telegram — нужен fallback)
+
+У этой сети DPI-блокировка подсетей Telegram: `api.telegram.org` по имени НЕ коннектится
+(крупные пакеты режутся), а GitHub/8.8.8.8 работают. Рабочий обход, проверенный hermes_a:
+
+- `149.154.167.220` — основной fallback IP (использует hermes_a, соединение стабильно)
+- `149.154.166.110` — запасной
+
+В Hermes gateway fallback уже встроен: пропиши IP в `extra.fallback_ips` — gateway сам
+переключится при недоступности основного домена (в логах будет «sticky fallback IP …»).
+
+### Шаги
+
+1. Владелец создаёт бота через @BotFather (`/newbot`) — получает токен. Свой бот,
+   НЕ общий с hermes_a (два gateway не могут long-poll'ить одного бота одновременно).
+2. Пропиши в `~/.hermes/.env` (права 600, владелец — ты):
+   ```
+   TELEGRAM_BOT_TOKEN=<токен>
+   TELEGRAM_ALLOWED_USERS=136098453
+   TELEGRAM_HOME_CHANNEL=136098453
+   ```
+3. В `~/.hermes/config.yaml`:
+   ```bash
+   hermes config set platforms.telegram.enabled true
+   hermes config set platforms.telegram.polling true
+   hermes config set platforms.telegram.extra.fallback_ips "149.154.167.220,149.154.166.110"
+   ```
+4. Подними gateway:
+   - **Вариант А (есть root/владелец)** — системный юнит, как у hermes_a:
+     `/etc/systemd/system/hermes-b-gateway.service`: `User=hermes_b`,
+     `ExecStart=/home/hermes_b/.hermes/hermes-agent/venv/bin/python -m hermes_cli.main gateway run`,
+     `Restart=always`; затем `systemctl daemon-reload && systemctl enable --now hermes-b-gateway`.
+   - **Вариант Б (без root)** — юзер-юнит `~/.config/systemd/user/hermes-gateway.service`
+     + `systemctl --user enable --now hermes-gateway`; linger (`sudo loginctl enable-linger hermes_b`)
+     пусть включит владелец, иначе gateway умрёт после выхода из сессии.
+   В репозитории есть готовый скрипт для варианта А: `setup-hermes-b-telegram.sh`
+   (запуск от root: `sudo TELEGRAM_BOT_TOKEN="<токен>" bash setup-hermes-b-telegram.sh` —
+   он заодно чинит мост, см. раздел 1).
+5. Проверка: напиши боту в Telegram. В логах gateway должно быть
+   «sticky fallback IP 149.154.167.220» (или просто успешный long polling).
+
+## 6. Безопасность
 
 - Слушай на `127.0.0.1:38765`, а не `0.0.0.0`: машина имеет публичный IP. Прокси hermes_a
   ходит на localhost — ему bind на 127.0.0.1 не мешает.
