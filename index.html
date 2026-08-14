@@ -26,6 +26,18 @@
   <div class="hazard-bar" aria-hidden="true"></div>
 
   <main class="grid">
+    <section class="panel info-panel">
+      <header class="panel-head">
+        <h2>Инфо</h2>
+        <span class="panel-meta mono">ENV // UTC+9</span>
+      </header>
+      <div class="info-grid">
+        <div class="info-item info-item--light" id="weather">Загрузка погоды…</div>
+        <div class="info-item" id="netinfo">Определение IP…</div>
+        <div class="info-item" id="localtime">—</div>
+      </div>
+    </section>
+
     <section class="panel panel--clip agents-panel">
       <header class="panel-head">
         <h2>Агенты</h2>
@@ -35,10 +47,12 @@
       <p class="hint">Клик по карточке — выбрать агента для команды</p>
     </section>
 
+    <div class="hazard-bar" aria-hidden="true"></div>
+
     <section class="panel panel--clip command-panel">
       <header class="panel-head">
         <h2>Обратная связь</h2>
-        <span class="panel-meta mono">TX // CMD</span>
+        <span class="panel-meta mono">TX // RX</span>
       </header>
       <label class="field">
         <span>Агент</span>
@@ -50,26 +64,9 @@
       </label>
       <button id="sendBtn" type="button" class="btn-primary">Отправить команду</button>
       <p class="hint">Ctrl + Enter — быстрая отправка</p>
-    </section>
-
-    <section class="panel panel--clip response-panel">
-      <header class="panel-head">
-        <h2>Последний ответ</h2>
-        <span class="panel-meta mono">RX // LOG</span>
-      </header>
-      <div id="responseBox" class="response-empty">Пока нет запросов. Выберите агента и отправьте команду.</div>
-      <div id="history" class="history"></div>
-    </section>
-
-    <section class="panel info-panel">
-      <header class="panel-head">
-        <h2>Инфо</h2>
-        <span class="panel-meta mono">ENV // UTC+9</span>
-      </header>
-      <div class="info-grid">
-        <div class="info-item info-item--light" id="weather">Загрузка погоды…</div>
-        <div class="info-item" id="netinfo">Определение IP…</div>
-        <div class="info-item" id="localtime">—</div>
+      <div class="response-area">
+        <div id="responseBox" class="response-empty">Пока нет запросов. Выберите агента и отправьте команду.</div>
+        <div id="history" class="history"></div>
       </div>
     </section>
 

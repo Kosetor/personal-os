@@ -238,7 +238,7 @@ async function sendCommand() {
   }
 
   renderResponse(agent, command, reply, mode);
-  glitch(document.querySelector(".response-panel"));
+  glitch(document.querySelector(".command-panel"));
   pushHistory(agent, command);
   renderAgents();
   $("#commandInput").value = "";

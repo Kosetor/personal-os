@@ -228,18 +228,17 @@ body {
   display: grid;
   gap: 16px;
   padding: 20px 24px;
-  grid-template-columns: 5fr 7fr;
+  grid-template-columns: 1fr 1fr;
   grid-template-areas:
-    "agents agents"
-    "command response"
-    "info info"
-    "digest digest";
+    "info agents"
+    "hazard hazard"
+    "feedback digest";
 }
 .agents-panel   { grid-area: agents; }
-.command-panel  { grid-area: command; }
-.response-panel { grid-area: response; }
+.command-panel  { grid-area: feedback; }
 .info-panel     { grid-area: info; }
 .digest-panel   { grid-area: digest; }
+.grid > .hazard-bar { grid-area: hazard; }
 
 /* ---------- Панели ---------- */
 
@@ -326,7 +325,10 @@ body {
 
 .agents { display: flex; flex-wrap: wrap; gap: 12px; }
 .agent-card {
-  width: 152px;
+  flex: 1 1 130px;
+  min-width: 130px;
+  max-width: 168px;
+  width: auto;
   padding: 14px 12px 12px;
   text-align: center;
   background: var(--bg-elevated);
@@ -465,6 +467,11 @@ select:focus, textarea:focus {
 /* ---------- Блок 3: ответ ---------- */
 
 .response-empty { color: var(--ink-muted); font-size: 14px; }
+.response-area {
+  border-top: 1px dashed var(--line);
+  margin-top: 14px;
+  padding-top: 14px;
+}
 .resp-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
 .resp-agent { font-weight: 700; }
 .resp-time { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); letter-spacing: 0.04em; }
@@ -671,10 +678,13 @@ select:focus, textarea:focus {
   .st-thinking .pip, .st-searching .pip { animation: none; }
 }
 
-@media (max-width: 860px) {
-  .grid { grid-template-columns: 1fr; grid-template-areas: "agents" "command" "response" "info" "digest"; }
+@media (max-width: 1100px) {
   .info-grid { grid-template-columns: 1fr; }
-  .agent-card { width: calc(50% - 6px); }
+}
+
+@media (max-width: 860px) {
+  .grid { grid-template-columns: 1fr; grid-template-areas: "info" "agents" "hazard" "feedback" "digest"; }
+  .info-grid { grid-template-columns: 1fr; }
   .brand-tag { display: none; }
   .topbar { flex-wrap: wrap; }
   .theme-btn { padding: 0 8px; }
