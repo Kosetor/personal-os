@@ -201,16 +201,14 @@ body {
 .theme-btn::after {
   content: attr(data-num);
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  top: 4px;
+  left: 9px; /* за скосом угла (clip-path 7px) */
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 600;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   color: currentColor;
-  opacity: 0.12;
+  opacity: 0.35;
   pointer-events: none;
 }
 .theme-btn:hover { color: var(--ink-on-dark); background: var(--bg-elevated); }
@@ -444,16 +442,14 @@ select:focus, textarea:focus {
 .btn-primary::after {
   content: "PERSONAL OS // TX-01 // 2026";
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  top: 6px;
+  left: 13px; /* за скосом угла (clip-path 12px) */
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 600;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.25em;
   color: currentColor;
-  opacity: 0.09;
+  opacity: 0.3;
   pointer-events: none;
   white-space: nowrap;
   overflow: hidden;
@@ -633,16 +629,14 @@ select:focus, textarea:focus {
 .digest-btn::after {
   content: "NAV";
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  top: 4px;
+  left: 8px; /* за скосом угла (clip-path 8px) */
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 600;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.25em;
   color: currentColor;
-  opacity: 0.1;
+  opacity: 0.3;
   pointer-events: none;
 }
 .digest-btn:hover:not(:disabled) {
