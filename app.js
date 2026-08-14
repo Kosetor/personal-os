@@ -210,13 +210,14 @@ async function sendCommand() {
         showLock(r.status === 423
           ? "Слишком много неудачных попыток — вход заблокирован на 10 минут."
           : "Неверный код доступа.");
-        reply = "Требуется авторизация: введи код доступа.";
         mode = "error";
       } else if (!r.ok) {
         throw new Error("HTTP " + r.status);
       }
       const data = await r.json().catch(() => ({}));
-      reply = data.reply || data.message || "Команда принята (агент вернул пустой ответ).";
+      reply = data.reply || (mode === "error"
+        ? "Требуется авторизация: введи код доступа."
+        : "Команда принята (агент вернул пустой ответ).");
     } catch (e) {
       reply = "Агент не ответил: " + e.message;
       mode = "error";
