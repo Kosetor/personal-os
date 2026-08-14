@@ -254,6 +254,59 @@ function tickClock() {
     <div class="muted">${dFmt.format(now)}</div>`;
 }
 
+/* ---------- Блок 5: дайджест статей ---------- */
+
+const digest = { items: [], idx: 0 };
+
+function renderDigest() {
+  const el = $("#digest");
+  if (!digest.items.length) {
+    el.innerHTML = `<div class="digest-empty">Статей пока нет — ждём первую публикацию.</div>`;
+    $("#digestMeta").textContent = "FEED // 6H";
+    return;
+  }
+  const it = digest.items[digest.idx];
+  const showDate = it.date || (it.published_at || "").slice(0, 10);
+  $("#digestMeta").textContent = `${digest.idx + 1} / ${digest.items.length} · 6H`;
+  el.innerHTML = `
+    <div class="digest-card">
+      <div class="digest-top">
+        <span class="digest-source">${escapeHtml(it.source || "")}</span>
+        <span class="digest-date mono">${escapeHtml(showDate)}</span>
+      </div>
+      <a class="digest-title" href="${escapeHtml(it.link)}" target="_blank" rel="noopener">${escapeHtml(it.title)}</a>
+      <p class="digest-ann">${escapeHtml(it.annotation || "")}</p>
+      <div class="digest-foot">
+        <a class="digest-more" href="${escapeHtml(it.link)}" target="_blank" rel="noopener">Читать полностью →</a>
+        <div class="digest-nav">
+          <button type="button" class="digest-btn mono" id="digPrev" aria-label="Предыдущая статья" ${digest.items.length > 1 ? "" : "disabled"}>◀</button>
+          <button type="button" class="digest-btn mono" id="digNext" aria-label="Следующая статья" ${digest.items.length > 1 ? "" : "disabled"}>▶</button>
+        </div>
+      </div>
+    </div>`;
+  $("#digPrev").addEventListener("click", () => {
+    digest.idx = (digest.idx - 1 + digest.items.length) % digest.items.length;
+    renderDigest();
+  });
+  $("#digNext").addEventListener("click", () => {
+    digest.idx = (digest.idx + 1) % digest.items.length;
+    renderDigest();
+  });
+}
+
+async function loadDigest() {
+  try {
+    const r = await fetch("articles.json", { cache: "no-store" });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    digest.items = Array.isArray(j.items) ? j.items : [];
+    if (digest.idx >= digest.items.length) digest.idx = 0;
+  } catch (e) {
+    digest.items = [];
+  }
+  renderDigest();
+}
+
 /* ---------- Автообновление конфигурации ---------- */
 
 async function refreshConfig() {
@@ -307,6 +360,9 @@ function init() {
   setInterval(loadWeather, 10 * 60 * 1000);
 
   loadNet();
+
+  loadDigest();
+  setInterval(loadDigest, 15 * 60 * 1000);
 
   setInterval(ambientGlitch, 7000);
 }
