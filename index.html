@@ -6,10 +6,19 @@
   <title>Personal OS — Dashboard</title>
   <meta name="description" content="Персональная ОС: дашборд Hermes-агентов, команды, ответы, погода и время — Благовещенск.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M0 0h64v41.6L41.6 64H0z' fill='%23FF3B4A'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0B0C0E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="assets/icon.svg">
   <script>try { document.documentElement.dataset.theme = localStorage.getItem("pos-theme") || "dark"; } catch (e) {}</script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="bg3d" aria-hidden="true"></div>
   <header class="topbar">
     <div class="brand">
       <span class="brand-mark" aria-hidden="true"></span>
@@ -24,6 +33,19 @@
     <div class="clock mono" id="clock" title="Время в Благовещенске">--:--:--</div>
   </header>
   <div class="hazard-bar" aria-hidden="true"></div>
+
+  <div id="bootScreen" class="boot-screen" aria-hidden="true">
+    <div class="boot-card">
+      <div class="boot-title glitch-text" data-text="PERSONAL OS">PERSONAL OS</div>
+      <div class="boot-sub mono">// BOOT SEQUENCE // KOSETOR.GITHUB.IO</div>
+      <div class="boot-bar" aria-hidden="true"><div class="boot-bar-fill"></div></div>
+      <div class="boot-lines mono" aria-hidden="true">
+        <div>INIT KERNEL ......... OK</div>
+        <div>MOUNT /AGENTS ....... OK</div>
+        <div>LINK TELEMETRY ...... OK</div>
+      </div>
+    </div>
+  </div>
 
   <main class="grid">
     <section class="panel info-panel">
@@ -86,7 +108,7 @@
     <span>Sync <span id="updatedAt">—</span></span>
   </footer>
 
-  <div id="lockScreen" class="lock-screen" aria-hidden="true">
+  <dialog id="lockScreen" class="lock-screen">
     <div class="lock-card">
       <div class="lock-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="34" height="34" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="12" y="28" width="40" height="26" rx="6"/><path d="M22 28v-8a10 10 0 0 1 20 0v8"/><circle cx="32" cy="41" r="3.5" fill="currentColor" stroke="none"/></svg></div>
       <h2>Доступ ограничен</h2>
@@ -95,9 +117,15 @@
       <button id="lockBtn" type="button" class="btn-primary">Войти</button>
       <p class="hint">Код хранится только в этом браузере</p>
     </div>
+  </dialog>
+
+  <div id="holoCube" title="Ядро: статус агентов · клик — смена темы">
+    <span class="holo-label mono">CORE</span>
   </div>
 
   <script src="config.js"></script>
   <script src="app.js"></script>
+  <script src="vendor/three.min.js"></script>
+  <script src="fx.js"></script>
 </body>
 </html>

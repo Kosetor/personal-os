@@ -219,6 +219,11 @@ body {
   height: 12px;
   flex: none;
   background: repeating-linear-gradient(45deg, var(--hazard-a) 0 8px, var(--hazard-b) 8px 16px);
+  background-size: 22.63px 22.63px;
+  animation: hazard-scroll 1.6s linear infinite;
+}
+@keyframes hazard-scroll {
+  to { background-position: 22.63px 0; }
 }
 
 /* ---------- Сетка ---------- */
@@ -336,8 +341,14 @@ body {
   border-left: 4px solid var(--ink-faint);
   border-radius: var(--r-sm);
   cursor: pointer;
-  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease), transform 0.18s var(--ease);
 }
+.agents-panel { perspective: 900px; }
+.agent-card .avatar,
+.agent-card .avatar-svg { transform: translateZ(20px); }
+.agent-card .agent-name { transform: translateZ(12px); }
 .agent-card:hover { border-color: var(--line-strong); border-left-color: var(--ink-muted); background: var(--elevated-hover); }
 .agent-card.st-active    { border-left-color: var(--ok); }
 .agent-card.st-thinking  { border-left-color: var(--amber); }
@@ -697,16 +708,22 @@ select:focus, textarea:focus {
   position: fixed;
   inset: 0;
   z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
   background: color-mix(in srgb, var(--bg-void) 82%, transparent);
   backdrop-filter: blur(6px);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--dur-ui) var(--ease);
+  overflow: hidden;
+  display: none;
+  align-items: center;
+  justify-content: center;
 }
-.lock-screen.visible { opacity: 1; pointer-events: auto; }
+.lock-screen[open], .lock-screen.visible { display: flex; }
+.lock-screen::backdrop { background: transparent; }
 
 .lock-card {
   width: min(92vw, 360px);
@@ -737,3 +754,180 @@ select:focus, textarea:focus {
 .lock-card input:focus { border-color: var(--focus); }
 .lock-card .btn-primary { width: 100%; }
 .lock-card .hint { margin: 12px 0 0; font-size: 11px; }
+
+/* ---------- Полировка: скроллбар, выделение, курсор ---------- */
+
+* { scrollbar-width: thin; scrollbar-color: var(--line-strong) var(--bg-void); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-void); }
+::-webkit-scrollbar-thumb { background: var(--line-strong); border: 2px solid var(--bg-void); }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-muted); }
+::selection { background: var(--volt); color: var(--ink-primary); }
+.response-area { cursor: crosshair; }
+
+/* ---------- View Transitions (смена тем) ---------- */
+
+::view-transition-old(root) { animation: vt-out 0.32s var(--ease) both; }
+::view-transition-new(root) { animation: vt-in 0.32s var(--ease) both; }
+@keyframes vt-out { to { opacity: 0; transform: scale(0.985); filter: saturate(0.2); } }
+@keyframes vt-in { from { opacity: 0; transform: scale(1.012); filter: saturate(1.5); } }
+
+/* ---------- Бут-заставка ---------- */
+
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  background: var(--bg-void);
+  transition: opacity 0.5s var(--ease);
+}
+.boot-screen.boot-done { opacity: 0; pointer-events: none; }
+.boot-card { text-align: center; padding: 24px; }
+.boot-title {
+  font: 700 44px/1 var(--font-display);
+  letter-spacing: 0.04em;
+  color: var(--ink-on-dark);
+  margin-bottom: 12px;
+}
+.boot-sub {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.boot-bar {
+  width: min(340px, 70vw);
+  height: 3px;
+  margin: 0 auto 20px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.boot-bar-fill {
+  height: 100%;
+  width: 0;
+  background: var(--volt);
+  animation: boot-fill 1.4s steps(12, end) forwards;
+}
+@keyframes boot-fill { to { width: 100%; } }
+.boot-lines {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-align: left;
+  color: var(--ok);
+  display: inline-block;
+  opacity: 0;
+  animation: boot-lines-in 0.9s 0.7s var(--ease) forwards;
+}
+.boot-lines div { padding: 2px 0; white-space: pre; }
+@keyframes boot-lines-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Глитч-текст (RGB-split по data-text) */
+.glitch-text { position: relative; display: inline-block; }
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.glitch-text::before {
+  color: var(--cyan);
+  transform: translate(-2px, 0);
+  animation: glitch-slice-a 2.4s steps(1, end) infinite;
+}
+.glitch-text::after {
+  color: var(--signal);
+  transform: translate(2px, 0);
+  animation: glitch-slice-b 2.4s steps(1, end) infinite;
+}
+@keyframes glitch-slice-a {
+  0%, 84%, 100% { clip-path: inset(0 0 100% 0); }
+  86% { clip-path: inset(8% 0 62% 0); }
+  90% { clip-path: inset(48% 0 28% 0); }
+  94% { clip-path: inset(72% 0 6% 0); }
+}
+@keyframes glitch-slice-b {
+  0%, 84%, 100% { clip-path: inset(0 0 100% 0); }
+  88% { clip-path: inset(64% 0 18% 0); }
+  92% { clip-path: inset(12% 0 74% 0); }
+  96% { clip-path: inset(40% 0 40% 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glitch-text::before, .glitch-text::after { display: none; }
+  .boot-bar-fill { animation-duration: 0.01s; }
+}
+
+/* ---------- Терминал ответа ---------- */
+
+.resp-copy-wrap { margin-left: auto; }
+.resp-copy {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-muted);
+  font-size: 12px;
+  padding: 3px 8px;
+  cursor: pointer;
+  border-radius: var(--r-sm);
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.resp-copy:hover { color: var(--ink-on-dark); border-color: var(--focus); }
+.resp-reply.pending::after {
+  content: "▊";
+  margin-left: 4px;
+  color: var(--amber);
+  animation: caret-blink 1s steps(2, start) infinite;
+}
+@keyframes caret-blink { to { visibility: hidden; } }
+
+/* ---------- Голо-куб (three.js) ---------- */
+
+#holoCube {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 132px;
+  height: 132px;
+  z-index: 5;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  background: radial-gradient(circle at 50% 62%, color-mix(in srgb, var(--cyan) 10%, transparent), transparent 72%);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+#holoCube:hover { border-color: var(--line-strong); }
+#holoCube .holo-label {
+  position: absolute;
+  bottom: 3px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  color: var(--ink-faint);
+  pointer-events: none;
+}
+@media (max-width: 860px) { #holoCube { display: none; } }
+
+/* ---------- 3D-фон (three.js) ---------- */
+
+#bg3d {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+#bg3d canvas { display: block; }
+main { position: relative; z-index: 1; }
+body.no-webgl #bg3d {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, color-mix(in srgb, var(--cyan) 7%, transparent), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 110%, color-mix(in srgb, var(--signal) 6%, transparent), transparent 60%);
+}

@@ -47,12 +47,21 @@ function initTheme() {
     btn.classList.toggle("active", btn.dataset.themeBtn === current);
     btn.addEventListener("click", () => {
       const t = btn.dataset.themeBtn;
-      document.documentElement.dataset.theme = t;
-      try { localStorage.setItem("pos-theme", t); } catch (e) { /* приватный режим */ }
+      setTheme(t);
       document.querySelectorAll(".theme-btn").forEach((x) =>
         x.classList.toggle("active", x === btn));
     });
   });
+}
+
+function setTheme(t) {
+  const apply = () => {
+    document.documentElement.dataset.theme = t;
+    try { localStorage.setItem("pos-theme", t); } catch (e) { /* приватный режим */ }
+    window.dispatchEvent(new CustomEvent("themechange", { detail: t }));
+  };
+  if (document.startViewTransition) document.startViewTransition(apply);
+  else apply();
 }
 
 /* ---------- Глитч-анимации ---------- */
@@ -134,18 +143,24 @@ function clearPin() {
 function showLock(msg) {
   const lock = $("#lockScreen");
   if (!lock) return;
-  lock.classList.add("visible");
-  lock.setAttribute("aria-hidden", "false");
   if (msg) $("#lockMsg").textContent = msg;
   const inp = $("#lockInput");
   if (inp) { inp.value = ""; setTimeout(() => inp.focus(), 50); }
+  if (typeof lock.showModal === "function") {
+    try { lock.showModal(); } catch (e) { lock.setAttribute("open", ""); lock.classList.add("visible"); }
+  } else {
+    lock.classList.add("visible");
+  }
 }
 
 function hideLock() {
   const lock = $("#lockScreen");
   if (!lock) return;
   lock.classList.remove("visible");
-  lock.setAttribute("aria-hidden", "true");
+  lock.removeAttribute("open");
+  if (typeof lock.close === "function" && lock.open) {
+    try { lock.close(); } catch (e) { /* уже закрыт или фолбэк-режим */ }
+  }
 }
 
 function initAuth() {
@@ -170,6 +185,7 @@ function renderResponse(agent, command, reply, mode) {
   const time = new Date().toLocaleString("ru-RU", { timeZone: CONFIG.city.tz });
   const replyCls = mode === "pending" ? "pending" : mode === "error" ? "error" : "";
   const replyText = mode === "pending" ? "Агент думает…" : reply;
+  const copyBtn = mode === "ok" ? `<button type="button" class="resp-copy mono" title="Скопировать ответ">⧉</button>` : "";
   box.innerHTML = `
     <div class="resp-head">
       <div class="avatar sm">${avatarHtml(agent, 42)}</div>
@@ -177,9 +193,38 @@ function renderResponse(agent, command, reply, mode) {
         <div class="resp-agent">${escapeHtml(agent.name)}</div>
         <div class="resp-time">${time} · ${escapeHtml(CONFIG.city.name)}</div>
       </div>
+      <span class="resp-copy-wrap">${copyBtn}</span>
     </div>
     <div class="resp-command"><span>Команда</span>${escapeHtml(command)}</div>
     <div class="resp-reply ${replyCls}">${escapeHtml(replyText)}</div>`;
+}
+
+function fallbackCopy(txt, done) {
+  const ta = document.createElement("textarea");
+  ta.value = txt;
+  ta.style.position = "fixed";
+  ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand("copy"); done(); } catch (e) { /* нет доступа */ }
+  ta.remove();
+}
+
+function attachTilt() {
+  if (reduceMotion) return;
+  const panel = document.querySelector(".agents-panel");
+  if (!panel) return;
+  panel.addEventListener("mousemove", (e) => {
+    const card = e.target.closest(".agent-card");
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = `rotateY(${(px * 14).toFixed(2)}deg) rotateX(${(-py * 14).toFixed(2)}deg)`;
+  });
+  panel.addEventListener("mouseleave", () => {
+    panel.querySelectorAll(".agent-card").forEach((c) => (c.style.transform = ""));
+  });
 }
 
 function pushHistory(agent, command) {
@@ -419,8 +464,24 @@ function init() {
   });
 
   renderAgents();
+  attachTilt();
   pollStatuses();
   setInterval(pollStatuses, CONFIG.statusPollMs || 15000);
+
+  $("#responseBox").addEventListener("click", (e) => {
+    const btn = e.target.closest(".resp-copy");
+    if (!btn) return;
+    const el = $("#responseBox").querySelector(".resp-reply");
+    const txt = el ? el.textContent.trim() : "";
+    if (!txt) return;
+    const done = () => {
+      btn.textContent = "✓";
+      setTimeout(() => { btn.textContent = "⧉"; }, 1200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(done).catch(() => fallbackCopy(txt, done));
+    } else fallbackCopy(txt, done);
+  });
 
   tickClock();
   setInterval(tickClock, 1000);
