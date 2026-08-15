@@ -753,6 +753,17 @@ select:focus, textarea:focus {
 }
 .lock-card input:focus { border-color: var(--focus); }
 .lock-card .btn-primary { width: 100%; }
+.lock-card .remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  margin: -2px 0 12px;
+  font-size: 12px;
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+.lock-card .remember-me input { width: auto; margin: 0; accent-color: var(--signal); }
 .lock-card .hint { margin: 12px 0 0; font-size: 11px; }
 
 /* ---------- Полировка: скроллбар, выделение, курсор ---------- */

@@ -75,6 +75,7 @@ function glitch(el) {
 }
 
 function ambientGlitch() {
+  if (reduceMotion) return;
   const panels = document.querySelectorAll(".panel");
   if (!panels.length) return;
   glitch(panels[Math.floor(Math.random() * panels.length)]);
@@ -114,9 +115,12 @@ async function fetchAgentStatus(agent) {
     const j = await r.json();
     agent.status = STATUSES[j.status] ? j.status : "inactive";
     agent.demo = false;
-  } catch {
+  } catch (e) {
     agent.status = "offline";
     agent.demo = false;
+    if (e instanceof TypeError && /fetch/i.test(e.message || "")) {
+      console.warn("[agents] Не удалось связаться с агентом «" + agent.name + "»: проверь HTTPS и CORS (Access-Control-Allow-Origin) на мосту.", e);
+    }
   }
 }
 
@@ -129,14 +133,32 @@ async function pollStatuses() {
 /* ---------- Авторизация: код доступа (PIN) ---------- */
 
 const PIN_KEY = "pos-pin";
+const PIN_REMEMBER_KEY = "pos-pin-remember";
 
 function getPin() {
-  try { return localStorage.getItem(PIN_KEY) || ""; } catch (e) { return ""; }
+  // sessionStorage (вкладка) — приоритет; localStorage — только если отмечено «Запомнить».
+  try {
+    const s = sessionStorage.getItem(PIN_KEY);
+    if (s) return s;
+  } catch (e) { /* приватный режим */ }
+  try {
+    return localStorage.getItem(PIN_KEY) || "";
+  } catch (e) { return ""; }
 }
-function savePin(p) {
-  try { localStorage.setItem(PIN_KEY, p); } catch (e) { /* приватный режим */ }
+function savePin(p, remember) {
+  try {
+    sessionStorage.setItem(PIN_KEY, p);
+    if (remember) {
+      localStorage.setItem(PIN_KEY, p);
+      localStorage.setItem(PIN_REMEMBER_KEY, "1");
+    } else {
+      localStorage.removeItem(PIN_KEY);
+      localStorage.removeItem(PIN_REMEMBER_KEY);
+    }
+  } catch (e) { /* приватный режим */ }
 }
 function clearPin() {
+  try { sessionStorage.removeItem(PIN_KEY); } catch (e) {}
   try { localStorage.removeItem(PIN_KEY); } catch (e) {}
 }
 
@@ -166,11 +188,18 @@ function hideLock() {
 function initAuth() {
   const btn = $("#lockBtn");
   const inp = $("#lockInput");
+  const remember = $("#rememberPin");
   if (!btn || !inp) return;
+
+  // Предзаполняем чекбокс из localStorage
+  if (remember) {
+    try { remember.checked = localStorage.getItem(PIN_REMEMBER_KEY) === "1"; } catch (e) {}
+  }
+
   btn.addEventListener("click", () => {
     const p = inp.value.trim();
     if (!p) return;
-    savePin(p);
+    savePin(p, !!(remember && remember.checked));
     hideLock();
   });
   inp.addEventListener("keydown", (e) => { if (e.key === "Enter") btn.click(); });
@@ -214,15 +243,36 @@ function attachTilt() {
   if (reduceMotion) return;
   const panel = document.querySelector(".agents-panel");
   if (!panel) return;
+
+  let rafId = 0;
+  let tx = 0, ty = 0;
+  let cx = 0, cy = 0;
+
+  const applyTilt = () => {
+    rafId = 0;
+    cx += (tx - cx) * 0.18;
+    cy += (ty - cy) * 0.18;
+    panel.querySelectorAll(".agent-card").forEach((card) => {
+      const r = card.getBoundingClientRect();
+      const px = (cx - (r.left + r.width / 2)) / (r.width / 2);
+      const py = (cy - (r.top + r.height / 2)) / (r.height / 2);
+      card.style.transform = `rotateY(${(px * 14).toFixed(2)}deg) rotateX(${(-py * 14).toFixed(2)}deg)`;
+    });
+    if (Math.abs(tx - cx) > 0.05 || Math.abs(ty - cy) > 0.05) schedule();
+  };
+
+  const schedule = () => {
+    if (!rafId) rafId = requestAnimationFrame(applyTilt);
+  };
+
   panel.addEventListener("mousemove", (e) => {
-    const card = e.target.closest(".agent-card");
-    if (!card) return;
-    const r = card.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width - 0.5;
-    const py = (e.clientY - r.top) / r.height - 0.5;
-    card.style.transform = `rotateY(${(px * 14).toFixed(2)}deg) rotateX(${(-py * 14).toFixed(2)}deg)`;
+    tx = e.clientX;
+    ty = e.clientY;
+    schedule();
   });
   panel.addEventListener("mouseleave", () => {
+    tx = 0; ty = 0; cx = 0; cy = 0;
+    if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
     panel.querySelectorAll(".agent-card").forEach((c) => (c.style.transform = ""));
   });
 }
@@ -270,7 +320,10 @@ async function sendCommand() {
         ? "Требуется авторизация: введи код доступа."
         : "Команда принята (агент вернул пустой ответ).");
     } catch (e) {
-      reply = "Агент не ответил: " + e.message;
+      const netErr = e instanceof TypeError && /fetch/i.test(e.message || "");
+      reply = netErr
+        ? "Не удалось связаться с агентом: проверь HTTPS и CORS (Access-Control-Allow-Origin) на мосту."
+        : "Агент не ответил: " + e.message;
       mode = "error";
     }
   } else {
@@ -369,10 +422,15 @@ function tickClock() {
 
 /* ---------- Блок 5: дайджест статей ---------- */
 
-const digest = { items: [], idx: 0 };
+const digest = { items: [], idx: 0, loadError: false };
 
 function renderDigest() {
   const el = $("#digest");
+  if (digest.loadError) {
+    el.innerHTML = `<div class="digest-empty">Не удалось загрузить дайджест</div>`;
+    $("#digestMeta").textContent = "FEED // 6H";
+    return;
+  }
   if (!digest.items.length) {
     el.innerHTML = `<div class="digest-empty">Статей пока нет — ждём первую публикацию.</div>`;
     $("#digestMeta").textContent = "FEED // 6H";
@@ -413,14 +471,61 @@ async function loadDigest() {
     if (!r.ok) throw new Error("HTTP " + r.status);
     const j = await r.json();
     digest.items = Array.isArray(j.items) ? j.items : [];
+    digest.loadError = false;
     if (digest.idx >= digest.items.length) digest.idx = 0;
   } catch (e) {
+    console.error("[digest] Не удалось загрузить дайджест:", e);
     digest.items = [];
+    digest.loadError = true;
   }
   renderDigest();
 }
 
 /* ---------- Автообновление конфигурации ---------- */
+
+/* Безопасный парсинг config.js без eval: config.js — это `const CONFIG = {...}`.
+   Извлекаем только id/statusUrl/commandUrl каждого агента. Значения всегда в
+   двойных кавычках, ключи без кавычек, возможны комментарии. */
+function parseAgentsFromConfigJs(txt) {
+  const out = [];
+  const arrMatch = txt.match(/agents\s*:\s*(\[[\s\S]*?\])/);
+  if (!arrMatch) return out;
+  const arrStr = arrMatch[1];
+  // Разбиваем массив на объекты по открывающим { (вне строк)
+  let current = null;
+  let depth = 0;
+  let i = 0;
+  const n = arrStr.length;
+  while (i < n) {
+    const ch = arrStr[i];
+    if (ch === '"' || ch === "'") {
+      const quote = ch;
+      i++;
+      while (i < n && arrStr[i] !== quote) {
+        if (arrStr[i] === "\\") i++;
+        i++;
+      }
+    } else if (ch === "{") {
+      if (depth === 0) current = {};
+      depth++;
+    } else if (ch === "}") {
+      depth--;
+      if (depth === 0 && current) {
+        out.push(current);
+        current = null;
+      }
+    } else if (current && depth === 1 && (ch === "i" || ch === "s" || ch === "c")) {
+      const keyMatch = arrStr.slice(i).match(/^("?)(id|statusUrl|commandUrl)\1\s*:\s*"([^"]*)"/);
+      if (keyMatch) {
+        current[keyMatch[2]] = keyMatch[3];
+        i += keyMatch[0].length;
+        continue;
+      }
+    }
+    i++;
+  }
+  return out;
+}
 
 async function refreshConfig() {
   // Быстрые туннели (localhost.run) меняют поддомен при переподключении —
@@ -429,9 +534,9 @@ async function refreshConfig() {
   try {
     const r = await fetch("config.js", { cache: "no-store" });
     const txt = await r.text();
-    const fresh = new Function(txt + "\nreturn CONFIG;")();
+    const fresh = parseAgentsFromConfigJs(txt);
     for (const a of state.agents) {
-      const nc = (fresh.agents || []).find((x) => x.id === a.id);
+      const nc = fresh.find((x) => x.id === a.id);
       if (!nc) continue;
       a.statusUrl = nc.statusUrl || "";
       a.commandUrl = nc.commandUrl || "";
