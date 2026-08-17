@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Русскоязычный обзор arXiv 2608.14528: передача in-context learning состояния между сессиями агента — что сохранять при handover и как оценивать память">
+<title>Передача ICL-состояния между сессиями: что должен помнить агент при handover — Personal OS</title>
+<style>
+  :root{
+    --bg:#f7f6f3; --fg:#1c1b19; --muted:#5c5a55; --card:#ffffff; --line:#e3e0d8;
+    --accent:#7a4a1f; --accent-soft:#f0e6d8; --code:#2f2d2a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#16150f; --fg:#eae7df; --muted:#a29e93; --card:#201e19;
+      --line:#37342c; --accent:#e0a860; --accent-soft:#2e281c; --code:#f2efe8;
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:17px; line-height:1.65;
+  }
+  .page-shell{max-width:760px; margin:0 auto; padding:2.2rem 1.25rem 4rem}
+  a{color:var(--accent); text-decoration-color:var(--line); text-underline-offset:3px}
+  a:hover{text-decoration-color:var(--accent)}
+  .back{display:inline-block; margin-bottom:1.6rem; font-size:.92rem}
+  header h1{font-size:1.75rem; line-height:1.25; margin:.4rem 0 .8rem; letter-spacing:-.01em}
+  .eyebrow{
+    margin:0; font-size:.8rem; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--muted);
+  }
+  .lead{font-size:1.05rem; color:var(--muted); margin:0 0 1.4rem}
+  .meta{
+    display:flex; flex-wrap:wrap; gap:.6rem 1.6rem; margin:0 0 1.8rem; padding:1rem 1.1rem;
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+  }
+  .meta div{display:flex; flex-direction:column; gap:.15rem}
+  .meta dt{font-size:.74rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted)}
+  .meta dd{margin:0; font-size:.95rem}
+  .toc{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:1rem 1.2rem; margin:0 0 2.2rem; font-size:.95rem;
+  }
+  .toc p{margin:0 0 .4rem; font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted)}
+  .toc ol{margin:.2rem 0 0; padding-left:1.2rem}
+  .toc li{margin:.25rem 0}
+  article h2{font-size:1.3rem; margin:2.6rem 0 .7rem; padding-top:.4rem; border-top:1px solid var(--line)}
+  article h2::before{content:"§ "; color:var(--accent)}
+  article p{margin:.6rem 0}
+  article ul, article ol{margin:.6rem 0; padding-left:1.35rem}
+  article li{margin:.4rem 0}
+  .tag{
+    display:inline-block; font-size:.78rem; font-weight:600; padding:.1rem .55rem;
+    border-radius:999px; border:1px solid var(--line); background:var(--card);
+  }
+  .tag.doc{color:var(--accent); border-color:var(--accent)}
+  .tag.hermes{color:#2e7d32; border-color:#4c9a50}
+  @media (prefers-color-scheme: dark){ .tag.hermes{color:#8fd694; border-color:#4c9a50} }
+  .schema{
+    margin:1.2rem 0; padding:1.1rem; background:var(--card);
+    border:1px solid var(--line); border-radius:10px;
+  }
+  .schema figcaption{font-size:.85rem; color:var(--muted); margin-bottom:.8rem}
+  /* Схема: трёхчастная запись handover */
+  .record{display:flex; flex-direction:column; gap:.5rem; max-width:600px; margin:0 auto}
+  .record .part{
+    padding:.7rem .9rem; border-radius:8px; border:1px solid var(--line); background:var(--card);
+    font-size:.92rem;
+  }
+  .record .part b{display:block; margin-bottom:.2rem}
+  .record .exact{border-color:var(--accent); background:var(--accent-soft)}
+  .record .part span{color:var(--muted)}
+  .src-note{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:.8rem; margin:1rem 0}
+  footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); font-size:.85rem; color:var(--muted)}
+  @media (max-width:520px){
+    body{font-size:16px}
+    header h1{font-size:1.5rem}
+  }
+
+html[data-theme="dark"]{ --bg:#16150f; --fg:#eae7df; --muted:#a29e93; --card:#201e19;
+      --line:#37342c; --accent:#e0a860; --accent-soft:#2e281c; --code:#f2efe8; }
+html[data-theme="light"]{ --bg:#f7f6f3; --fg:#1c1b19; --muted:#5c5a55; --card:#ffffff; --line:#e3e0d8;
+    --accent:#7a4a1f; --accent-soft:#f0e6d8; --code:#2f2d2a; }
+
+/* Мобильная безопасность: длинные ссылки переносятся, картинки не вылезают */
+img{max-width:100%;height:auto}
+.meta dd{min-width:0;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<main class="page-shell">
+  <a class="back" href="../../index.html">← Вернуться в Personal OS</a>
+<button type="button" class="theme-toggle" id="themeToggle" aria-label="Переключить тему (светлая/тёмная)" title="Светлая/тёмная тема">🌓</button>
+
+  <header>
+    <p class="eyebrow">ИИ-агенты · обзор источника</p>
+    <h1>Передача ICL-состояния между сессиями: что должен помнить агент при handover</h1>
+    <p class="lead">Когда контекст упирается в лимит, приложение перезапускается или задачу заканчивает другой агент — что именно нужно передать дальше? Статья arXiv 2608.14528 формализует session handover как передачу task-относительного ICL-состояния и предлагает трёхчастную запись вместо «пересказа разговора».</p>
+    <dl class="meta">
+      <div><dt>Первичный источник</dt><dd><a href="https://arxiv.org/abs/2608.14528" target="_blank" rel="noopener noreferrer">arXiv 2608.14528 — Handover of In-Context Learning State Across Session Boundaries</a></dd></div>
+      <div><dt>Тип</dt><dd>Научная статья (препринт arXiv)</dd></div>
+      <div><dt>Опубликовано</dt><dd>2026-08-14</dd></div>
+      <div><dt>Проверено</dt><dd>2026-08-17</dd></div>
+    </dl>
+  </header>
+
+  <nav class="toc" aria-label="Содержание">
+    <p>Содержание</p>
+    <ol>
+      <li><a href="#summary">Суть материала</a></li>
+      <li><a href="#why-it-matters">Почему это важно</a></li>
+      <li><a href="#practical">Практическое применение</a></li>
+      <li><a href="#limits">Ограничения и риски</a></li>
+      <li><a href="#implementation">Как применить к вашему ИИ-агенту</a></li>
+      <li><a href="#sources">Первичные материалы</a></li>
+    </ol>
+  </nav>
+
+  <article>
+    <section id="summary">
+      <h2>Суть материала</h2>
+      <p>Статья «Handover of In-Context Learning State Across Session Boundaries» (авторы — Masahiro Kato и Taka Kato, препринт от 14 августа 2026) формализует ситуацию, знакомую каждому, кто запускает агентов: задача не закончилась, а сессия закончилась. Контекст упёрся в лимит модели, приложение перезапустилось, или доделывать попросили другого агента. Новая сессия получает только то, что решено передать, — автор называет это <strong>session handover</strong>, а переданную информацию — <strong>handover record</strong>.</p>
+      <p>Ключевой сдвиг: запись не обязана воспроизводить прошлый разговор, но обязана сохранить информацию, от которой зависит незаконченная задача. Поэтому оценивать запись нужно не по похожести на старый текст, а по предсказанию или действию после handover: «мы судим о записи по предсказанию или действию после handover, а не по её сходству с прежней формулировкой». Авторы различают точное восстановление старого материала и сохранение целевого распределения (predictive equivalence) — при условии экзогенности predictive equivalence характеризует самый грубый детерминированный достаточный handover и даёт оценку требуемого объёма в битах.</p>
+      <p>Практическая часть — <strong>трёхчастная запись</strong> H = (H<sub>exact</sub>, H<sub>stat</sub>, H<sub>residual</sub>):</p>
+      <div class="schema" role="img" aria-label="Схема трёхчастной записи handover: точная, статистическая, остаточная части">
+        <figcaption>Трёхчастная handover-запись по arXiv 2608.14528</figcaption>
+        <div class="record">
+          <div class="part exact"><b>H<sub>exact</sub> — точная часть</b><span>текущая цель, принятые решения, ограничивающие следующий шаг, отклонённые варианты и нерешённые вопросы — с источником каждой записи, без усреднения и без превращения «не решено» в «предположительно решено»</span></div>
+          <div class="part"><b>H<sub>stat</sub> — статистическая часть</b><span>повторяющиеся примеры и результаты инструментов заменяются более короткой величиной, только если у сжатия есть явное обоснование через функцию потерь задачи (task-justified statistics)</span></div>
+          <div class="part"><b>H<sub>residual</sub> — остаточная часть</b><span>исходные наблюдения, чей эффект не сохраняется статистиками; если для задачи нет достаточной статистики — сюда уходят релевантные исходные записи</span></div>
+        </div>
+      </div>
+      <p>Теоретическая часть: для гауссовой линейной регрессии handover точен и конечномерен, даны конечные границы на битовые возмущения; для непараметрической регрессии — верхние и нижние границы, связывающие объём памяти с квадратичной ошибкой предсказания. Вывод для практики: требуемый объём памяти зависит от задачи продолжения, а запись «до того, как известен следующий запрос» стоит дороже — анализ количественно оценивает цену записи до реализации downstream-запроса.</p>
+      <p class="src-note">Выводы проверены по полному тексту (HTML-версия статьи на arXiv), включая разделы 4.1–4.3 и введение: все описанные концепции и формулировки действительно присутствуют в тексте.</p>
+    </section>
+
+    <section id="why-it-matters">
+      <h2>Почему это важно</h2>
+      <p>Любой агент, который живёт дольше одного контекстного окна, каждую сессию делает неявный handover: продолжение задачи после сжатия, после перезапуска, после передачи другому агенту. Статья даёт язык и критерий для этого процесса: не «сколько текста пересказали», а «сохранилась ли способность принять правильное решение». Это меняет способ проектирования резюме, памяти и handoff-документов.</p>
+      <p>Особенно ценно разделение «решения/ограничения» и «доказательства»: прозаическое резюме может незаметно изменить статус — принять нерешённый вопрос за решённый, а отклонённую опцию за живую. Такие искажения меняют, какие действия разрешены дальше, и их трудно заметить при чтении итогового текста. Трёхчастная схема заставляет хранить решения точно, а не «в среднем».</p>
+      <p>Для Personal OS это прямо про наш цикл: cron-задачи, продолжающиеся через несколько сессий, передача работы между профилями/агентами (супервизор ↔ редактор раздела), восстановление после рестарта. Вопрос «что останется после сжатия или перезапуска» — это вопрос о handover-записи.</p>
+    </section>
+
+    <section id="practical">
+      <h2>Практическое применение</h2>
+      <p>Ниже — как идеи статьи соотносятся с практикой Hermes Agent. Помечаем, что задокументировано в Hermes, а что — наша интерпретация.</p>
+      <ul>
+        <li><span class="tag doc">Источник</span> <strong>Критерий оценки записи</strong> — «по предсказанию/действию после handover, а не по сходству текста». Это применимо к любому резюме сессии: проверять не «похоже ли на переписку», а «может ли продолжение принять те же решения».</li>
+        <li><span class="tag doc">Источник</span> <strong>Точная часть хранит решения и ограничения без искажений</strong>: текущая цель, принятые решения, отклонённые варианты, нерешённые вопросы + источник каждой записи. «Нерешённое» не превращать в «решённое».</li>
+        <li><span class="tag doc">Источник</span> <strong>Сжатие допустимо только с обоснованием</strong>: заменять повторяющиеся примеры статистиками можно, только если связь с потерями задачи явная; иначе — хранить исходные наблюдения (H<sub>residual</sub>).</li>
+        <li><span class="tag hermes">Hermes</span> <strong>Сжатие контекста в Hermes</strong> — механизм compression в v0.20 (микро-компакция, гарантированный хвост из N пользовательских сообщений, head+tail удержание) реализует «запись до неизвестного запроса»; критерии статьи объясняют, почему «хвост» и точные решения важнее полного пересказа.</li>
+        <li><span class="tag hermes">Hermes</span> <strong>Файлы памяти MEMORY.md/USER.md</strong> — фактически точная часть: компактные факты «что верно»; по статье им место в H<sub>exact</sub>-подобной части, а не в пересказе диалога.</li>
+        <li><span class="tag hermes">Hermes</span> <strong>Передача между агентами (A2A / delegation)</strong> — когда субагент продолжает задачу, релевантен весь анализ: что передавать субагенту (решения и ограничения точно, статистики с обоснованием, остальное — исходниками), чтобы продолжение не «поплыло».</li>
+        <li><span class="tag">Интерпретация</span> <strong>Шаблон handoff-документа</strong> для Personal OS: секция «цель и текущее состояние», «принятые решения и отклонённые варианты», «нерешённые вопросы», «источники/ссылки», «что проверять при продолжении». Это практическая реализация трёхчастной схемы без теории.</li>
+      </ul>
+    </section>
+
+    <section id="limits">
+      <h2>Ограничения и риски</h2>
+      <ul>
+        <li><span class="tag doc">Источник</span> Это теоретическая работа: формулировки и границы получены для упрощённых моделей (гауссова линейная регрессия, непараметрическая регрессия), а не для реальных LLM; перенос на произвольные языковые задачи — предмет дальнейших исследований, а не гарантированный результат.</li>
+        <li><span class="tag doc">Источник</span> Условие экзогенности, при котором predictive equivalence даёт точную характеристику, в реальных агентных циклах может нарушаться (модель влияет на то, какие данные появятся дальше).</li>
+        <li><span class="tag doc">Источник</span> «Запись до известного запроса стоит дороже» — количественная оценка этого эффекта есть, но практического рецепта «какой объём выбрать для моего агента» статья не даёт: границы асимптотические.</li>
+        <li><span class="tag doc">Источник</span> Препринт без указания статуса рецензирования; авторы прямо перечисляют, какие сравнения остаются «запутанными» (confounded) и формулируют фальсифицируемые предсказания — выводы стоит перепроверять по мере появления последующих версий.</li>
+        <li><span class="tag hermes">Hermes</span> Практика Hermes (compression, MEMORY.md, A2A) не реализует трёхчастную схему «из коробки»: это ориентир для проектирования handoff-документов и политик памяти, а не готовая функция.</li>
+      </ul>
+    </section>
+
+    <section id="implementation">
+<h2>Как применить к вашему ИИ-агенту</h2>
+      <p>Для вашего ИИ-агента это можно применить так:</p>
+      <ol>
+        <li><strong>Разделяйте «решения» и «пересказ» в резюме сессии</strong>: цель, принятые решения, отклонённые варианты и нерешённые вопросы — храните дословно и с источником; диалог — только если он влияет на будущие решения.</li>
+        <li><strong>Не превращайте «не решено» в «решено»</strong>: нерешённые вопросы держите отдельным списком с пометкой статуса; при продолжении задачи агент должен видеть, что вопрос открыт.</li>
+        <li><strong>Сжимайте только с обоснованием</strong>: прежде чем заменить массив примеров/результатов одним числом или выводом, проверьте, сохраняет ли сжатие информацию, нужную для продолжения; сомневаетесь — оставьте исходники (файлы, ссылки, сырые результаты).</li>
+        <li><strong>Оценивайте handoff по действию, а не по тексту</strong>: перед передачей задачи другому агенту или новой сессии прогоните контрольный вопрос «может ли продолжение принять то же решение, что и оригинал?» — это дешевле, чем полная перепроверка.</li>
+        <li><strong>Сделайте шаблон handoff-документа</strong>: статус задачи, решения и ограничения, нерешённое, ссылки на исходники, критерий готовности — и используйте его в cron-продолжениях и при делегировании субагентам.</li>
+        <li><strong>Учитывайте цену «записи заранее»</strong>: если вы пишете резюме до того, как известно, что спросят дальше, — храните больше исходного материала; если продолжение известно заранее — можно агрегировать смелее.</li>
+      </ol>
+    </section>
+
+    <section id="sources">
+      <h2>Первичные материалы</h2>
+      <ul>
+        <li><a href="https://arxiv.org/abs/2608.14528" target="_blank" rel="noopener noreferrer">arXiv 2608.14528 — Handover of In-Context Learning State Across Session Boundaries</a> (аннотация; полный текст: <a href="https://arxiv.org/html/2608.14528v1" target="_blank" rel="noopener noreferrer">HTML-версия</a>)</li>
+        <li><a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener noreferrer">Документация Hermes Agent</a> — память, сжатие контекста, делегирование (практика, сверена с локальным SKILL.md)</li>
+        <li><a href="https://arxiv.org/abs/2603.07670" target="_blank" rel="noopener noreferrer">arXiv 2603.07670 — Memory for Autonomous LLM Agents</a> — смежный обзор о памяти агентов (write–manage–read цикл), уже разобран в обзоре «Память и навыки агента»</li>
+      </ul>
+    </section>
+  </article>
+
+  <footer>
+    Personal OS · обзор источника · 2026-08-17 · материал подготовлен агентом Hermes на русском языке
+  </footer>
+</main>
+<script>
+(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),v=null;try{v=localStorage.getItem("review-theme")}catch(e){}if(v==="light"||v==="dark")r.setAttribute("data-theme",v);if(b)b.addEventListener("click",function(){var c=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),n=c==="dark"?"light":"dark";r.setAttribute("data-theme",n);try{localStorage.setItem("review-theme",n)}catch(e){}});})();
+</script>
+</body>
+</html>

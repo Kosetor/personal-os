@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Русскоязычный обзор релиза Hermes Agent v0.20.0 «The Herald Release»: голосовой режим, проверяемые ответы, A2A, webhooks и самовосстановление инструментов">
+<title>Hermes Agent v0.20 «The Herald Release»: голос, проверяемые ответы и A2A — Personal OS</title>
+<style>
+  :root{
+    --bg:#f7f6f3; --fg:#1c1b19; --muted:#5c5a55; --card:#ffffff; --line:#e3e0d8;
+    --accent:#7a4a1f; --accent-soft:#f0e6d8; --code:#2f2d2a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#16150f; --fg:#eae7df; --muted:#a29e93; --card:#201e19;
+      --line:#37342c; --accent:#e0a860; --accent-soft:#2e281c; --code:#f2efe8;
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:17px; line-height:1.65;
+  }
+  .page-shell{max-width:760px; margin:0 auto; padding:2.2rem 1.25rem 4rem}
+  a{color:var(--accent); text-decoration-color:var(--line); text-underline-offset:3px}
+  a:hover{text-decoration-color:var(--accent)}
+  .back{display:inline-block; margin-bottom:1.6rem; font-size:.92rem}
+  header h1{font-size:1.75rem; line-height:1.25; margin:.4rem 0 .8rem; letter-spacing:-.01em}
+  .eyebrow{
+    margin:0; font-size:.8rem; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--muted);
+  }
+  .lead{font-size:1.05rem; color:var(--muted); margin:0 0 1.4rem}
+  .meta{
+    display:flex; flex-wrap:wrap; gap:.6rem 1.6rem; margin:0 0 1.8rem; padding:1rem 1.1rem;
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+  }
+  .meta div{display:flex; flex-direction:column; gap:.15rem}
+  .meta dt{font-size:.74rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted)}
+  .meta dd{margin:0; font-size:.95rem}
+  .toc{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:1rem 1.2rem; margin:0 0 2.2rem; font-size:.95rem;
+  }
+  .toc p{margin:0 0 .4rem; font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted)}
+  .toc ol{margin:.2rem 0 0; padding-left:1.2rem}
+  .toc li{margin:.25rem 0}
+  article h2{font-size:1.3rem; margin:2.6rem 0 .7rem; padding-top:.4rem; border-top:1px solid var(--line)}
+  article h2::before{content:"§ "; color:var(--accent)}
+  article p{margin:.6rem 0}
+  article ul, article ol{margin:.6rem 0; padding-left:1.35rem}
+  article li{margin:.4rem 0}
+  .tag{
+    display:inline-block; font-size:.78rem; font-weight:600; padding:.1rem .55rem;
+    border-radius:999px; border:1px solid var(--line); background:var(--card);
+  }
+  .tag.doc{color:var(--accent); border-color:var(--accent)}
+  .tag.hermes{color:#2e7d32; border-color:#4c9a50}
+  @media (prefers-color-scheme: dark){ .tag.hermes{color:#8fd694; border-color:#4c9a50} }
+  .schema{
+    margin:1.2rem 0; padding:1.1rem; background:var(--card);
+    border:1px solid var(--line); border-radius:10px;
+  }
+  .schema figcaption{font-size:.85rem; color:var(--muted); margin-bottom:.8rem}
+  /* Схема: столбцы релиза v0.20 */
+  .columns{display:flex; flex-wrap:wrap; gap:.6rem; justify-content:center}
+  .columns .col{
+    flex:1 1 200px; padding:.8rem .7rem; border-radius:8px;
+    background:var(--accent-soft); border:1px solid var(--line); font-size:.92rem;
+  }
+  .columns .col b{display:block; margin-bottom:.25rem; font-size:.95rem}
+  .src-note{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:.8rem; margin:1rem 0}
+  footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); font-size:.85rem; color:var(--muted)}
+  @media (max-width:520px){
+    body{font-size:16px}
+    header h1{font-size:1.5rem}
+  }
+
+html[data-theme="dark"]{ --bg:#16150f; --fg:#eae7df; --muted:#a29e93; --card:#201e19;
+      --line:#37342c; --accent:#e0a860; --accent-soft:#2e281c; --code:#f2efe8; }
+html[data-theme="light"]{ --bg:#f7f6f3; --fg:#1c1b19; --muted:#5c5a55; --card:#ffffff; --line:#e3e0d8;
+    --accent:#7a4a1f; --accent-soft:#f0e6d8; --code:#2f2d2a; }
+
+/* Мобильная безопасность: длинные ссылки переносятся, картинки не вылезают */
+img{max-width:100%;height:auto}
+.meta dd{min-width:0;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<main class="page-shell">
+  <a class="back" href="../../index.html">← Вернуться в Personal OS</a>
+<button type="button" class="theme-toggle" id="themeToggle" aria-label="Переключить тему (светлая/тёмная)" title="Светлая/тёмная тема">🌓</button>
+
+  <header>
+    <p class="eyebrow">ИИ-агенты · обзор источника</p>
+    <h1>Hermes Agent v0.20 «The Herald Release»: голос, проверяемые ответы и A2A</h1>
+    <p class="lead">Большой релиз открытого агентного runtime: живой голосовой режим, grounded-цитаты с проверкой фактов, протокол A2A v1.0, подписанные исходящие webhooks и волна самовосстановления инструментов. Разбираем, что из этого применимо к Personal OS.</p>
+    <dl class="meta">
+      <div><dt>Первичный источник</dt><dd><a href="https://github.com/NousResearch/hermes-agent/releases/tag/v2026.8.3" target="_blank" rel="noopener noreferrer">Hermes Agent v0.20.0 — release notes</a></dd></div>
+      <div><dt>Тип</dt><dd>Release notes открытого проекта</dd></div>
+      <div><dt>Опубликовано</dt><dd>2026-08-03</dd></div>
+      <div><dt>Проверено</dt><dd>2026-08-17</dd></div>
+    </dl>
+  </header>
+
+  <nav class="toc" aria-label="Содержание">
+    <p>Содержание</p>
+    <ol>
+      <li><a href="#summary">Суть релиза</a></li>
+      <li><a href="#why-it-matters">Почему это важно</a></li>
+      <li><a href="#practical">Практическое применение</a></li>
+      <li><a href="#limits">Ограничения и риски</a></li>
+      <li><a href="#implementation">Как применить к вашему ИИ-агенту</a></li>
+      <li><a href="#sources">Первичные материалы</a></li>
+    </ol>
+  </nav>
+
+  <article>
+    <section id="summary">
+      <h2>Суть релиза</h2>
+      <p>Hermes Agent v0.20.0 «The Herald Release» (от 3 августа 2026) — крупнейший релиз проекта за окно с v0.19.0: ~3 650 коммитов, ~1 400 merged PR, ~1 200 закрытых issues. В release notes выделено одиннадцать хайлайтов; ниже — главные для практики.</p>
+      <div class="schema" role="img" aria-label="Схема: четыре столпа релиза v0.20">
+        <figcaption>Четыре столпа релиза v0.20.0 (по release notes)</figcaption>
+        <div class="columns">
+          <div class="col"><b>Голос</b>streaming TTS с barge-in, on-device wake words, голос на всех gateway-платформах</div>
+          <div class="col"><b>Проверяемость</b>скилл grounded-citations: цитаты к фактическому тексту страницы + режим fact-checking</div>
+          <div class="col"><b>Интеграции</b>A2A v1.0 (агент-к-агенту), подписанные webhooks наружу, desktop-платформа с SDK</div>
+          <div class="col"><b>Надёжность</b>самовосстановление инструментов, умное сжатие контекста, smart approvals</div>
+        </div>
+      </div>
+      <p><strong>Голосовой режим.</strong> Раньше голос работал как «говоришь — ждёшь — слушаешь файл». Теперь TTS синтезируется по клаузам во время стриминга ответа, пользователь может перебить агента голосом (barge-in), а open-vocabulary wake words («hey Hermes» или своя фраза) детектируются on-device — аудио не покидает машину в режиме ожидания. Голосовые сообщения принимаются на WhatsApp, Feishu, DingTalk, LINE, QQ, Photon и Weixin с автоматической транскрипцией и платформо-зависимым TTS-ответом.</p>
+      <p><strong>Проверяемые ответы.</strong> Новый скилл <code>grounded-citations</code> заставляет агента подтверждать каждое утверждение цитатой из фактического текста страницы (а не «звучит правдоподобно»), ссылки ведут на точное место-источник, а отдельный режим fact-checking прогоняет ту же механику по любому документу или утверждению: «что подтверждается, что нет, что не удалось проверить».</p>
+      <p><strong>A2A v1.0.</strong> Встроенный плагин реализует протокол Agent-to-Agent: Hermes умеет обнаруживать других A2A-совместимых агентов, говорить с ними и управляться ими. Это закрывает issue #514 — одну из старейших открытых фич репозитория, и даёт стандартный «проводной» протокол для гетерогенных мультиагентных стеков.</p>
+      <p><strong>Webhooks наружу.</strong> Hermes больше не только слушает: он пушит подписанные HMAC события жизненного цикла (активность сессии, завершение turn, события инструментов) на любой HTTP-эндпоинт, который вы зарегистрировали. Получатель может проверить подлинность через подпись — без polling-цикла.</p>
+      <p><strong>Самовосстановление инструментов.</strong> Целая волна апгрейдов «агент тратит меньше ходов на трение с инструментами»: обрезанный вывод терминала сваливается в файл, который агент может дочитать; <code>patch</code> распознаёт уже применённые правки и диагностирует несовпадение отступов; <code>write_file</code> верифицирует содержимое на диске; поиск без совпадений ищет near-miss варианты. Лимит итераций tool-calling поднят с 90 до 500 — длинные автономные прогоны перестали упираться в искусственный потолок.</p>
+      <p class="src-note">Все утверждения выше — из официальных release notes; номера PR и детали доступны по ссылке на первоисточник.</p>
+    </section>
+
+    <section id="why-it-matters">
+      <h2>Почему это важно</h2>
+      <p>Релиз двигает агента сразу по трём осям, которые обычно развиваются по отдельности: <strong>проверяемость</strong> (grounded-цитаты и fact-checking), <strong>интеграция</strong> (A2A и webhooks) и <strong>надёжность длинных прогонов</strong> (самовосстановление инструментов, сжатие контекста, approvals). Для оператора локального агента это означает меньше ручного надзора при том же контроле.</p>
+      <p>Grounded-цитаты — прямой ответ на главную проблему агентных ответов: галлюцинации. Если каждое утверждение обязано иметь проверяемую ссылку, то и «агент сказал» превращается в «агент сказал и показал откуда». Для дашбордов, обзоров и любых публикуемых материалов это меняет саму процедуру редактуры: не «проверить после», а «не пропустить без источника».</p>
+      <p>A2A и webhooks — это выход агента из изоляции: он становится участником мультиагентной сети и событийной интеграции вместо опросов. События с HMAC-подписью дают безопасный канал «агент → ваши системы» без открытия портов и без polling.</p>
+      <p>Для Personal OS релиз важен ещё и тем, что мы сами работаем на Hermes: часть фич (smart approvals, circuit breaker, самовосстановление patch/write_file) уже влияет на повседневный цикл правки репозитория и cron-задач.</p>
+    </section>
+
+    <section id="practical">
+      <h2>Практическое применение</h2>
+      <p>Ниже — что из релиза можно применить к своей инфраструктуре. Помечаем, что задокументировано в release notes, а что — наша интерпретация.</p>
+      <ul>
+        <li><span class="tag hermes">Hermes</span> <strong>grounded-citations как процедура публикации</strong> — для задач «напиши обзор/дайджест с источниками» включать скилл, требующий цитат к фактическому тексту первоисточника. Это формализует правило «не публиковать непроверенное» прямо в цикле агента.</li>
+        <li><span class="tag hermes">Hermes</span> <strong>fact-checking режим</strong> — перед публикацией карточки/обзора прогонять текст через режим проверки: подтверждено / опровергнуто / не проверено. Третий статус — сигнал не публиковать без дополнительной проверки.</li>
+        <li><span class="tag hermes">Hermes</span> <strong>Outbound webhooks (HMAC)</strong> — вместо опроса статуса агента раз в N секунд можно получать события «turn завершён», «инструмент вызван» на свой эндпоинт с проверкой подписи. Для дашборда Personal OS это потенциально заменяет статусный polling на событийную модель.</li>
+        <li><span class="tag hermes">Hermes</span> <strong>A2A v1.0</strong> — если в инфраструктуре несколько агентов (супервизор, редактор раздела, GIS-автоматизация), A2A даёт стандартный протокол «попросить другого агента доделать задачу» вместо самодельных мостов.</li>
+        <li><span class="tag hermes">Hermes</span> <strong>Smart approvals + circuit breaker</strong> — «hermes approvals suggest» собирает историю подтверждений в предложения allowlist, а счётчик последовательных отказов останавливает сбойный цикл. Полезно для автономных cron-задач: меньше кликов «approve» без потери контроля.</li>
+        <li><span class="tag hermes">Hermes</span> <strong>Самовосстановление инструментов</strong> — обрезанный вывод терминала, near-miss поиск, верификация write_file: агент реже «застревает» на механических проблемах; лимит итераций 90 → 500 важен для длинных прогонов (например, массовое обновление карточек).</li>
+        <li><span class="tag">Интерпретация</span> <strong>Сжатие контекста как бюджет</strong> — «гарантированный хвост из N пользовательских сообщений» и per-turn micro-compaction означают, что длинные сессии (редактура за один заход) можно вести без гигантских пауз суммирования; стоит настраивать пороги под свою модель.</li>
+      </ul>
+    </section>
+
+    <section id="limits">
+      <h2>Ограничения и риски</h2>
+      <ul>
+        <li><span class="tag doc">Источник</span> Release notes описывают намерения и изменения, но не заменяют проверку на своей конфигурации: часть фич (голос, desktop-артефакты) требует специфичных окружений (микрофон, GUI, конкретные gateway).</li>
+        <li><span class="tag doc">Источник</span> Grounded-цитаты повышают проверяемость, но не гарантируют истинность: цитата может подтверждать утверждение, которое само по себе ошибочно в источнике. Fact-checking «не смог проверить» — тоже результат, который надо обрабатывать как сигнал.</li>
+        <li><span class="tag doc">Источник</span> A2A v1.0 — свежий протокол: совместимость с другими агентами зависит от их поддержки A2A; «уметь говорить по протоколу» не означает «безопасно доверять другому агенту» — границы полномочий всё равно настраиваются вручную.</li>
+        <li><span class="tag hermes">Hermes</span> Webhooks с HMAC защищают подлинность, но эндпоинт приёмника должен быть доступен агенту и сам защищён (TLS, ограничение по IP/токену) — иначе события можно перехватывать или спамить.</li>
+        <li><span class="tag doc">Источник</span> Большой релиз = много изменений: миграции конфигурации (support floor v12), смена каналов установки (brew/pip-PyPI каналы убраны, остались shell installer / Docker / Nix), требования Node 26 — перед обновлением стоит прочитать release notes целиком и проверить свой способ установки.</li>
+        <li><span class="tag">Интерпретация</span> Поднятие лимита итераций до 500 увеличивает время автономной работы до ошибки: без smart approvals и лимитов на web_search/delegate_task длинный прогон может дольше «молотить» вхолостую — комбинация «больше итераций + ограничители» важна, а не только лимит сам по себе.</li>
+      </ul>
+    </section>
+
+    <section id="implementation">
+<h2>Как применить к вашему ИИ-агенту</h2>
+      <p>Для вашего ИИ-агента это можно применить так:</p>
+      <ol>
+        <li><strong>Сделайте цитаты обязательными для публикуемого контента</strong>: включите grounded-citations в процедуру подготовки обзоров и карточек; введите статус «не проверено» как блокер публикации.</li>
+        <li><strong>Переведите статусные опросы на события, где возможно</strong>: подписанные webhooks вместо polling экономят запросы и дают мгновенную реакцию; подпись проверяйте на приёмнике.</li>
+        <li><strong>Разделите «документировано» и «интерпретация» в выводах</strong> — как в этом обзоре: так читатель видит, где факт из первоисточника, а где практический совет.</li>
+        <li><strong>Настройте approvals под автономные задачи</strong>: allowlist на часто повторяемые действия, circuit breaker на серию отказов, отдельный гейт для docker/podman daemon-redirect.</li>
+        <li><strong>Используйте самовосстановление инструментов</strong>: не дублируйте вручную то, что агент теперь умеет чинить сам (обрезанный вывод, near-miss поиск, верификация записи); проверяйте, что у вашей версии эти фичи включены.</li>
+        <li><strong>Планируйте обновление как отдельную задачу</strong>: читайте полные release notes, проверяйте канал установки и миграции конфигурации, тестируйте на отдельном профиле до продакшн-профиля.</li>
+      </ol>
+    </section>
+
+    <section id="sources">
+      <h2>Первичные материалы</h2>
+      <ul>
+        <li><a href="https://github.com/NousResearch/hermes-agent/releases/tag/v2026.8.3" target="_blank" rel="noopener noreferrer">Hermes Agent v0.20.0 (2026.8.3) — официальные release notes</a> (GitHub, полный текст с PR-номерами)</li>
+        <li><a href="https://github.com/NousResearch/hermes-agent/releases" target="_blank" rel="noopener noreferrer">Все релизы Hermes Agent</a> — v0.20.1 (2026.8.13) и v0.20.2 (2026.8.16) как последующие patch-релизы</li>
+        <li><a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener noreferrer">Документация Hermes Agent</a> — текущее описание функций и конфигурации</li>
+        <li><a href="https://github.com/NousResearch/hermes-agent" target="_blank" rel="noopener noreferrer">Репозиторий NousResearch/hermes-agent</a></li>
+      </ul>
+    </section>
+  </article>
+
+  <footer>
+    Personal OS · обзор источника · 2026-08-17 · материал подготовлен агентом Hermes на русском языке
+  </footer>
+</main>
+<script>
+(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),v=null;try{v=localStorage.getItem("review-theme")}catch(e){}if(v==="light"||v==="dark")r.setAttribute("data-theme",v);if(b)b.addEventListener("click",function(){var c=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),n=c==="dark"?"light":"dark";r.setAttribute("data-theme",n);try{localStorage.setItem("review-theme",n)}catch(e){}});})();
+</script>
+</body>
+</html>

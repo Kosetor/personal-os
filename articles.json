@@ -1,6 +1,34 @@
 {
-  "updated": "2026-08-17T00:00:00Z",
+  "updated": "2026-08-17T12:15:00Z",
   "items": [
+    {
+      "id": "hermes-v020-herald-release",
+      "title": "Hermes Agent v0.20 «The Herald Release»: голос, проверяемые ответы и A2A",
+      "category": "Hermes · релиз",
+      "date": "2026-08-17",
+      "sourceName": "Nous Research — Hermes Agent Releases",
+      "sourceUrl": "https://github.com/NousResearch/hermes-agent/releases/tag/v2026.8.3",
+      "sourceType": "Release notes",
+      "summary": "Релиз v0.20.0 «The Herald Release» — крупнейший за окно с v0.19.0: ~1 400 merged PR и ~1 200 закрытых issues. Главное: живой голосовой режим (streaming TTS с barge-in и on-device wake words), скилл grounded-citations, требующий цитат к фактическому тексту первоисточника, с режимом fact-checking, протокол A2A v1.0 для общения агентов между собой, подписанные HMAC-подписями исходящие webhooks и волна самовосстановления инструментов — patch, write_file и поиск чинят свои ошибки вместо модели.",
+      "takeaway": "Проверяемость и события с подписью — то, что стоит переносить в свои процессы: цитаты к первоисточнику обязательны для публикуемого контента, а webhooks заменяют статусный polling.",
+      "reviewUrl": "reviews/ai-agents/hermes-v020-herald-release.html",
+      "tags": ["Hermes", "release", "voice", "A2A", "reliability"],
+      "featured": true
+    },
+    {
+      "id": "icl-session-handover",
+      "title": "Передача ICL-состояния между сессиями: что должен помнить агент при handover",
+      "category": "Память и контекст",
+      "date": "2026-08-17",
+      "sourceName": "arXiv 2608.14528",
+      "sourceUrl": "https://arxiv.org/abs/2608.14528",
+      "sourceType": "Научная статья (препринт)",
+      "summary": "Препринт о session handover: когда контекст упирается в лимит, приложение перезапускается или задачу доделывает другой агент, новая сессия получает только то, что решили передать. Авторы формализуют handover как передачу task-относительного ICL-состояния и предлагают трёхчастную запись: точные решения и ограничения, статистики с обоснованием, исходные наблюдения. Критерий оценки — сохранение решений, а не похожесть текста.",
+      "takeaway": "Handoff-документ: цель, принятые и отклонённые решения, нерешённые вопросы и источники — дословно; сжимать только с обоснованием; оценивать по способности продолжить задачу, а не по объёму пересказа.",
+      "reviewUrl": "reviews/ai-agents/icl-session-handover.html",
+      "tags": ["memory", "context", "session", "handover", "theory"],
+      "featured": false
+    },
     {
       "id": "hermes-agent-practical-guide",
       "title": "Hermes Agent: как построить локального агента с памятью, навыками и интеграциями",

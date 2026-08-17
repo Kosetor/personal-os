@@ -23,6 +23,8 @@
 
 | Файл | Тема |
 |---|---|
+| `hermes-v020-herald-release.html` | Hermes Agent v0.20 «The Herald Release»: голос, проверяемые ответы, A2A, webhooks |
+| `icl-session-handover.html` | Передача ICL-состояния между сессиями (arXiv 2608.14528) |
 | `hermes-agent-practical-guide.html` | Hermes Agent: локальный агент с памятью, навыками и инструментами |
 | `building-effective-ai-agents.html` | Workflows vs agents: паттерны оркестрации (Anthropic) |
 | `mcp-for-ai-agents.html` | Model Context Protocol: безопасные интеграции |
