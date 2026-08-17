@@ -236,7 +236,7 @@
       <li><a href="#why-it-matters">Почему это важно</a></li>
       <li><a href="#practical">Практическое применение</a></li>
       <li><a href="#limits">Ограничения и риски</a></li>
-      <li><a href="#implementation">Что можно сделать в Personal OS / Hermes</a></li>
+      <li><a href="#implementation">Как применить к вашему ИИ-агенту</a></li>
       <li><a href="#sources">Первичные материалы</a></li>
     </ol>
   </nav>
@@ -293,35 +293,18 @@
     </section>
 
     <section id="implementation">
-      <h2>Что можно сделать в Personal OS / Hermes</h2>
-      <p class="note">Этот раздел — практическая интерпретация для Personal OS на основе документации Hermes Agent (нативный MCP-клиент), а не пересказ спецификации MCP.</p>
+<h2>Как применить к вашему ИИ-агенту</h2>
+      <p class="note">Этот раздел — практическая интерпретация на основе спецификации MCP и практики её внедрения в агентных рантаймах, а не пересказ спецификации.</p>
+      <p>Для вашего ИИ-агента это можно применить так:</p>
       <ol>
-        <li><strong>Установить зависимость:</strong> Python-пакет <code>mcp</code> (<code>pip install mcp</code>) — без него нативный MCP-клиент Hermes молча отключается. Для npx-серверов нужен Node.js, для uvx-серверов — uv.</li>
-        <li><strong>Прописать серверы в конфиге</strong> <code>~/.hermes/config.yaml</code> в ключе <code>mcp_servers</code>: stdio-сервер задаётся <code>command</code>/<code>args</code>, удалённый — <code>url</code>/<code>headers</code> (или <code>command</code>, или <code>url</code> — не оба). Для каждого сервера настраиваются <code>timeout</code> и <code>connect_timeout</code>.</li>
-        <li><strong>Перезапустить Hermes:</strong> при старте <code>discover_mcp_tools()</code> подключается к серверам, вызывает <code>tools/list</code> и регистрирует инструменты с префиксом <code>mcp_&lt;сервер&gt;_&lt;инструмент&gt;</code> (дефисы и точки заменяются на подчёркивания). Инструменты автоматически внедряются во все платформы — CLI, Discord, Telegram.</li>
-        <li><strong>Секреты — только явно:</strong> stdio-подпроцессам передаётся отфильтрованное окружение (PATH, HOME, USER, LANG, LC_ALL, TERM, SHELL, TMPDIR, XDG_*), все остальные переменные (ключи API, токены) отсекаются, если не указаны вручную в <code>env</code> сервера. Credential-паттерны в сообщениях об ошибках автоматически редактируются — секреты не утекают в подпроцессы и в контекст.</li>
-        <li><strong>Ограничить sampling:</strong> серверы могут запрашивать LLM-вызовы (включено по умолчанию) — задать <code>max_tokens_cap</code>, <code>max_rpm</code>, <code>allowed_models</code>, <code>max_tool_rounds</code> против бесконечных циклов, а для недоверенных серверов — <code>sampling: { enabled: false }</code>.</li>
-        <li><strong>Минимальные права и человеческий контроль:</strong> подключать только нужные серверы с минимальными привилегиями; для деструктивных команд держать approval-режим (<code>approvals.mode: smart</code>/<code>manual</code>) — практический аналог human-in-the-loop из спецификации.</li>
+        <li><strong>Стандартизируйте подключение инструментов</strong>: серверы объявляют свои tools/resources, клиент получает их единообразно (например, через MCP) — вместо N частных интеграций.</li>
+        <li><strong>Настраивайте серверы в конфигурации, а не в коде</strong>: stdio-сервер задаётся командой и аргументами, удалённый — URL и заголовками; таймауты подключения и вызова задаются явно.</li>
+        <li><strong>Принцип наименьших привилегий</strong>: подключайте только нужные инструменты, отключайте неиспользуемые; allowlist важнее blocklist.</li>
+        <li><strong>Секреты — вне контекста</strong>: ключи и токены не попадают в prompt; подпроцессам передавайте отфильтрованное окружение, секреты — только явно и точечно.</li>
+        <li><strong>Человек в цикле для необратимых действий</strong>: запись, удаление, отправка, платные вызовы требуют подтверждения; автоматизация — только для обратимых и дешёвых операций.</li>
+        <li><strong>Изоляция и границы доверия</strong>: непроверенные серверы запускать в песочнице/контейнерах, логировать вызовы инструментов, не доверять серверу или клиенту по умолчанию.</li>
+        <li><strong>Ограничьте обратные вызовы</strong>: если сервер может запрашивать LLM-вызовы (sampling), задайте лимиты на токены, частоту и белый список моделей.</li>
       </ol>
-      <div class="trust" role="img" aria-label="Схема границы доверия MCP: внутри доверенной зоны пользователь и хост с политиками, снаружи — серверы, доступ через фильтрацию окружения, allowlist инструментов и подтверждения">
-        <div class="trust-label">Граница доверия MCP</div>
-        <div class="trust-boundary">
-          <div class="trust-row">
-            <div class="trust-node"><strong>Пользователь</strong><span>согласие и контроль</span></div>
-            <div class="trust-arrow" aria-hidden="true">→</div>
-            <div class="trust-node"><strong>Хост (Hermes)</strong><span>approval, редакция секретов</span></div>
-            <div class="trust-arrow" aria-hidden="true">→</div>
-            <div class="trust-node"><strong>MCP-клиент</strong><span>allowlist инструментов</span></div>
-          </div>
-          <div class="trust-label" style="margin-top:12px">Доверенная зона: пользователь + хост + клиент</div>
-        </div>
-        <div class="trust-row">
-          <div class="trust-node"><strong>Локальные серверы</strong><span>stdio, фильтрация env</span></div>
-          <div class="trust-arrow" aria-hidden="true">⇄</div>
-          <div class="trust-node"><strong>Удалённые серверы</strong><span>HTTP + OAuth/headers</span></div>
-        </div>
-        <p class="flow-caption">За пределами доверенной зоны — серверы: им не доверяют по умолчанию, доступ ограничен фильтрацией окружения, allowlist инструментов и подтверждениями пользователя.</p>
-      </div>
     </section>
 
     <section id="sources">
