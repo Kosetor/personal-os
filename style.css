@@ -666,7 +666,121 @@ select:focus, textarea:focus {
 }
 .digest-btn:active:not(:disabled) { transform: translateY(1px); }
 .digest-btn:disabled { opacity: 0.35; cursor: default; }
-.digest-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.digest-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+/* ---------- Блок 5b: карточки обзоров ИИ-агентов ---------- */
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+.review-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--bg-void);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--cyan);
+  border-radius: var(--r-sm);
+  padding: 14px 16px;
+}
+.review-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.review-cat {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  border: 1px solid var(--line);
+  background: rgba(var(--glitch-rgb), 0.07);
+  padding: 2px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70%;
+}
+.review-date { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.05em; white-space: nowrap; }
+.review-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ink-on-dark);
+}
+.review-summary {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+.review-takeaway {
+  margin: 2px 0 0;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  background: var(--bg-elevated);
+  border-left: 3px solid var(--volt);
+  border-radius: var(--r-sm);
+}
+.review-takeaway span {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--volt);
+  margin-bottom: 3px;
+}
+.review-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+.review-source {
+  font-size: 11px;
+  color: var(--ink-faint);
+  min-width: 0;
+}
+.review-source-link {
+  color: var(--ink-muted);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--line-strong);
+  transition: color var(--dur-fast) var(--ease);
+}
+.review-source-link:hover { color: var(--ink-on-dark); }
+.review-open {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 11px;
+  background: var(--volt);
+  color: var(--ink-primary);
+  border: 1px solid var(--volt);
+  border-radius: var(--r-sm);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+.review-open:hover { background: var(--btn-hover); border-color: var(--btn-hover); }
+.review-open:focus-visible,
+.review-source-link:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+.review-mobile { display: flex; flex-direction: column; gap: 12px; }
 
 /* ---------- Подвал ---------- */
 

@@ -420,47 +420,94 @@ function tickClock() {
     <div class="muted">${dFmt.format(now)}</div>`;
 }
 
-/* ---------- Блок 5: дайджест статей ---------- */
+/* ---------- Блок 5: обзоры ИИ-агентов ---------- */
 
-const digest = { items: [], idx: 0, loadError: false };
+const digest = { items: [], idx: 0, loadError: false, mobile: false };
+
+const digestMQ = window.matchMedia("(max-width: 860px)");
+
+// Разрешены только https: и безопасный относительный путь внутри reviews/ai-agents/
+function safeReviewUrl(u) {
+  if (typeof u !== "string") return "";
+  if (/^https:\/\//i.test(u)) return u;
+  if (/^reviews\/ai-agents\/[A-Za-z0-9\-_./]*\.html$/.test(u)) return u;
+  return "";
+}
+
+function safeHttpUrl(u) {
+  if (typeof u !== "string") return "";
+  return /^https:\/\//i.test(u) ? u : "";
+}
+
+function reviewCard(it) {
+  const cat = escapeHtml(it.category || "ИИ-агенты");
+  const title = escapeHtml(it.title || "");
+  const summary = escapeHtml(it.summary || "");
+  const takeaway = escapeHtml(it.takeaway || "");
+  const date = escapeHtml(it.date || "");
+  const srcName = escapeHtml(it.sourceName || "");
+  const srcUrl = safeHttpUrl(it.sourceUrl);
+  const revUrl = safeReviewUrl(it.reviewUrl);
+  const srcLink = srcUrl
+    ? `<a class="review-source-link" href="${srcUrl}" target="_blank" rel="noopener noreferrer">${srcName || srcUrl}</a>`
+    : `<span class="review-source-name">${srcName}</span>`;
+  const revLink = revUrl
+    ? `<a class="review-open" href="${revUrl}" target="_blank" rel="noopener noreferrer">Расширенный обзор <span aria-hidden="true">↗</span></a>`
+    : "";
+  return `
+    <article class="review-card">
+      <div class="review-top">
+        <span class="review-cat">${cat}</span>
+        <span class="review-date mono">${date}</span>
+      </div>
+      <h3 class="review-title">${title}</h3>
+      <p class="review-summary">${summary}</p>
+      ${takeaway ? `<p class="review-takeaway"><span>Практический вывод</span>${takeaway}</p>` : ""}
+      <div class="review-foot">
+        <div class="review-source">${srcLink}</div>
+        ${revLink}
+      </div>
+    </article>`;
+}
 
 function renderDigest() {
   const el = $("#digest");
   if (digest.loadError) {
-    el.innerHTML = `<div class="digest-empty">Не удалось загрузить дайджест</div>`;
-    $("#digestMeta").textContent = "FEED // 6H";
+    el.innerHTML = `<div class="digest-empty">Не удалось загрузить подборку источников. Попробуйте обновить страницу.</div>`;
+    $("#digestMeta").textContent = "AI // REV";
     return;
   }
   if (!digest.items.length) {
-    el.innerHTML = `<div class="digest-empty">Статей пока нет — ждём первую публикацию.</div>`;
-    $("#digestMeta").textContent = "FEED // 6H";
+    el.innerHTML = `<div class="digest-empty">Не удалось загрузить подборку источников. Попробуйте обновить страницу.</div>`;
+    $("#digestMeta").textContent = "AI // REV";
     return;
   }
-  const it = digest.items[digest.idx];
-  const showDate = it.date || (it.published_at || "").slice(0, 10);
-  $("#digestMeta").textContent = `${digest.idx + 1} / ${digest.items.length} · 6H`;
+  const items = digest.items.slice(0, 5);
+  if (!digest.mobile) {
+    // Desktop: все 5 карточек сразу, без пагинации
+    $("#digestMeta").textContent = `${items.length} · AI // REV`;
+    el.innerHTML = `<div class="review-grid">${items.map(reviewCard).join("")}</div>`;
+    return;
+  }
+  // Mobile: одна карточка + стрелки
+  const n = items.length;
+  if (digest.idx >= n) digest.idx = 0;
+  const it = items[digest.idx];
+  $("#digestMeta").textContent = `${digest.idx + 1} / ${n} · AI // REV`;
   el.innerHTML = `
-    <div class="digest-card">
-      <div class="digest-top">
-        <span class="digest-source">${escapeHtml(it.source || "")}</span>
-        <span class="digest-date mono">${escapeHtml(showDate)}</span>
-      </div>
-      <a class="digest-title" href="${escapeHtml(it.link)}" target="_blank" rel="noopener">${escapeHtml(it.title)}</a>
-      <p class="digest-ann">${escapeHtml(it.annotation || "")}</p>
-      <div class="digest-foot">
-        <a class="digest-more" href="${escapeHtml(it.link)}" target="_blank" rel="noopener">Читать полностью →</a>
-        <div class="digest-nav">
-          <button type="button" class="digest-btn mono" id="digPrev" aria-label="Предыдущая статья" ${digest.items.length > 1 ? "" : "disabled"}>◀</button>
-          <button type="button" class="digest-btn mono" id="digNext" aria-label="Следующая статья" ${digest.items.length > 1 ? "" : "disabled"}>▶</button>
-        </div>
+    <div class="review-mobile">
+      ${reviewCard(it)}
+      <div class="digest-nav">
+        <button type="button" class="digest-btn mono" id="digPrev" aria-label="Предыдущий обзор" ${digest.idx === 0 ? "disabled" : ""}>◀</button>
+        <button type="button" class="digest-btn mono" id="digNext" aria-label="Следующий обзор" ${digest.idx >= n - 1 ? "disabled" : ""}>▶</button>
       </div>
     </div>`;
   $("#digPrev").addEventListener("click", () => {
-    digest.idx = (digest.idx - 1 + digest.items.length) % digest.items.length;
+    digest.idx = Math.max(0, digest.idx - 1);
     renderDigest();
   });
   $("#digNext").addEventListener("click", () => {
-    digest.idx = (digest.idx + 1) % digest.items.length;
+    digest.idx = Math.min(n - 1, digest.idx + 1);
     renderDigest();
   });
 }
@@ -474,7 +521,7 @@ async function loadDigest() {
     digest.loadError = false;
     if (digest.idx >= digest.items.length) digest.idx = 0;
   } catch (e) {
-    console.error("[digest] Не удалось загрузить дайджест:", e);
+    console.error("[digest] Не удалось загрузить подборку источников:", e);
     digest.items = [];
     digest.loadError = true;
   }
@@ -598,6 +645,11 @@ function init() {
 
   loadDigest();
   setInterval(loadDigest, 15 * 60 * 1000);
+  digest.mobile = digestMQ.matches;
+  digestMQ.addEventListener("change", (e) => {
+    digest.mobile = e.matches;
+    renderDigest();
+  });
 
   setInterval(ambientGlitch, 7000);
 }

@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Русскоязычный обзор источника по ИИ-агентам">
+<title>MCP для ИИ-агентов: безопасное подключение инструментов и внешних систем — Personal OS</title>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --fg: #1c1b1a;
+    --muted: #6b6760;
+    --accent: #8a5a2b;
+    --line: #e3dfd8;
+    --card: #ffffff;
+    --node: #f4efe7;
+    --code: #f0ece4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171614;
+      --fg: #eceae4;
+      --muted: #a29d93;
+      --accent: #d9a45c;
+      --line: #33302a;
+      --card: #201e1b;
+      --node: #26231f;
+      --code: #26231f;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+  }
+  .page-shell {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 32px 22px 72px;
+  }
+  .back {
+    display: inline-block;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.95em;
+    margin-bottom: 28px;
+  }
+  .back:hover { text-decoration: underline; }
+  .eyebrow {
+    margin: 0 0 8px;
+    font-size: 0.82em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  h1 {
+    margin: 0 0 14px;
+    font-size: 1.85em;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .lead {
+    margin: 0 0 24px;
+    font-size: 1.1em;
+    color: var(--muted);
+  }
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin: 0 0 30px;
+    padding: 16px 18px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .meta dt {
+    font-size: 0.78em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+  .meta dd { margin: 0; font-size: 0.95em; }
+  .meta a { color: var(--accent); }
+  .toc {
+    margin: 0 0 34px;
+    padding: 14px 18px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-size: 0.95em;
+  }
+  .toc p { margin: 0 0 6px; font-weight: 600; }
+  .toc ol { margin: 0; padding-left: 1.3em; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  article section { margin-bottom: 34px; }
+  article h2 {
+    font-size: 1.3em;
+    margin: 0 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  article p { margin: 0 0 12px; }
+  article ul, article ol { margin: 0 0 12px; padding-left: 1.35em; }
+  article li { margin-bottom: 8px; }
+  article code {
+    background: var(--code);
+    border-radius: 5px;
+    padding: 0.1em 0.4em;
+    font-size: 0.88em;
+  }
+  .note {
+    font-size: 0.9em;
+    color: var(--muted);
+    background: var(--card);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    margin: 14px 0;
+  }
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 6px;
+    margin: 16px 0 8px;
+    padding: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .flow-node {
+    flex: 1 1 130px;
+    min-width: 120px;
+    padding: 10px 12px;
+    background: var(--node);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 0.9em;
+  }
+  .flow-node strong { display: block; font-size: 1.02em; }
+  .flow-node span { color: var(--muted); font-size: 0.88em; }
+  .flow-arrow {
+    align-self: center;
+    color: var(--accent);
+    font-size: 1.2em;
+    padding: 0 2px;
+  }
+  .flow-caption {
+    margin: 0 0 4px;
+    font-size: 0.85em;
+    color: var(--muted);
+  }
+  .trust {
+    margin: 16px 0 8px;
+    padding: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .trust-boundary {
+    border: 2px dashed var(--accent);
+    border-radius: 10px;
+    padding: 14px;
+    margin: 10px 0;
+  }
+  .trust-label {
+    font-size: 0.8em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .trust-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+  .trust-node {
+    flex: 1 1 140px;
+    min-width: 120px;
+    padding: 10px 12px;
+    background: var(--node);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 0.9em;
+  }
+  .trust-node strong { display: block; font-size: 1.02em; }
+  .trust-node span { color: var(--muted); font-size: 0.88em; }
+  .trust-arrow {
+    align-self: center;
+    color: var(--accent);
+    font-size: 1.2em;
+    padding: 0 2px;
+  }
+  .src-list a { color: var(--accent); word-break: break-word; }
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    .page-shell { padding: 22px 16px 56px; }
+    h1 { font-size: 1.55em; }
+    .flow-arrow { transform: rotate(90deg); }
+    .trust-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+<main class="page-shell">
+  <a class="back" href="../../index.html">← Вернуться в Personal OS</a>
+
+  <header>
+    <p class="eyebrow">ИИ-агенты · обзор источника</p>
+    <h1>MCP для ИИ-агентов: безопасное подключение инструментов и внешних систем</h1>
+    <p class="lead">Model Context Protocol — открытый стандарт, который избавляет ИИ-агентов от «интеграционной вавилонской башни»: вместо сотен частных коннекторов — единый протокол для инструментов, данных и промптов. Разбираем архитектуру, границы доверия и то, как Hermes встраивает MCP из коробки.</p>
+    <dl class="meta">
+      <div><dt>Первичный источник</dt><dd><a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener noreferrer">Model Context Protocol</a></dd></div>
+      <div><dt>Тип</dt><dd>Спецификация открытого протокола</dd></div>
+      <div><dt>Опубликовано</dt><dd>2024–2026, развивается открыто</dd></div>
+      <div><dt>Проверено</dt><dd>2026-08-17</dd></div>
+    </dl>
+  </header>
+
+  <nav class="toc" aria-label="Содержание">
+    <p>Содержание</p>
+    <ol>
+      <li><a href="#summary">Суть материала</a></li>
+      <li><a href="#why-it-matters">Почему это важно</a></li>
+      <li><a href="#practical">Практическое применение</a></li>
+      <li><a href="#limits">Ограничения и риски</a></li>
+      <li><a href="#implementation">Что можно сделать в Personal OS / Hermes</a></li>
+      <li><a href="#sources">Первичные материалы</a></li>
+    </ol>
+  </nav>
+
+  <article>
+    <section id="summary">
+      <h2>Суть материала</h2>
+      <p>MCP (Model Context Protocol) — открытый стандарт подключения ИИ-приложений к внешним системам: данным (файлы, базы данных), инструментам (поиск, калькуляторы) и воркфлоу (специализированные промпты). Официальная документация называет его «USB-C портом для ИИ-приложений»: как USB-C унифицировал подключение устройств, так MCP унифицирует подключение агентов к внешнему миру. Протокол представлен в конце 2024 года и активно развивается открыто — текущая версия спецификации датирована 2026-07-28.</p>
+      <p>Архитектура клиент-серверная, в ней три участника. <strong>MCP Host</strong> — ИИ-приложение (например, Claude Desktop, VS Code или Hermes), которое инициирует соединения. <strong>MCP Client</strong> — компонент внутри хоста: на каждый сервер создаётся свой клиент с выделенным соединением. <strong>MCP Server</strong> — программа, которая предоставляет контекст и возможности; она может работать локально (транспорт <em>stdio</em>: JSON-RPC по стандартным потокам запущенного подпроцесса) или удалённо (транспорт <em>Streamable HTTP</em>: POST на единый endpoint, ответ JSON или SSE-потоком). Протокол основан на JSON-RPC 2.0 и вдохновлён Language Server Protocol.</p>
+      <div class="flow" role="img" aria-label="Схема архитектуры MCP: хост создаёт клиент на каждый сервер, сервер предоставляет инструменты, ресурсы и промпты">
+        <div class="flow-node"><strong>MCP Host</strong><span>ИИ-приложение (Hermes)</span></div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-node"><strong>MCP Client</strong><span>по одному на сервер, JSON-RPC 2.0</span></div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-node"><strong>MCP Server</strong><span>stdio или Streamable HTTP</span></div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-node"><strong>Инструменты · Ресурсы · Промпты</strong><span>файлы, БД, API, шаблоны</span></div>
+      </div>
+      <p class="flow-caption">Три участника MCP: хост управляет клиентами, каждый клиент держит выделенное соединение со своим сервером, сервер отдаёт инструменты, ресурсы и промпты.</p>
+      <p>Серверы предлагают три примитива. <strong>Tools</strong> — функции, которые модель вызывает сама (обнаружение через <code>tools/list</code>, исполнение через <code>tools/call</code>, схемы на JSON Schema); это «действия»: запись в БД, отправка сообщений, вызов API. <strong>Resources</strong> — пассивные read-only данные для контекста (URI + MIME-тип). <strong>Prompts</strong> — готовые шаблоны инструкций и воркфлоу, которыми управляет пользователь. Со стороны клиента доступны <em>elicitation</em> (сервер запрашивает данные у пользователя) и <em>sampling</em> (сервер запрашивает LLM-вызовы через клиента); в версии 2026-07-28 sampling и roots помечены deprecated. Спецификация написана в терминах MUST/SHOULD (RFC 2119), а безопасность — её неотъемлемая часть: человеческий контроль, согласие пользователя, минимальные привилегии и песочницы описаны как требования, а не как советы.</p>
+    </section>
+
+    <section id="why-it-matters">
+      <h2>Почему это важно</h2>
+      <ul>
+        <li><strong>Стандартизация вместо N интеграций.</strong> Без MCP каждый агент интегрируется с каждым сервисом отдельно — квадратичный рост кода. С MCP достаточно один раз реализовать клиент, и он получает доступ к целой экосистеме серверов: от референсных (filesystem, GitHub, базы данных) до серверов от Anthropic, OpenAI и сообщества. Поддержку протокола имеют Claude, ChatGPT, VS Code, Cursor и десятки других инструментов.</li>
+        <li><strong>Разделение ответственности.</strong> Сервер инкапсулирует доступ к данным и права (кому и что открыто), хост отвечает за UX и политики безопасности, а модель — за выбор инструментов. Каждая сторона контролирует свою часть, что упрощает аудит и изоляцию.</li>
+        <li><strong>Безопасность заложена в протокол.</strong> Спецификация и руководство по безопасности описывают атаки и контрмеры: «confused deputy», SSRF, перехват токенов, компрометацию локальных серверов. Принципы — least privilege, сужение scope токенов, human-in-the-loop для инструментов — зафиксированы как требования к реализации.</li>
+        <li><strong>Открытость и экосистема.</strong> Спецификация, SDK, референсные серверы и MCP Registry живут в открытых репозиториях; развитие идёт через публичные предложения (SEP). Для персональной автоматизации это означает: протокол не привязан к одному вендору и не исчезнет вместе с ним.</li>
+      </ul>
+    </section>
+
+    <section id="practical">
+      <h2>Практическое применение</h2>
+      <p>Сценарии, которые описывает документация MCP и которые напрямую реализуются поверх протокола:</p>
+      <ul>
+        <li><strong>Локальные серверы через stdio</strong> (npx, uvx или любой исполняемый файл): доступ к файловой системе, GitHub, базам данных — сервер запускается как подпроцесс, обмен идёт по stdin/stdout.</li>
+        <li><strong>Удалённые серверы через Streamable HTTP</strong> с авторизацией (OAuth 2.1 для серверов, заголовки для частных endpoint'ов) — для облачных и корпоративных сервисов.</li>
+        <li><strong>Модель сама находит и вызывает инструменты</strong>: <code>tools/list</code> для обнаружения, <code>tools/call</code> для исполнения. Интеграцию не нужно хардкодить — она описывается схемами инструментов.</li>
+        <li><strong>Типовые кейсы из документации</strong>: агент, работающий с Google Calendar и Notion; IDE, генерирующая приложение по макету Figma; чат-бот предприятия, анализирующий данные из нескольких баз.</li>
+        <li><strong>Инструменты разработчика</strong>: MCP Inspector для отладки серверов, клиентские best practices для масштабирования хоста на много серверов и инструментов.</li>
+      </ul>
+    </section>
+
+    <section id="limits">
+      <h2>Ограничения и риски</h2>
+      <ul>
+        <li><strong>Документировано источником:</strong> инструменты — это произвольный код. Компрометация локального сервера означает произвольное выполнение команд с правами клиента, эксфильтрацию данных и их потерю; поэтому требуются sandboxing/контейнеры и явное согласие пользователя.</li>
+        <li><strong>Документировано источником:</strong> «не доверяй по умолчанию» — ни серверу, ни клиенту. Официально описаны атаки на прокси-серверы («confused deputy»), подмена авторизации (SSRF), проброс токенов и перехват состояния. Секреты и ключи не должны попадать в промпт/контекст модели.</li>
+        <li><strong>Документировано источником:</strong> scope minimization — токен с широкими правами (<code>files:*</code>, <code>admin:*</code>) усиливает ущерб от любой утечки; запрашивать нужно только необходимые scope. Для необратимых действий спецификация требует human-in-the-loop с возможностью отклонить вызов.</li>
+        <li><strong>Документировано источником:</strong> протокол быстро меняется: в версии 2026-07-28 sampling и roots объявлены deprecated, появляются расширения (Tasks, Skills over MCP, MCP Apps) — реализации нужно обновлять и перепроверять.</li>
+        <li><strong>Практическая интерпретация:</strong> MCP решает проблему интеграции, но не проблему доверия: качество и безопасность серверов различаются, поэтому подключать стоит проверенные серверы, а каждому давать минимум прав и таймауты.</li>
+      </ul>
+    </section>
+
+    <section id="implementation">
+      <h2>Что можно сделать в Personal OS / Hermes</h2>
+      <p class="note">Этот раздел — практическая интерпретация для Personal OS на основе документации Hermes Agent (нативный MCP-клиент), а не пересказ спецификации MCP.</p>
+      <ol>
+        <li><strong>Установить зависимость:</strong> Python-пакет <code>mcp</code> (<code>pip install mcp</code>) — без него нативный MCP-клиент Hermes молча отключается. Для npx-серверов нужен Node.js, для uvx-серверов — uv.</li>
+        <li><strong>Прописать серверы в конфиге</strong> <code>~/.hermes/config.yaml</code> в ключе <code>mcp_servers</code>: stdio-сервер задаётся <code>command</code>/<code>args</code>, удалённый — <code>url</code>/<code>headers</code> (или <code>command</code>, или <code>url</code> — не оба). Для каждого сервера настраиваются <code>timeout</code> и <code>connect_timeout</code>.</li>
+        <li><strong>Перезапустить Hermes:</strong> при старте <code>discover_mcp_tools()</code> подключается к серверам, вызывает <code>tools/list</code> и регистрирует инструменты с префиксом <code>mcp_&lt;сервер&gt;_&lt;инструмент&gt;</code> (дефисы и точки заменяются на подчёркивания). Инструменты автоматически внедряются во все платформы — CLI, Discord, Telegram.</li>
+        <li><strong>Секреты — только явно:</strong> stdio-подпроцессам передаётся отфильтрованное окружение (PATH, HOME, USER, LANG, LC_ALL, TERM, SHELL, TMPDIR, XDG_*), все остальные переменные (ключи API, токены) отсекаются, если не указаны вручную в <code>env</code> сервера. Credential-паттерны в сообщениях об ошибках автоматически редактируются — секреты не утекают в подпроцессы и в контекст.</li>
+        <li><strong>Ограничить sampling:</strong> серверы могут запрашивать LLM-вызовы (включено по умолчанию) — задать <code>max_tokens_cap</code>, <code>max_rpm</code>, <code>allowed_models</code>, <code>max_tool_rounds</code> против бесконечных циклов, а для недоверенных серверов — <code>sampling: { enabled: false }</code>.</li>
+        <li><strong>Минимальные права и человеческий контроль:</strong> подключать только нужные серверы с минимальными привилегиями; для деструктивных команд держать approval-режим (<code>approvals.mode: smart</code>/<code>manual</code>) — практический аналог human-in-the-loop из спецификации.</li>
+      </ol>
+      <div class="trust" role="img" aria-label="Схема границы доверия MCP: внутри доверенной зоны пользователь и хост с политиками, снаружи — серверы, доступ через фильтрацию окружения, allowlist инструментов и подтверждения">
+        <div class="trust-label">Граница доверия MCP</div>
+        <div class="trust-boundary">
+          <div class="trust-row">
+            <div class="trust-node"><strong>Пользователь</strong><span>согласие и контроль</span></div>
+            <div class="trust-arrow" aria-hidden="true">→</div>
+            <div class="trust-node"><strong>Хост (Hermes)</strong><span>approval, редакция секретов</span></div>
+            <div class="trust-arrow" aria-hidden="true">→</div>
+            <div class="trust-node"><strong>MCP-клиент</strong><span>allowlist инструментов</span></div>
+          </div>
+          <div class="trust-label" style="margin-top:12px">Доверенная зона: пользователь + хост + клиент</div>
+        </div>
+        <div class="trust-row">
+          <div class="trust-node"><strong>Локальные серверы</strong><span>stdio, фильтрация env</span></div>
+          <div class="trust-arrow" aria-hidden="true">⇄</div>
+          <div class="trust-node"><strong>Удалённые серверы</strong><span>HTTP + OAuth/headers</span></div>
+        </div>
+        <p class="flow-caption">За пределами доверенной зоны — серверы: им не доверяют по умолчанию, доступ ограничен фильтрацией окружения, allowlist инструментов и подтверждениями пользователя.</p>
+      </div>
+    </section>
+
+    <section id="sources">
+      <h2>Первичные материалы</h2>
+      <ul class="src-list">
+        <li><a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener noreferrer">Model Context Protocol — официальная документация</a> — концепции, архитектура, руководство по безопасности (проверено 2026-08-17).</li>
+        <li><a href="https://modelcontextprotocol.io/specification" target="_blank" rel="noopener noreferrer">Спецификация MCP</a> — требования к клиентам и серверам: транспорты, примитивы, MUST/SHOULD, версия 2026-07-28.</li>
+        <li><a href="https://github.com/modelcontextprotocol" target="_blank" rel="noopener noreferrer">GitHub: modelcontextprotocol</a> — репозитории спецификации, SDK и референсных серверов.</li>
+        <li><a href="https://hermes-agent.nousresearch.com/docs/integrations/" target="_blank" rel="noopener noreferrer">Hermes Agent — интеграции</a> — документация нативного MCP-клиента Hermes: конфигурация mcp_servers, префиксы инструментов, безопасность окружения.</li>
+      </ul>
+    </section>
+  </article>
+</main>
+</body>
+</html>

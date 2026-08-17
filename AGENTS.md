@@ -182,3 +182,55 @@ rate-limiting на мосту, валидация команд по белому
 | «Не активен» при живом агенте | status не из списка допустимых | Верни одно из: active / thinking / searching / inactive |
 | Правка config.js не видна на сайте | Pages ещё собирается | Подожди 1–2 мин, обнови с Ctrl+F5 |
 | Ответ не появляется | Мост думает дольше ~30 сек | Возвращай подтверждение сразу, результат — отдельно |
+
+---
+
+## Публикация обзоров ИИ-агентов
+
+Дашборд содержит раздел «Источники · ИИ-агенты»: русскоязычные карточки в `articles.json`
+и расширенные HTML-обзоры в `reviews/ai-agents/`. Раздел непрерывно пополняется агентом
+на основе открытых материалов. Требования к карточкам и шаблон HTML — в `reviews/ai-agents/README.md`.
+
+### Разрешённые источники (приоритет 1 — первичные/официальные)
+- Hermes Agent: https://hermes-agent.nousresearch.com/docs/ · /docs/llms.txt · /docs/llms-full.txt · https://github.com/NousResearch/hermes-agent · https://nousresearch.com/
+- Model Context Protocol: https://modelcontextprotocol.io/ · https://github.com/modelcontextprotocol
+- Anthropic Engineering: https://www.anthropic.com/engineering/ · OpenAI Developers: https://developers.openai.com/
+- LangChain/LangGraph: https://langchain-ai.github.io/ · https://github.com/langchain-ai · Microsoft AutoGen: https://github.com/microsoft/autogen
+- Arize Phoenix/OpenInference: https://github.com/Arize-ai/phoenix · https://github.com/Arize-ai/openinference · Langfuse: https://github.com/langfuse/langfuse
+- arXiv: https://arxiv.org/ · Hugging Face Papers: https://huggingface.co/papers · GitHub Releases официальных репозиториев
+
+Приоритет 2 — доклады и выступления официальных каналов (Nous Research, LangChain, Arize AI,
+DeepLearning.AI, Google Cloud Tech, Microsoft Developer) и записи конференций с видимыми
+докладчиком/организацией. Приоритет 3 — независимые каналы (World of AI, Wanderloots,
+AI Makerspace, MLOps Community): они НЕ первоисточник технического факта — обязательна
+ссылка на официальную документацию/репозиторий/доклад.
+
+### Потоки обнаружения
+- arXiv Atom: https://rss.arxiv.org/atom/cs.AI+cs.CL+cs.SE+cs.LG
+- GitHub release feeds (Atom): NousResearch/hermes-agent · langchain-ai/langgraph · microsoft/autogen · Arize-ai/phoenix · langfuse/langfuse (`https://github.com/<owner>/<repo>/releases.atom`). Лента — удобный, но не гарантированный интерфейс: при ошибке переключаться на GitHub API/страницу releases, не публиковать непроверенное.
+
+### Критерии отбора
+Публиковать, если: тема входит в целевой список; есть инженерная/архитектурная/исследовательская
+ценность; открытая ссылка без аккаунта и paywall; проверяемость по первоисточнику; нет дубликата
+(один первоисточник — одна карточка); есть конкретный вывод для Personal OS/Hermes/локальных или
+облачных моделей/Docker/автоматизации.
+НЕ публиковать: clickbait, неподтверждённые сравнения, сгенерированные списки без ссылок,
+paywall без открытого первоисточника, рекламу инструмента, заявления о «полной автономии»/
+«самообучении»/«лучшей модели», руководства по доступу к чужим данным/системам.
+
+### Процесс публикации
+1. Обнаружить материал → 2. Открыть и проверить первоисточник → 3. Свериться с `articles.json`
+и `reviews/ai-agents/` на дубликаты → 4. Написать карточку (поля: id, title≤110, category, date ISO,
+sourceName, sourceUrl, sourceType, summary 280–520, takeaway≤260, reviewUrl, tags 3–6, featured)
+и HTML-обзор по шаблону → 5. Добавить первичные ссылки, практический вывод, ограничения;
+различать «Документировано источником» и «Практическая интерпретация» → 6. Проверить, что
+reviewUrl открывается и все внешние ссылки с `target="_blank" rel="noopener noreferrer"` →
+7. Проверить desktop/mobile поведение блока → 8. Один коммит: `content: add AI-agent review <slug>`
+или `content: update AI-agent review <slug>` → 9. push.
+
+### Частота и лимиты
+- Обнаружение: ежедневно или каждые 6–12 часов. Публикация: 1–3 обзора за цикл.
+- Приоритет: обновления Hermes/MCP/security/release notes — сразу; научные статьи — после краткой экспертной оценки.
+- Еженедельная чистка: битые ссылки, дубликаты, устаревшие утверждения.
+- Сортировка: первые 5 записей — витрина desktop; новые в начало только после проверки качества;
+устаревшие, но фундаментальные — категория «База» или тег `foundation`; недоступный источник — не публиковать.

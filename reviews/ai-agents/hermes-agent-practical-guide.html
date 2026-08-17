@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Русскоязычный обзор источника по ИИ-агентам">
+<title>Hermes Agent: как построить локального агента с памятью, навыками и интеграциями — Personal OS</title>
+<style>
+:root{
+  --bg:#f7f7f5; --fg:#1c1e21; --muted:#5c6370; --line:#e2e2dc;
+  --accent:#4f46e5; --accent-soft:#eef0ff; --card:#ffffff; --code-bg:#f0efe9;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#141519; --fg:#e7e8ea; --muted:#9aa1ac; --line:#2a2d35;
+    --accent:#8b93ff; --accent-soft:#1d1f2b; --card:#1b1d23; --code-bg:#23252c;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:16px; line-height:1.65; -webkit-font-smoothing:antialiased;
+}
+@media (max-width:600px){ body{font-size:17px} }
+.page-shell{max-width:780px; margin:0 auto; padding:2.5rem 1.5rem 4rem}
+.back{display:inline-block; color:var(--accent); text-decoration:none; font-size:.95rem; margin-bottom:2rem}
+.back:hover{text-decoration:underline}
+.eyebrow{text-transform:uppercase; letter-spacing:.08em; font-size:.8rem; color:var(--muted); margin:0 0 .5rem}
+h1{font-size:2rem; line-height:1.25; margin:0 0 1rem}
+.lead{font-size:1.1rem; color:var(--muted); margin:0 0 1.5rem}
+.meta{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1px;
+  background:var(--line); border:1px solid var(--line); border-radius:12px;
+  overflow:hidden; margin:0 0 2.5rem; padding:0}
+.meta div{background:var(--card); padding:.9rem 1.1rem}
+.meta dt{font-size:.75rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:.25rem}
+.meta dd{margin:0; font-size:.95rem}
+.toc{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:1.2rem 1.4rem; margin-bottom:2.5rem}
+.toc h2{font-size:1rem; margin:0 0 .6rem}
+.toc ol{margin:0; padding-left:1.3rem}
+.toc li{margin:.25rem 0}
+.toc a{color:var(--fg); text-decoration:none}
+.toc a:hover{color:var(--accent)}
+article section{margin-bottom:2.5rem}
+h2{font-size:1.35rem; border-bottom:1px solid var(--line); padding-bottom:.4rem; margin:0 0 1rem}
+h3{font-size:1.05rem; margin:1.4rem 0 .5rem}
+p{margin:0 0 1rem}
+ul,ol{margin:0 0 1rem; padding-left:1.4rem}
+li{margin:.35rem 0}
+a{color:var(--accent)}
+code{background:var(--code-bg); border-radius:5px; padding:.1em .35em; font-size:.9em;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.note{background:var(--accent-soft); border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0; padding:.8rem 1rem; margin:1rem 0; font-size:.95rem}
+.flow{display:flex; flex-wrap:wrap; align-items:stretch; gap:.6rem; margin:1.2rem 0}
+.flow .node{flex:1 1 140px; background:var(--card); border:1px solid var(--line);
+  border-radius:10px; padding:.7rem .8rem; text-align:center; font-size:.88rem}
+.flow .node b{display:block; font-size:.95rem; margin-bottom:.15rem}
+.flow .node span{color:var(--muted); font-size:.8rem}
+.flow .arrow{align-self:center; color:var(--muted); font-size:1.1rem; font-weight:700}
+@media (max-width:700px){
+  .flow{flex-direction:column}
+  .flow .arrow{align-self:flex-start; transform:rotate(90deg)}
+}
+</style>
+</head>
+<body>
+<main class="page-shell">
+<a class="back" href="../../index.html">← Вернуться в Personal OS</a>
+<header>
+  <p class="eyebrow">ИИ-агенты · обзор источника</p>
+  <h1>Hermes Agent: как построить локального агента с памятью, навыками и интеграциями</h1>
+  <p class="lead">Практический разбор официальной документации Hermes Agent — open-source агентного runtime от Nous Research: установка, постоянная память, система навыков, MCP-интеграции, мессенджер-шлюзы и безопасность. Материал полезен тем, кто хочет собрать своего автономного ассистента без привязки к одному LLM-провайдеру.</p>
+  <dl class="meta">
+    <div><dt>Первичный источник</dt><dd><a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener noreferrer">Официальная документация Hermes Agent</a></dd></div>
+    <div><dt>Тип</dt><dd>Официальная документация</dd></div>
+    <div><dt>Опубликовано</dt><dd>Постоянно обновляется (живой open-source проект)</dd></div>
+    <div><dt>Проверено</dt><dd>2026-08-17</dd></div>
+  </dl>
+</header>
+<nav class="toc" aria-label="Содержание">
+  <h2>Содержание</h2>
+  <ol>
+    <li><a href="#summary">Суть материала</a></li>
+    <li><a href="#why-it-matters">Почему это важно</a></li>
+    <li><a href="#practical">Практическое применение</a></li>
+    <li><a href="#limits">Ограничения и риски</a></li>
+    <li><a href="#implementation">Что можно сделать в Personal OS / Hermes</a></li>
+    <li><a href="#sources">Первичные материалы</a></li>
+  </ol>
+</nav>
+<article>
+
+<section id="summary">
+  <h2>Суть материала</h2>
+  <p>Hermes Agent — open-source агентный фреймворк от Nous Research, который запускается в терминале, нативном десктоп-приложении, в мессенджерах и IDE. Он относится к той же категории, что Claude Code, OpenAI Codex или OpenClaw: автономные агенты, которые с помощью вызова инструментов (tool calling) выполняют задачи на вашей системе. Документация выделяет пять отличительных свойств:</p>
+  <ul>
+    <li><strong>Самосовершенствование через навыки</strong> — агент сохраняет повторно используемые процедуры в виде skills и подгружает их в будущие сессии.</li>
+    <li><strong>Постоянная память между сессиями</strong> — запоминает пользователя, предпочтения, окружение и извлечённые уроки; поддерживаются сменные бэкенды памяти.</li>
+    <li><strong>Мультиплатформенный gateway</strong> — один и тот же агент работает через Telegram, Discord, Slack, WhatsApp, iMessage, Signal, Matrix, Teams, Email и другие платформы с полным доступом к инструментам, а не только к чату.</li>
+    <li><strong>Провайдер-агностичность</strong> — поддерживаются 20+ провайдеров (OpenRouter, Anthropic, OpenAI, Google, DeepSeek, xAI, локальные модели и др.), модель можно менять прямо в ходе работы.</li>
+    <li><strong>Профили и расширяемость</strong> — несколько изолированных инстансов агента, а также плагины, MCP-серверы, cron, вебхуки и темы.</li>
+  </ul>
+  <p>Установка описывается одной командой: <code>curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash</code> — скрипт ставит uv, Python, виртуальное окружение и лаунчер. Далее: <code>hermes setup</code> (мастер настройки), <code>hermes</code> (интерактивный чат), <code>hermes chat -q "…"</code> (разовый запрос), <code>hermes doctor</code> (проверка здоровья).</p>
+  <p>Ключевое для понимания — как устроена память агента. Схема ниже обобщает слои, описанные в документации:</p>
+  <div class="flow" role="img" aria-label="Схема слоёв памяти Hermes Agent: контекст сессии, постоянная память, навыки, профили">
+    <div class="node"><b>Контекст сессии</b><span>переменный, сжимается, /compress</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Постоянная память</b><span>memory_enabled, user profile, /memory</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Навыки SKILL.md</b><span>процедуры, /learn, curator</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Профили</b><span>~/.hermes/profiles/&lt;name&gt;, изоляция</span></div>
+  </div>
+</section>
+
+<section id="why-it-matters">
+  <h2>Почему это важно</h2>
+  <p>ИИ-агенты перестали быть игрушкой: они выполняют реальную работу — пишут код, ведут переписку, собирают данные. Документация Hermes важна тем, что описывает <strong>зрелую архитектуру</strong>, а не демо: тут есть постоянная память, процедурные навыки, фоновая автоматизация, интеграции и продуманная модель безопасности — всё, чего не хватает простым «чат-ботам с API».</p>
+  <ul>
+    <li><strong>Открытый код и локальный запуск</strong> — данные и ключи остаются у вас; можно работать с локальными моделями, не отправляя контекст в чужие API.</li>
+    <li><strong>Один агент на многих поверхностях</strong> — та же кодовая база крутит CLI, десктоп, веб-дашборд и мессенджеры; нет дублирования логики.</li>
+    <li><strong>Самосовершенствование</strong> — навыки превращают удачный опыт в переиспользуемую процедуру, а curator обслуживает их жизненный цикл без ручного вмешательства.</li>
+    <li><strong>Отсутствие привязки к вендору</strong> — смена модели или провайдера не ломает агента, пул ключей ротируется автоматически.</li>
+    <li><strong>Для Personal OS это образец</strong> — как документировать собственные агентные конвейеры и как встроить агента в статический сайт: генерация обзоров, проверка ссылок, cron-доставка.</li>
+  </ul>
+</section>
+
+<section id="practical">
+  <h2>Практическое применение</h2>
+  <p>Разберём, что из документации можно применить уже сегодня. Ниже — только то, что подтверждено локальной документацией; неподтверждённые детали помечены как интерпретация.</p>
+  <ul>
+    <li><strong>Установка и запуск</strong>: <code>hermes setup</code> → выбор провайдера и модели → <code>hermes</code>. Проверка: <code>hermes doctor</code>.</li>
+    <li><strong>Конфигурация</strong>: настройки — в <code>~/.hermes/config.yaml</code> через <code>hermes config set section.key value</code>; секреты и API-ключи — только в <code>~/.hermes/.env</code>. Изменения инструментов вступают в силу на новом сеансе (<code>/reset</code>), чтобы не ломать кэш промпта.</li>
+    <li><strong>Постоянная память</strong>: секция <code>memory</code> в конфиге (<code>memory_enabled</code>, <code>user_profile_enabled</code>, <code>provider</code>, <code>write_approval</code>); незаписанные факты копятся в очереди — команда <code>/memory pending|approve|reject</code>. <span class="note">Интерпретация: в обсуждениях проекта фигурируют файлы-хранилища <code>MEMORY.md</code>/<code>USER.md</code> и <code>SOUL.md</code>/<code>HERMES.md</code> с лимитами символов — локальная документация на момент проверки эти имена напрямую не подтверждает, точные лимиты сверяйте с актуальными docs.</span></li>
+    <li><strong>Навыки (skills)</strong>: навык — это <code>SKILL.md</code> с frontmatter (имя, описание, триггеры). Создание: <code>/learn &lt;source&gt;</code> из чата, директории или URL; управление: <code>/skills</code>, <code>hermes skills</code>. Поддержку порядка ведёт curator.</li>
+    <li><strong>Инструменты и toolsets</strong>: <code>hermes tools</code> включает/выключает наборы — <code>terminal</code>, <code>file</code>, <code>web</code>/<code>search</code>, <code>browser</code>, <code>code_execution</code>, <code>vision</code>, <code>memory</code>, <code>session_search</code>, <code>delegation</code>, <code>cronjob</code>, <code>kanban</code> и др.; есть минимальный набор <code>safe</code> для «запертых» сессий.</li>
+    <li><strong>MCP-интеграции</strong>: встроенный MCP-клиент — серверы прописываются в <code>mcp_servers</code> (stdio через <code>command</code> или HTTP через <code>url</code>), инструменты на старте обнаруживаются и регистрируются с префиксом <code>mcp_&lt;server&gt;_&lt;tool&gt;</code>, затем автоматически инъектируются во все платформенные toolsets. Перезагрузка: <code>/reload-mcp</code>.</li>
+    <li><strong>Messaging gateways</strong>: Telegram, Discord, Slack, WhatsApp и др.; из CLI сессию можно передать в мессенджер командой <code>/handoff</code>, состояние платформ смотрит <code>/platforms</code>, приостановка — <code>/platform pause</code>.</li>
+    <li><strong>Cron и фоновые задачи</strong>: durable-планировщик через <code>cronjob</code>-инструмент, <code>hermes cron</code> или <code>/cron</code>; расписания — длительности (<code>"30m"</code>), фразы (<code>"every monday 9am"</code>), cron-выражения или ISO-метки; у каждого задания свой <code>model</code>, <code>skills</code>, <code>workdir</code>, цепочки через <code>context_from</code>.</li>
+    <li><strong>Профили</strong>: независимые инстансы в <code>~/.hermes/profiles/&lt;name&gt;/</code> с собственными конфигами, сессиями, навыками и памятью.</li>
+    <li><strong>Безопасность</strong>: маскировка секретов в выводе инструментов включена по умолчанию (<code>security.redact_secrets</code>); режимы одобрения команд — <code>approvals.mode: smart</code> (по умолчанию), <code>manual</code>, <code>off</code>; разовый обход — <code>hermes --yolo</code>. Сброс накопленных разрешений: очистить <code>command_allowlist</code>.</li>
+  </ul>
+</section>
+
+<section id="limits">
+  <h2>Ограничения и риски</h2>
+  <ul>
+    <li><strong>Живой проект, документация догоняет код</strong>: функции добавляются быстро; внутри сессии авторитетен <code>/help</code>, а локальная копия руководства может отставать от репозитория.</li>
+    <li><strong>Фоновые делегации не durable</strong>: <code>delegate_task</code> с <code>background=true</code> живёт в процессе родителя — при его выходе дочерняя задача теряется. Для работы, которая должна пережить процесс, нужны <code>cronjob</code> или <code>terminal(background=true)</code>.</li>
+    <li><strong>YOLO ≠ безопасность</strong>: <code>approvals.mode: off</code> или <code>--yolo</code> обходит запросы одобрения, но <em>не</em> отключает маскировку секретов — это независимые механизмы; всё равно режим off не рекомендуется.</li>
+    <li><strong>Секреты</strong>: нарушение инварианта «ключи в <code>.env</code>, настройки в <code>config.yaml</code>» — частая причина утечек; маскировка не заменяет гигиену хранения.</li>
+    <li><strong>Кэш промпта диктует правила</strong>: менять инструменты и системный промпт посреди разговора нельзя (ломается кэширование) — отсюда необходимость <code>/reset</code>; это надо закладывать в сценарии автоматизации.</li>
+    <li><strong>Зависимости MCP</strong>: без установленного Python-пакета <code>mcp</code> поддержка молча отключается; для серверов на <code>npx</code>/<code>uvx</code> нужны Node.js и uv.</li>
+    <li><strong>Сторонний код</strong>: MCP-серверы и gateway-платформы — внешние компоненты с доступом к вашим инструментам; их нужно выбирать осознанно.</li>
+    <li><strong>Непроверенные детали</strong>: имена файлов памяти (<code>MEMORY.md</code>, <code>SOUL.md</code>) и их лимиты символов в локальной документации не подтверждены — это интерпретация, требующая сверки с официальным сайтом.</li>
+  </ul>
+</section>
+
+<section id="implementation">
+  <h2>Что можно сделать в Personal OS / Hermes</h2>
+  <p>Практическая интерпретация: как превратить этот обзор в работающий конвейер на нашем сайте.</p>
+  <ol>
+    <li><strong>Поднять агента</strong>: установить Hermes по однострочнику, прогнать <code>hermes setup</code> и <code>hermes doctor</code>, выбрать провайдера.</li>
+    <li><strong>Настроить память</strong>: включить <code>memory_enabled</code> и <code>user_profile_enabled</code>, настроить <code>write_approval</code>, регулярно разбирать очередь <code>/memory</code>.</li>
+    <li><strong>Создать навык обзоров</strong>: обучить агента процедуре «источник → карточка → HTML-обзор» через <code>/learn</code> или вручную оформить <code>SKILL.md</code> с триггерами — тогда каждый новый обзор делается по проверенному шаблону.</li>
+    <li><strong>Запустить cron</strong>: еженедельная задача проверки битых ссылок на сайте и генерации карточек новых источников с доставкой в выбранный канал.</li>
+    <li><strong>Подключить MCP-сервер</strong>: например, файловый сервер для репозитория Personal OS или базы Obsidian, чтобы агент читал и обновлял заметки нативно.</li>
+    <li><strong>Включить Telegram-gateway</strong>: доступ к агенту с телефона — «скинь список просроченных карточек» из любого места.</li>
+    <li><strong>Включить curator</strong>: <code>curator.enabled: true</code> — навыки не протухают, устаревшие архивируются с бэкапом, ничего не теряется.</li>
+    <li><strong>Проверить безопасность</strong>: оставить <code>security.redact_secrets: true</code> и <code>approvals.mode: smart</code>, ключи держать в <code>.env</code>, не коммитить <code>~/.hermes</code> в репозиторий сайта.</li>
+  </ol>
+</section>
+
+<section id="sources">
+  <h2>Первичные материалы</h2>
+  <ul>
+    <li><a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener noreferrer">Официальная документация Hermes Agent</a> — главный источник (на момент проверки недоступен для автоматического извлечения, использована локальная копия того же контента).</li>
+    <li><a href="https://hermes-agent.nousresearch.com/docs/llms.txt" target="_blank" rel="noopener noreferrer">llms.txt — машинно-читаемый индекс документации</a></li>
+    <li><a href="https://hermes-agent.nousresearch.com/docs/llms-full.txt" target="_blank" rel="noopener noreferrer">llms-full.txt — полный текст документации</a></li>
+    <li><a href="https://github.com/NousResearch/hermes-agent" target="_blank" rel="noopener noreferrer">Репозиторий NousResearch/hermes-agent</a> — исходный код, лицензия MIT.</li>
+    <li><a href="https://nousresearch.com/" target="_blank" rel="noopener noreferrer">Сайт Nous Research</a></li>
+    <li>Локальная копия руководства: <code>~/.hermes/skills/autonomous-ai-agents/hermes-agent/</code> — <code>SKILL.md</code> (v3.1.0) и <code>references/</code> (configuration, background-systems, native-mcp, security-privacy, slash-commands).</li>
+  </ul>
+</section>
+
+</article>
+</main>
+</body>
+</html>

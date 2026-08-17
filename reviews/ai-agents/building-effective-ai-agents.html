@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Русскоязычный обзор источника по ИИ-агентам">
+<title>Как проектировать надёжных ИИ-агентов: workflows, agents и паттерны оркестрации — Personal OS</title>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --fg: #1c1b1a;
+    --muted: #6b6760;
+    --accent: #8a5a2b;
+    --line: #e3dfd8;
+    --card: #ffffff;
+    --node: #f4efe7;
+    --code: #f0ece4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171614;
+      --fg: #eceae4;
+      --muted: #a29d93;
+      --accent: #d9a45c;
+      --line: #33302a;
+      --card: #201e1b;
+      --node: #26231f;
+      --code: #26231f;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+  }
+  .page-shell {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 32px 22px 72px;
+  }
+  .back {
+    display: inline-block;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.95em;
+    margin-bottom: 28px;
+  }
+  .back:hover { text-decoration: underline; }
+  .eyebrow {
+    margin: 0 0 8px;
+    font-size: 0.82em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  h1 {
+    margin: 0 0 14px;
+    font-size: 1.85em;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .lead {
+    margin: 0 0 24px;
+    font-size: 1.1em;
+    color: var(--muted);
+  }
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin: 0 0 30px;
+    padding: 16px 18px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .meta dt {
+    font-size: 0.78em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+  .meta dd { margin: 0; font-size: 0.95em; }
+  .meta a { color: var(--accent); }
+  .toc {
+    margin: 0 0 34px;
+    padding: 14px 18px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-size: 0.95em;
+  }
+  .toc p { margin: 0 0 6px; font-weight: 600; }
+  .toc ol { margin: 0; padding-left: 1.3em; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  article section { margin-bottom: 34px; }
+  article h2 {
+    font-size: 1.3em;
+    margin: 0 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  article p { margin: 0 0 12px; }
+  article ul, article ol { margin: 0 0 12px; padding-left: 1.35em; }
+  article li { margin-bottom: 8px; }
+  .note {
+    font-size: 0.9em;
+    color: var(--muted);
+    background: var(--card);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    margin: 14px 0;
+  }
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 6px;
+    margin: 16px 0 8px;
+    padding: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .flow-node {
+    flex: 1 1 130px;
+    min-width: 120px;
+    padding: 10px 12px;
+    background: var(--node);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 0.9em;
+  }
+  .flow-node strong { display: block; font-size: 1.02em; }
+  .flow-node span { color: var(--muted); font-size: 0.88em; }
+  .flow-arrow {
+    align-self: center;
+    color: var(--accent);
+    font-size: 1.2em;
+    padding: 0 2px;
+  }
+  .flow-caption {
+    margin: 0 0 4px;
+    font-size: 0.85em;
+    color: var(--muted);
+  }
+  .src-list a { color: var(--accent); word-break: break-word; }
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    .page-shell { padding: 22px 16px 56px; }
+    h1 { font-size: 1.55em; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+<main class="page-shell">
+  <a class="back" href="../../index.html">← Вернуться в Personal OS</a>
+
+  <header>
+    <p class="eyebrow">ИИ-агенты · обзор источника</p>
+    <h1>Как проектировать надёжных ИИ-агентов: workflows, agents и паттерны оркестрации</h1>
+    <p class="lead">Инженерное эссе Anthropic о том, из чего на самом деле состоят эффективные ИИ-агенты: пять проверенных паттернов workflow, автономные агенты и принцип «начинай с простого». Разбор для тех, кто автоматизирует личные процессы и конвейеры.</p>
+    <dl class="meta">
+      <div><dt>Первичный источник</dt><dd><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener noreferrer">Building Effective Agents — Anthropic Engineering</a></dd></div>
+      <div><dt>Тип</dt><dd>Инженерное эссе</dd></div>
+      <div><dt>Опубликовано</dt><dd>декабрь 2024</dd></div>
+      <div><dt>Проверено</dt><dd>2026-08-17</dd></div>
+    </dl>
+  </header>
+
+  <nav class="toc" aria-label="Содержание">
+    <p>Содержание</p>
+    <ol>
+      <li><a href="#summary">Суть материала</a></li>
+      <li><a href="#why-it-matters">Почему это важно</a></li>
+      <li><a href="#practical">Практическое применение</a></li>
+      <li><a href="#limits">Ограничения и риски</a></li>
+      <li><a href="#implementation">Что можно сделать в Personal OS / Hermes</a></li>
+      <li><a href="#sources">Первичные материалы</a></li>
+    </ol>
+  </nav>
+
+  <article>
+    <section id="summary">
+      <h2>Суть материала</h2>
+      <p>Эссе опубликовано в блоге Anthropic Engineering 19 декабря 2024 года и основано на опыте работы с «десятками команд» из разных отраслей. Главный вывод: самые успешные реализации агентов построены не на сложных фреймворках и специализированных библиотеках, а на простых, композируемых паттернах.</p>
+      <p>Ключевое различие, которое проводит Anthropic, — между <strong>workflows</strong> и <strong>agents</strong>. Workflow — это система, где LLM и инструменты оркестрируются заранее заданными кодом путями: модель выполняет предсказуемый конвейер шагов. Agent — система, где LLM сама динамически управляет собственным процессом и выбором инструментов и сама решает, как достичь цели. Оба варианта объединяются термином «агентные системы» (agentic systems).</p>
+      <p>Авторы прямо рекомендуют «находить самое простое возможное решение» и увеличивать сложность только при необходимости: агентные системы часто обменивают задержку и стоимость на лучшее качество выполнения, и этот обмен нужно оценивать осознанно. Для многих приложений достаточно оптимизации одиночных LLM-вызовов с retrieval и примерами в контексте. К фреймворкам советуют относиться осторожно: они ускоряют старт, но добавляют слои абстракции, скрывающие промпты и ответы, и провоцируют лишнюю сложность.</p>
+      <p>Фундаментальный строительный блок — <strong>augmented LLM</strong>: модель, дополненная retrieval, инструментами и памятью. Современные модели сами генерируют поисковые запросы, выбирают инструменты и решают, что запомнить. Как один из способов интеграции упоминается Model Context Protocol (MCP). Далее статья разбирает пять паттернов workflow — от простого к сложному — и переходит к автономным агентам. В приложении 1 описаны две сферы, где агенты показали наибольшую ценность: поддержка клиентов и кодовые агенты. В приложении 2 — «промпт-инжиниринг инструментов»: интерфейсу агент-компьютер (ACI) нужно уделять не меньше внимания, чем человеко-компьютерному (HCI).</p>
+      <div class="flow" role="img" aria-label="Схема: пять паттернов workflow по нарастанию сложности — prompt chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer — и автономный агент поверх них">
+        <div class="flow-node"><strong>Prompt chaining</strong><span>фиксированные шаги</span></div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-node"><strong>Routing</strong><span>классификация входа</span></div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-node"><strong>Parallelization</strong><span>параллельные вызовы</span></div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-node"><strong>Orchestrator-workers</strong><span>динамическое делегирование</span></div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-node"><strong>Evaluator-optimizer</strong><span>генерация + оценка в цикле</span></div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-node"><strong>Автономный агент</strong><span>модель управляет циклом сама</span></div>
+      </div>
+      <p class="flow-caption">Шесть уровней по нарастанию сложности: пять паттернов workflow и автономный агент, который строится поверх них (по статье Anthropic).</p>
+    </section>
+
+    <section id="why-it-matters">
+      <h2>Почему это важно</h2>
+      <ul>
+        <li><strong>Антидот против хайпа фреймворков.</strong> Статья утверждает, что лишние слои абстракции скрывают промпты и ответы, затрудняют отладку и делают сложность «соблазнительной» там, где хватило бы простого решения. Рекомендация — начинать с прямых вызовов LLM API, а фреймворк использовать только с пониманием того, что под капотом.</li>
+        <li><strong>Общий словарь для проектирования.</strong> Различение workflows/agents, пять паттернов, augmented LLM, ACI — эти термины задают рамку для обсуждения и сравнения любых автоматизаций, включая личные.</li>
+        <li><strong>Дисциплина «измеряй, потом усложняй».</strong> Сложность добавляется только тогда, когда она «демонстративно улучшает результаты». Это напрямую применимо к личным конвейерам, где главный ресурс — время на поддержку.</li>
+        <li><strong>Спокойствие для персональной автоматизации.</strong> Большинство задач вроде дайджестов и обзоров решаются одним вызовом модели с retrieval, а не полноценным агентом; эссе легитимизирует такой минимализм.</li>
+      </ul>
+    </section>
+
+    <section id="practical">
+      <h2>Практическое применение</h2>
+      <p>Ниже — паттерны в том виде, в котором их документирует статья, с примерами использования из текста Anthropic.</p>
+      <ul>
+        <li><strong>Prompt chaining</strong> — задача раскладывается на фиксированную последовательность шагов, каждый LLM-вызов обрабатывает выход предыдущего; между шагами возможны программные проверки («гейты»). Примеры из статьи: маркетинговый текст → перевод на другой язык; план документа → проверка плана по критериям → написание текста по плану.</li>
+        <li><strong>Routing</strong> — классификация входа и направление в специализированный обработчик, что позволяет строить узкие промпты. Примеры: разные типы запросов в поддержку (общие вопросы, возвраты, техподдержка) идут в разные процессы; простые вопросы — дешёвой модели (Haiku), сложные — более сильной (Sonnet).</li>
+        <li><strong>Parallelization</strong> — два варианта: <em>sectioning</em> (независимые подзадачи параллельно, например отдельный вызов для гардрейлов) и <em>voting</em> (несколько попыток или мнений, например ревью кода на уязвимости несколькими промптами).</li>
+        <li><strong>Orchestrator-workers</strong> — центральная LLM динамически разбивает задачу на подзадачи, делегирует их воркерам и синтезирует результаты. Отличие от parallelization в том, что подзадачи заранее не определены. Примеры: кодовые продукты, меняющие много файлов; поиск с анализом информации из нескольких источников.</li>
+        <li><strong>Evaluator-optimizer</strong> — один вызов генерирует ответ, другой оценивает и даёт обратную связь в цикле. Признаки применимости: есть чёткие критерии оценки, и итеративное улучшение даёт измеримую ценность. Примеры: литературный перевод с нюансами; сложный многораундовый поиск, где оценщик решает, нужны ли дополнительные поиски.</li>
+        <li><strong>Автономные агенты</strong> — для открытых задач с непредсказуемым числом шагов, где нельзя захардкодить путь. По сути это «LLM + инструменты в цикле по обратной связи окружения», поэтому критичны качество и документация инструментов. Примеры Anthropic: кодовый агент для бенчмарка SWE-bench, реализация «computer use». Отдельно в приложении 1 выделена поддержка клиентов: диалог + инструменты (данные клиента, история заказов, возвраты) с измеримым успехом через «решения, подтверждённые пользователем».</li>
+      </ul>
+    </section>
+
+    <section id="limits">
+      <h2>Ограничения и риски</h2>
+      <ul>
+        <li><strong>Документировано источником:</strong> агенты обменивают задержку и стоимость на качество; при автономной работе возможны накапливающиеся ошибки, поэтому нужны песочницы для тестирования и гардрейлы. «Не строить агентные системы вообще» — легитимный выбор, если одиночный вызов с retrieval решает задачу.</li>
+        <li><strong>Документировано источником:</strong> фреймворки усложняют отладку и скрывают промпты; неверные предположения о том, что происходит «под капотом», — частая причина ошибок у клиентов Anthropic.</li>
+        <li><strong>Документировано источником:</strong> качество инструментов критично — статья приводит пример, где агент ошибался с относительными путями к файлам, и проблема исчезла после перехода на обязательные абсолютные пути. Формат инструмента может быть «тяжёлым» для модели (диффы, экранирование JSON), и это надо проектировать.</li>
+        <li><strong>Документировано источником:</strong> сама статья помечена уведомлением, что ландшафт инструментов с декабря 2024 года изменился: текущий подход Anthropic — Claude Managed Agents. Паттерны остаются актуальными, но ссылки на конкретные SDK стоит проверять.</li>
+        <li><strong>Практическая интерпретация:</strong> рекомендации рассчитаны на продакшн-команды с нагрузкой и бюджетами; для личных скриптов и кронов большинство паттернов избыточны, и начинать нужно с самого простого варианта, а не с полной схемы.</li>
+      </ul>
+    </section>
+
+    <section id="implementation">
+      <h2>Что можно сделать в Personal OS / Hermes</h2>
+      <p class="note">Этот раздел — практическая интерпретация для Personal OS, а не пересказ статьи. Паттерны Anthropic используются как рамка для аудита собственных конвейеров.</p>
+      <ol>
+        <li><strong>Аудит текущих конвейеров</strong> (дайджесты RSS, обзоры источников, мониторинг цен): если задача выполняется одним вызовом модели с retrieval и примерами в контексте — оставить как есть. Это прямое применение принципа «простейшего решения».</li>
+        <li><strong>Prompt chaining в пайплайне дайджеста:</strong> fetch → фильтрация по правилам → генерация обзора → программная проверка формата и обязательных полей перед публикацией («гейт» между шагами).</li>
+        <li><strong>Routing в кронах:</strong> классифицировать входящие статьи по темам и направлять их в разные шаблоны обзоров или Telegram-темы; простые/повторяющиеся записи — более дешёвой модели, сложные — более сильной.</li>
+        <li><strong>Evaluator-optimizer для обзоров:</strong> после генерации черновика отдельный проход проверяет цитируемость, соответствие фактам источника и отсутствие выдуманных деталей, прежде чем публиковать.</li>
+        <li><strong>Orchestrator-workers для многоисточниковых задач</strong> (например, мониторинг конкурентов): один вызов планирует подзадачи по источникам, «воркеры» собирают данные, оркестратор синтезирует итог.</li>
+        <li><strong>Принцип ACI к собственным инструментам:</strong> документировать скрипты и мосты так, будто их будет использовать младший разработчик, — с примерами, границами и требованиями к входным данным; тестировать, как агент их вызывает, и упрощать интерфейс (poka-yoke).</li>
+        <li><strong>Измерять перед усложнением:</strong> фиксировать долю неудачных публикаций, пустых дайджестов и ошибок форматирования; агентский цикл добавлять только если метрики не улучшаются простыми средствами.</li>
+      </ol>
+    </section>
+
+    <section id="sources">
+      <h2>Первичные материалы</h2>
+      <ul class="src-list">
+        <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener noreferrer">Building Effective Agents — Anthropic Engineering</a> — оригинальное эссе (декабрь 2024).</li>
+        <li><a href="https://github.com/anthropics/anthropic-cookbook" target="_blank" rel="noopener noreferrer">Anthropic Cookbook</a> — примеры реализации паттернов, на которые ссылается статья.</li>
+        <li><a href="https://modelcontextprotocol.io" target="_blank" rel="noopener noreferrer">Model Context Protocol</a> — способ интеграции augmentations (retrieval, tools, memory), упомянутый в статье.</li>
+        <li><a href="https://www.swebench.com" target="_blank" rel="noopener noreferrer">SWE-bench</a> — бенчмарк, на котором Anthropic тестирует кодового агента.</li>
+      </ul>
+    </section>
+  </article>
+</main>
+</body>
+</html>
