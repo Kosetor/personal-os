@@ -87,11 +87,31 @@
     .meta dt { flex-basis: 130px; }
     .pipe-arrow { transform: rotate(90deg); }
   }
+
+html[data-theme="dark"]{ --bg: #14161a;
+      --fg: #e8e6e1;
+      --muted: #9aa0a8;
+      --accent: #5cc8b0;
+      --accent-soft: #1d3330;
+      --card: #1c1f24;
+      --border: #33373d; }
+html[data-theme="light"]{ --bg: #f7f7f5;
+    --fg: #1c1e21;
+    --muted: #5b5f66;
+    --accent: #0f6c5c;
+    --accent-soft: #e2f0ec;
+    --card: #ffffff;
+    --border: #d9dcd9; }
+
+/* Мобильная безопасность: длинные ссылки переносятся, картинки не вылезают */
+img{max-width:100%;height:auto}
+.meta dd{min-width:0;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
 <main class="page-shell">
   <a class="back" href="../../index.html">← Вернуться в Personal OS</a>
+<button type="button" class="theme-toggle" id="themeToggle" aria-label="Переключить тему (светлая/тёмная)" title="Светлая/тёмная тема">🌓</button>
   <header>
     <p class="eyebrow">ИИ-агенты · обзор источника</p>
     <h1>AgentOps: как наблюдать, оценивать и улучшать агентов в production</h1>
@@ -197,5 +217,8 @@
     </section>
   </article>
 </main>
+<script>
+(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),v=null;try{v=localStorage.getItem("review-theme")}catch(e){}if(v==="light"||v==="dark")r.setAttribute("data-theme",v);if(b)b.addEventListener("click",function(){var c=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),n=c==="dark"?"light":"dark";r.setAttribute("data-theme",n);try{localStorage.setItem("review-theme",n)}catch(e){}});})();
+</script>
 </body>
 </html>

@@ -63,11 +63,21 @@ code{background:var(--code-bg); border-radius:5px; padding:.1em .35em; font-size
   .flow{flex-direction:column}
   .flow .arrow{align-self:flex-start; transform:rotate(90deg)}
 }
+
+html[data-theme="dark"]{ --bg:#141519; --fg:#e7e8ea; --muted:#9aa1ac; --line:#2a2d35;
+    --accent:#8b93ff; --accent-soft:#1d1f2b; --card:#1b1d23; --code-bg:#23252c; }
+html[data-theme="light"]{ --bg:#f7f7f5; --fg:#1c1e21; --muted:#5c6370; --line:#e2e2dc;
+  --accent:#4f46e5; --accent-soft:#eef0ff; --card:#ffffff; --code-bg:#f0efe9; }
+
+/* Мобильная безопасность: длинные ссылки переносятся, картинки не вылезают */
+img{max-width:100%;height:auto}
+.meta dd{min-width:0;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
 <main class="page-shell">
 <a class="back" href="../../index.html">← Вернуться в Personal OS</a>
+<button type="button" class="theme-toggle" id="themeToggle" aria-label="Переключить тему (светлая/тёмная)" title="Светлая/тёмная тема">🌓</button>
 <header>
   <p class="eyebrow">ИИ-агенты · обзор источника</p>
   <h1>Hermes Agent: как построить локального агента с памятью, навыками и интеграциями</h1>
@@ -186,5 +196,8 @@ code{background:var(--code-bg); border-radius:5px; padding:.1em .35em; font-size
 
 </article>
 </main>
+<script>
+(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),v=null;try{v=localStorage.getItem("review-theme")}catch(e){}if(v==="light"||v==="dark")r.setAttribute("data-theme",v);if(b)b.addEventListener("click",function(){var c=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),n=c==="dark"?"light":"dark";r.setAttribute("data-theme",n);try{localStorage.setItem("review-theme",n)}catch(e){}});})();
+</script>
 </body>
 </html>

@@ -160,11 +160,33 @@
     h1 { font-size: 1.55em; }
     .flow-arrow { transform: rotate(90deg); }
   }
+
+html[data-theme="dark"]{ --bg: #171614;
+      --fg: #eceae4;
+      --muted: #a29d93;
+      --accent: #d9a45c;
+      --line: #33302a;
+      --card: #201e1b;
+      --node: #26231f;
+      --code: #26231f; }
+html[data-theme="light"]{ --bg: #faf9f7;
+    --fg: #1c1b1a;
+    --muted: #6b6760;
+    --accent: #8a5a2b;
+    --line: #e3dfd8;
+    --card: #ffffff;
+    --node: #f4efe7;
+    --code: #f0ece4; }
+
+/* Мобильная безопасность: длинные ссылки переносятся, картинки не вылезают */
+img{max-width:100%;height:auto}
+.meta dd{min-width:0;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
 <main class="page-shell">
   <a class="back" href="../../index.html">← Вернуться в Personal OS</a>
+<button type="button" class="theme-toggle" id="themeToggle" aria-label="Переключить тему (светлая/тёмная)" title="Светлая/тёмная тема">🌓</button>
 
   <header>
     <p class="eyebrow">ИИ-агенты · обзор источника</p>
@@ -273,5 +295,8 @@
     </section>
   </article>
 </main>
+<script>
+(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),v=null;try{v=localStorage.getItem("review-theme")}catch(e){}if(v==="light"||v==="dark")r.setAttribute("data-theme",v);if(b)b.addEventListener("click",function(){var c=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),n=c==="dark"?"light":"dark";r.setAttribute("data-theme",n);try{localStorage.setItem("review-theme",n)}catch(e){}});})();
+</script>
 </body>
 </html>

@@ -88,11 +88,21 @@
     .stack .layer{flex-direction:column; gap:.1rem}
     .stack .layer span{text-align:left}
   }
+
+html[data-theme="dark"]{ --bg:#16150f; --fg:#eae7df; --muted:#a29e93; --card:#201e19;
+      --line:#37342c; --accent:#e0a860; --accent-soft:#2e281c; --code:#f2efe8; }
+html[data-theme="light"]{ --bg:#f7f6f3; --fg:#1c1b19; --muted:#5c5a55; --card:#ffffff; --line:#e3e0d8;
+    --accent:#7a4a1f; --accent-soft:#f0e6d8; --code:#2f2d2a; }
+
+/* Мобильная безопасность: длинные ссылки переносятся, картинки не вылезают */
+img{max-width:100%;height:auto}
+.meta dd{min-width:0;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
 <main class="page-shell">
   <a class="back" href="../../index.html">← Вернуться в Personal OS</a>
+<button type="button" class="theme-toggle" id="themeToggle" aria-label="Переключить тему (светлая/тёмная)" title="Светлая/тёмная тема">🌓</button>
 
   <header>
     <p class="eyebrow">ИИ-агенты · обзор источника</p>
@@ -210,5 +220,8 @@
     Personal OS · обзор источника · 2026-08-17 · материал подготовлен агентом Hermes на русском языке
   </footer>
 </main>
+<script>
+(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),v=null;try{v=localStorage.getItem("review-theme")}catch(e){}if(v==="light"||v==="dark")r.setAttribute("data-theme",v);if(b)b.addEventListener("click",function(){var c=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),n=c==="dark"?"light":"dark";r.setAttribute("data-theme",n);try{localStorage.setItem("review-theme",n)}catch(e){}});})();
+</script>
 </body>
 </html>
