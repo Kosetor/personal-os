@@ -1,6 +1,34 @@
 {
-  "updated": "2026-08-17T12:15:00Z",
+  "updated": "2026-08-18T08:00:00Z",
   "items": [
+    {
+      "id": "agentao-governed-local-first-runtime",
+      "title": "Agentao: управляемый local-first runtime для агентов с инструментами",
+      "category": "Безопасность агентов · архитектура",
+      "date": "2026-08-18",
+      "sourceName": "arXiv 2608.13574",
+      "sourceUrl": "https://arxiv.org/abs/2608.13574",
+      "sourceType": "Научная статья (препринт) + открытый код",
+      "summary": "Препринт о governed local-first runtime для tool-using LLM-агентов: разделение предложенных моделью действий и авторизованного хостом исполнения. Слоистая архитектура — host-facing surfaces, host contract, runtime core, permission-mediated tools — плюс подсистемы памяти, replay, плагинов, навыков и субагентов. Модель угроз: избыточные привилегии, слабая аудируемость, prompt injection, tool poisoning. Формальных гарантий безопасности нет. Код открыт (jin-bo/agentao): local-first, embeddable harness для Python.",
+      "takeaway": "Безопасность агента — архитектурный слой, а не список проверок: отделяйте предложение от исполнения, делайте трассы и права явными, не принимайте архитектуру за гарантию.",
+      "reviewUrl": "reviews/ai-agents/agentao-governed-local-first-runtime.html",
+      "tags": ["security", "runtime", "permissions", "local-first", "tools"],
+      "featured": false
+    },
+    {
+      "id": "demystifying-agent-skills",
+      "title": "Demystifying Agent Skills: когда навыки агентов работают, а когда ломаются",
+      "category": "Память и навыки",
+      "date": "2026-08-18",
+      "sourceName": "arXiv 2608.14036",
+      "sourceUrl": "https://arxiv.org/abs/2608.14036",
+      "sourceType": "Научная статья (препринт)",
+      "summary": "Эмпирический препринт о навыках агентов: 8 135 записей прогонов, таксономия из трёх категорий и двенадцати режимов использования. Главное: навыки работают как процедурные якоря, стабилизирующие исполнение (65,7% случаев), а не как инъекция знаний (4,5%); выигрыш над Workflow Memory +6,06 пункта. Retrieval — узкое место: точность падает с 29,6% до 3,3% при росте пула с 5 до 100 навыков. Точный вызов «правильного» навыка не обязателен; навыки ломаются при хрупких допущениях и контексте.",
+      "takeaway": "Навык — процедура с условиями применения, а не справочник; каталог навыков проектируйте как поисковую систему и оценивайте по результату задачи, а не по точности вызова.",
+      "reviewUrl": "reviews/ai-agents/demystifying-agent-skills.html",
+      "tags": ["skills", "self-improvement", "retrieval", "memory", "evals"],
+      "featured": false
+    },
     {
       "id": "hermes-v020-herald-release",
       "title": "Hermes Agent v0.20 «The Herald Release»: голос, проверяемые ответы и A2A",
@@ -79,7 +107,7 @@
       "sourceName": "arXiv 2603.07670 + Hermes Agent Documentation",
       "sourceUrl": "https://arxiv.org/abs/2603.07670",
       "sourceType": "Научная статья + практика Hermes",
-      "summary": "Материалы о памяти и навыках агентов: write–manage–read цикл, хранение только проверяемой информации, разрешение противоречий, retrieval и процедурные навыки. На примере практики Hermes — слои памяти (MEMORY, база знаний, скиллы, история) и curator для обслуживания навыков.",
+      "summary": "Материалы о памяти и навыках агентов: write–manage–read цикл, хранение только проверяемой информации, разрешение противоречий, retrieval и процедурные навыки. На примере практики Hermes — слои памяти (MEMORY, база знаний, скиллы, история) и curator для обслуживания навыков; выводы для долгих задач и повторяемых workflow.",
       "takeaway": "Память — это запрашиваемые маленькие документы, а не один растущий файл; навыки — процедуры с триггерами, которые подключаются по необходимости.",
       "reviewUrl": "reviews/ai-agents/agent-memory-and-skills.html",
       "tags": ["memory", "skills", "self-improvement", "long-tasks"],
@@ -93,7 +121,7 @@
       "sourceName": "arXiv 2503.16416 + OpenInference",
       "sourceUrl": "https://arxiv.org/abs/2503.16416",
       "sourceType": "Научный обзор + открытый стандарт",
-      "summary": "AgentOps — практики наблюдения, оценки и надёжности агентов в production: трассировка шагов и tool calls, метрики latency/cost, eval-наборы, LLM-as-a-judge и таксономия отказов. Практическая часть — открытый стандарт трассировки OpenInference и связанный видеодоклад.",
+      "summary": "AgentOps — практики наблюдения, оценки и надёжности агентов в production: трассировка шагов и tool calls, метрики latency/cost, eval-наборы, LLM-as-a-judge и таксономия отказов. Практическая часть — открытый стандарт трассировки OpenInference, связанный видеодоклад и рекомендации для внедрения наблюдаемости.",
       "takeaway": "Запускать агента без трассировки — значит не иметь возможности его улучшать: сначала трейсы и метрики, затем eval-наборы и системный разбор отказов.",
       "reviewUrl": "reviews/ai-agents/agentops-observability-and-evals.html",
       "tags": ["AgentOps", "observability", "evals", "reliability"],
