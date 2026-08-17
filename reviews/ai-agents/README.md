@@ -33,3 +33,13 @@
 
 Процесс публикации новых обзоров описан в `AGENTS.md` (раздел
 «Публикация обзоров ИИ-агентов»).
+
+## Оформление обзоров (Graphic Realism)
+
+- Стиль: https://github.com/Kosetor/graphic-realism-design (дизайн-токены `--mgr-*` из `tokens/tokens.css`).
+- Палитра: тёмная bg `#0b0c0e` / card `#1a1d24` / ink `#f4f5f7` / muted `#8b919c` / line `#2e3440`;
+  светлая bg `#e8eaef` / card `#ffffff` / ink `#0b0c0e`; акценты volt `#c8f542` и cyan `#0e7490` (≤2 на вид).
+- Радиус ≤8px; срезанные углы через `clip-path`; CAPS-лейблы, данные моноширинным; без веб-шрифтов.
+- Переключатель темы — кнопка с иконкой `ic-sun-rays.svg` (из `icons/mgr-geometry/`), min-height 44px,
+  localStorage, видимый фокус. Эмодзи-иконки запрещены.
+- Мобильный: body ≥16px, схемы в колонку, `overflow-wrap:anywhere` для длинных ссылок.
