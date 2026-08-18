@@ -1,6 +1,66 @@
 {
-  "updated": "2026-08-18T12:30:00Z",
+  "updated": "2026-08-18T15:30:00Z",
   "items": [
+    {
+      "id": "toward-safe-llm-agents",
+      "title": "Безопасные LLM-агенты: обзор подходов к спецификации, верификации и контролю исполнения",
+      "category": "Безопасность агентов",
+      "date": "2026-08-18",
+      "sourceName": "arXiv 2608.14590",
+      "sourceUrl": "https://arxiv.org/abs/2608.14590",
+      "sourceType": "Научная статья (систематический обзор)",
+      "summary": "Систематический обзор (PRISMA 2020) 38 исследований о безопасности LLM-агентов. Выводы: перевод намерения в формальные требования даёт 24–35% семантической корректности — спецификация остаётся узким местом; runtime-мониторинг снижает опасные действия на 40–65%, но без полных гарантий; «налог верификатора»: блокировка 94% опасных действий может дать менее 5% безопасных завершений; ни один подход не сочетает корректность, масштабируемость и продуктивность. Плюс таксономия и повестка из десяти проблем.",
+      "takeaway": "Безопасность агента — система из трёх слоёв (спецификация → верификация → контроль исполнения), слабейший сейчас — спецификация: формализуйте критические правила как инварианты, а не как пожелания в промпте, и измеряйте влияние проверок на завершённость задач.",
+      "reviewUrl": "reviews/ai-agents/toward-safe-llm-agents.html",
+      "tags": [
+        "security",
+        "verification",
+        "specification",
+        "runtime-monitoring",
+        "survey"
+      ],
+      "featured": false
+    },
+    {
+      "id": "bounded-agents-delegation-security",
+      "title": "Bounded Agents: безопасное делегирование в мультиагентных системах",
+      "category": "Безопасность агентов · multi-agent",
+      "date": "2026-08-18",
+      "sourceName": "arXiv 2608.15888",
+      "sourceUrl": "https://arxiv.org/abs/2608.15888",
+      "sourceType": "Научная статья (препринт) + открытый код",
+      "summary": "Статичные права и независимая проверка запросов не защищают от комбинированных атак и неограниченного делегирования субагентам. Agentic Principal Chain отслеживает цепочку делегирования, ограничивает scope и бюджеты и ловит запрещённые комбинации через composition closure; решение — вне модели. Эксфильтрация AgentDojo: 75–100% → 0%, заблокированы все 544 случая кражи данных InjecAgent, разрушения 38,6%→4,0%, манипуляции 90,5%→12,1%; цена — минус 8,6–13,9 п.п. полезности. Код и данные открыты.",
+      "takeaway": "Делегирование — отдельная поверхность атаки: субагент не должен получать прав больше родителя, а проверка обязана учитывать предыдущие действия сессии и комбинации (чтение + отправка); решение об авторизации — вне модели.",
+      "reviewUrl": "reviews/ai-agents/bounded-agents-delegation-security.html",
+      "tags": [
+        "security",
+        "multi-agent",
+        "delegation",
+        "authorization",
+        "prompt-injection"
+      ],
+      "featured": false
+    },
+    {
+      "id": "hallucination-snowball",
+      "title": "Hallucination Snowball: почему проверять нужно на ранних стыках пайплайна",
+      "category": "Multi-agent · верификация",
+      "date": "2026-08-18",
+      "sourceName": "arXiv 2608.14588",
+      "sourceUrl": "https://arxiv.org/abs/2608.14588",
+      "sourceType": "Научная статья (препринт, FAGEN Workshop @ ICML 2026)",
+      "summary": "В последовательных мультиагентных пайплайнах галлюцинации трансформируются: сырой факт → вычисление → нарратив → «одобренный» вывод, и обнаружимость падает (вероятности побега 24,6% → 48,3% → 89,3%). Марковская модель на 346 инъекциях в 4-агентном финансовом пайплайне: gpt-4o ловит 72,0% на первом стыке и 50,9% на последнем, 23,7% выживают полностью. Проверка на каждом стыке (те же RAG-гейты) снижает выживание с 58,4% до 16,2%, проверка только в конце даёт +2,3 п.п.",
+      "takeaway": "Верификацию размещайте на ранних переходах между агентами: на S1→S2 ловимы 75,4% ошибок, на S3→S4 — почти ничего; проверка в конце конвейера — ритуал, а не защита (+2,3 п.п.).",
+      "reviewUrl": "reviews/ai-agents/hallucination-snowball.html",
+      "tags": [
+        "multi-agent",
+        "hallucination",
+        "verification",
+        "pipeline",
+        "RAG"
+      ],
+      "featured": false
+    },
     {
       "id": "memorylake-memoryarena-backends",
       "title": "MemoryLake on MemoryArena: как сравнивать бэкенды памяти агентов по-настоящему",
@@ -12,7 +72,13 @@
       "summary": "Matched-сравнение четырёх бэкендов памяти агентов — MemoryLake (multi-track), Mem0, vector RAG и long-context — на бенчмарке MemoryArena, проверяющем не recall, а завершение многосессионных задач. Фреймворк, модель и задачи общие; меняется только память. MemoryLake лидирует в математике (9/40), физике (12/20) и progressive retrieval (4/20); среднее по доменам 20,5% против 13,6% у лучшего конкурента. Travel planning: ноль успехов у всех; web shopping: 1/150. Цифры — точечные оценки с пересекающимися интервалами.",
       "takeaway": "Память оценивайте по завершению задач, а не по recall; бэкенд выбирайте под класс задач собственным прогоном — единого «лучшего» в работе нет, а long-context остаётся легитимным контролем.",
       "reviewUrl": "reviews/ai-agents/memorylake-memoryarena-backends.html",
-      "tags": ["memory", "retrieval", "multi-session", "evals", "long-context"],
+      "tags": [
+        "memory",
+        "retrieval",
+        "multi-session",
+        "evals",
+        "long-context"
+      ],
       "featured": false
     },
     {
@@ -26,7 +92,13 @@
       "summary": "Ранняя ошибка в долгом прогоне агента расползается по контексту и состоянию среды; существующие подходы лишь предотвращают ошибки. AgentRewind — runtime-фреймворк восстановления: согласованные чекпойнты контекста и среды, возврат к раннему состоянию и возобновление с знанием прошлых попыток. Авторы собрали бенчмарк MettleBench для долгих инженерных заданий с оценкой частичного прогресса; эксперименты на нескольких моделях показывают улучшение success rate. Откат работает только для контролируемой среды.",
       "takeaway": "Восстановление — первоклассная возможность, а не аврал: чекпойнты «контекст+среда» перед деструктивными шагами, повтор с памятью неудачи и метрика частичного прогресса для долгих автономных задач.",
       "reviewUrl": "reviews/ai-agents/agentrewind-recoverable-execution.html",
-      "tags": ["reliability", "checkpointing", "recovery", "long-horizon", "runtime"],
+      "tags": [
+        "reliability",
+        "checkpointing",
+        "recovery",
+        "long-horizon",
+        "runtime"
+      ],
       "featured": false
     },
     {
@@ -40,7 +112,13 @@
       "summary": "Препринт о governed local-first runtime для tool-using LLM-агентов: разделение предложенных моделью действий и авторизованного хостом исполнения. Слоистая архитектура — host-facing surfaces, host contract, runtime core, permission-mediated tools — плюс подсистемы памяти, replay, плагинов, навыков и субагентов. Модель угроз: избыточные привилегии, слабая аудируемость, prompt injection, tool poisoning. Формальных гарантий безопасности нет. Код открыт (jin-bo/agentao): local-first, embeddable harness для Python.",
       "takeaway": "Безопасность агента — архитектурный слой, а не список проверок: отделяйте предложение от исполнения, делайте трассы и права явными, не принимайте архитектуру за гарантию.",
       "reviewUrl": "reviews/ai-agents/agentao-governed-local-first-runtime.html",
-      "tags": ["security", "runtime", "permissions", "local-first", "tools"],
+      "tags": [
+        "security",
+        "runtime",
+        "permissions",
+        "local-first",
+        "tools"
+      ],
       "featured": false
     },
     {
@@ -54,7 +132,13 @@
       "summary": "Эмпирический препринт о навыках агентов: 8 135 записей прогонов, таксономия из трёх категорий и двенадцати режимов использования. Главное: навыки работают как процедурные якоря, стабилизирующие исполнение (65,7% случаев), а не как инъекция знаний (4,5%); выигрыш над Workflow Memory +6,06 пункта. Retrieval — узкое место: точность падает с 29,6% до 3,3% при росте пула с 5 до 100 навыков. Точный вызов «правильного» навыка не обязателен; навыки ломаются при хрупких допущениях и контексте.",
       "takeaway": "Навык — процедура с условиями применения, а не справочник; каталог навыков проектируйте как поисковую систему и оценивайте по результату задачи, а не по точности вызова.",
       "reviewUrl": "reviews/ai-agents/demystifying-agent-skills.html",
-      "tags": ["skills", "self-improvement", "retrieval", "memory", "evals"],
+      "tags": [
+        "skills",
+        "self-improvement",
+        "retrieval",
+        "memory",
+        "evals"
+      ],
       "featured": false
     },
     {
@@ -68,7 +152,13 @@
       "summary": "Релиз v0.20.0 «The Herald Release» — крупнейший за окно с v0.19.0: ~1 400 merged PR и ~1 200 закрытых issues. Главное: живой голосовой режим (streaming TTS с barge-in и on-device wake words), скилл grounded-citations, требующий цитат к фактическому тексту первоисточника, с режимом fact-checking, протокол A2A v1.0 для общения агентов между собой, подписанные HMAC-подписями исходящие webhooks и волна самовосстановления инструментов — patch, write_file и поиск чинят свои ошибки вместо модели.",
       "takeaway": "Проверяемость и события с подписью — то, что стоит переносить в свои процессы: цитаты к первоисточнику обязательны для публикуемого контента, а webhooks заменяют статусный polling.",
       "reviewUrl": "reviews/ai-agents/hermes-v020-herald-release.html",
-      "tags": ["Hermes", "release", "voice", "A2A", "reliability"],
+      "tags": [
+        "Hermes",
+        "release",
+        "voice",
+        "A2A",
+        "reliability"
+      ],
       "featured": true
     },
     {
@@ -82,7 +172,13 @@
       "summary": "Препринт о session handover: когда контекст упирается в лимит, приложение перезапускается или задачу доделывает другой агент, новая сессия получает только то, что решили передать. Авторы формализуют handover как передачу task-относительного ICL-состояния и предлагают трёхчастную запись: точные решения и ограничения, статистики с обоснованием, исходные наблюдения. Критерий оценки — сохранение решений, а не похожесть текста.",
       "takeaway": "Handoff-документ: цель, принятые и отклонённые решения, нерешённые вопросы и источники — дословно; сжимать только с обоснованием; оценивать по способности продолжить задачу, а не по объёму пересказа.",
       "reviewUrl": "reviews/ai-agents/icl-session-handover.html",
-      "tags": ["memory", "context", "session", "handover", "theory"],
+      "tags": [
+        "memory",
+        "context",
+        "session",
+        "handover",
+        "theory"
+      ],
       "featured": false
     },
     {
@@ -96,7 +192,13 @@
       "summary": "Hermes Agent — открытый агентный runtime от Nous Research: постоянная память, система навыков, tool use, MCP и мессенджер-шлюзы. Обзор разбирает установку, устройство конфигурации (SOUL.md, HERMES.md), модель безопасности и сценарии запуска локального агента, включая фоновые задачи и self-improvement.",
       "takeaway": "Начинать стоит с минимального agent loop и ограниченного набора инструментов; память и навыки подключать через измеримые сценарии, а не ради универсальной автономии.",
       "reviewUrl": "reviews/ai-agents/hermes-agent-practical-guide.html",
-      "tags": ["Hermes", "local-first", "memory", "skills", "tools"],
+      "tags": [
+        "Hermes",
+        "local-first",
+        "memory",
+        "skills",
+        "tools"
+      ],
       "featured": true
     },
     {
@@ -110,7 +212,12 @@
       "summary": "Эссе Anthropic о разнице между workflow (предсказуемые конвейеры) и agents (модель сама управляет циклом). Разобраны пять паттернов оркестрации — prompt chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer — и принцип «начинать с самого простого решения».",
       "takeaway": "Сложность добавлять только по измеримой необходимости: сначала простой workflow, агент — когда гибкость реально требуется и её можно проверять.",
       "reviewUrl": "reviews/ai-agents/building-effective-ai-agents.html",
-      "tags": ["workflows", "agents", "orchestration", "design"],
+      "tags": [
+        "workflows",
+        "agents",
+        "orchestration",
+        "design"
+      ],
       "featured": true
     },
     {
@@ -124,7 +231,12 @@
       "summary": "Model Context Protocol — открытый стандарт подключения инструментов и данных к агентам: архитектура host/client/server, транспорты, примитивы tools, resources, prompts. Обзор разбирает границы доверия, least privilege, allowlist инструментов, изоляцию и встроенную поддержку MCP в Hermes Agent.",
       "takeaway": "Подключать инструменты по принципу наименьших привилегий, секреты держать вне контекста и требовать подтверждение человека для необратимых действий.",
       "reviewUrl": "reviews/ai-agents/mcp-for-ai-agents.html",
-      "tags": ["MCP", "tools", "security", "integrations"],
+      "tags": [
+        "MCP",
+        "tools",
+        "security",
+        "integrations"
+      ],
       "featured": true
     },
     {
@@ -138,7 +250,12 @@
       "summary": "Материалы о памяти и навыках агентов: write–manage–read цикл, хранение только проверяемой информации, разрешение противоречий, retrieval и процедурные навыки. На примере практики Hermes — слои памяти (MEMORY, база знаний, скиллы, история) и curator для обслуживания навыков; выводы для долгих задач и повторяемых workflow.",
       "takeaway": "Память — это запрашиваемые маленькие документы, а не один растущий файл; навыки — процедуры с триггерами, которые подключаются по необходимости.",
       "reviewUrl": "reviews/ai-agents/agent-memory-and-skills.html",
-      "tags": ["memory", "skills", "self-improvement", "long-tasks"],
+      "tags": [
+        "memory",
+        "skills",
+        "self-improvement",
+        "long-tasks"
+      ],
       "featured": true
     },
     {
@@ -152,7 +269,12 @@
       "summary": "AgentOps — практики наблюдения, оценки и надёжности агентов в production: трассировка шагов и tool calls, метрики latency/cost, eval-наборы, LLM-as-a-judge и таксономия отказов. Практическая часть — открытый стандарт трассировки OpenInference, связанный видеодоклад и рекомендации для внедрения наблюдаемости.",
       "takeaway": "Запускать агента без трассировки — значит не иметь возможности его улучшать: сначала трейсы и метрики, затем eval-наборы и системный разбор отказов.",
       "reviewUrl": "reviews/ai-agents/agentops-observability-and-evals.html",
-      "tags": ["AgentOps", "observability", "evals", "reliability"],
+      "tags": [
+        "AgentOps",
+        "observability",
+        "evals",
+        "reliability"
+      ],
       "featured": true
     }
   ]

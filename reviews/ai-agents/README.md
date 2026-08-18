@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `toward-safe-llm-agents.html` | Безопасность LLM-агентов: обзор спецификации, верификации и enforcement (arXiv 2608.14590) |
+| `bounded-agents-delegation-security.html` | Bounded Agents: безопасное делегирование полномочий в мультиагентных системах (arXiv 2608.15888) |
+| `hallucination-snowball.html` | Hallucination Snowball: где размещать верификацию в мультиагентных пайплайнах (arXiv 2608.14588) |
 | `memorylake-memoryarena-backends.html` | Сравнение бэкендов памяти агентов (MemoryLake, Mem0, vector RAG, long-context) на MemoryArena |
 | `agentrewind-recoverable-execution.html` | AgentRewind: чекпойнты и восстановление для долгих задач агентов |
 | `agentao-governed-local-first-runtime.html` | Agentao: governed local-first runtime для агентов с инструментами |
