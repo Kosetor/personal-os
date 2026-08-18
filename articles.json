@@ -1,6 +1,34 @@
 {
-  "updated": "2026-08-18T08:00:00Z",
+  "updated": "2026-08-18T12:30:00Z",
   "items": [
+    {
+      "id": "memorylake-memoryarena-backends",
+      "title": "MemoryLake on MemoryArena: как сравнивать бэкенды памяти агентов по-настоящему",
+      "category": "Память и контекст",
+      "date": "2026-08-18",
+      "sourceName": "arXiv 2608.13883",
+      "sourceUrl": "https://arxiv.org/abs/2608.13883",
+      "sourceType": "Научная статья (препринт)",
+      "summary": "Matched-сравнение четырёх бэкендов памяти агентов — MemoryLake (multi-track), Mem0, vector RAG и long-context — на бенчмарке MemoryArena, проверяющем не recall, а завершение многосессионных задач. Фреймворк, модель и задачи общие; меняется только память. MemoryLake лидирует в математике (9/40), физике (12/20) и progressive retrieval (4/20); среднее по доменам 20,5% против 13,6% у лучшего конкурента. Travel planning: ноль успехов у всех; web shopping: 1/150. Цифры — точечные оценки с пересекающимися интервалами.",
+      "takeaway": "Память оценивайте по завершению задач, а не по recall; бэкенд выбирайте под класс задач собственным прогоном — единого «лучшего» в работе нет, а long-context остаётся легитимным контролем.",
+      "reviewUrl": "reviews/ai-agents/memorylake-memoryarena-backends.html",
+      "tags": ["memory", "retrieval", "multi-session", "evals", "long-context"],
+      "featured": false
+    },
+    {
+      "id": "agentrewind-recoverable-execution",
+      "title": "AgentRewind: чекпойнты и восстановление для долгих задач агентов",
+      "category": "Надёжность · долгие задачи",
+      "date": "2026-08-18",
+      "sourceName": "arXiv 2608.14380",
+      "sourceUrl": "https://arxiv.org/abs/2608.14380",
+      "sourceType": "Научная статья (препринт)",
+      "summary": "Ранняя ошибка в долгом прогоне агента расползается по контексту и состоянию среды; существующие подходы лишь предотвращают ошибки. AgentRewind — runtime-фреймворк восстановления: согласованные чекпойнты контекста и среды, возврат к раннему состоянию и возобновление с знанием прошлых попыток. Авторы собрали бенчмарк MettleBench для долгих инженерных заданий с оценкой частичного прогресса; эксперименты на нескольких моделях показывают улучшение success rate. Откат работает только для контролируемой среды.",
+      "takeaway": "Восстановление — первоклассная возможность, а не аврал: чекпойнты «контекст+среда» перед деструктивными шагами, повтор с памятью неудачи и метрика частичного прогресса для долгих автономных задач.",
+      "reviewUrl": "reviews/ai-agents/agentrewind-recoverable-execution.html",
+      "tags": ["reliability", "checkpointing", "recovery", "long-horizon", "runtime"],
+      "featured": false
+    },
     {
       "id": "agentao-governed-local-first-runtime",
       "title": "Agentao: управляемый local-first runtime для агентов с инструментами",

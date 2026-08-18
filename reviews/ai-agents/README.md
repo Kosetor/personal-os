@@ -23,6 +23,10 @@
 
 | Файл | Тема |
 |---|---|
+| `memorylake-memoryarena-backends.html` | Сравнение бэкендов памяти агентов (MemoryLake, Mem0, vector RAG, long-context) на MemoryArena |
+| `agentrewind-recoverable-execution.html` | AgentRewind: чекпойнты и восстановление для долгих задач агентов |
+| `agentao-governed-local-first-runtime.html` | Agentao: governed local-first runtime для агентов с инструментами |
+| `demystifying-agent-skills.html` | Когда навыки агентов работают, а когда ломаются (arXiv 2608.14036) |
 | `hermes-v020-herald-release.html` | Hermes Agent v0.20 «The Herald Release»: голос, проверяемые ответы, A2A, webhooks |
 | `icl-session-handover.html` | Передача ICL-состояния между сессиями (arXiv 2608.14528) |
 | `hermes-agent-practical-guide.html` | Hermes Agent: локальный агент с памятью, навыками и инструментами |
