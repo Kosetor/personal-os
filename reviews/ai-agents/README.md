@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `fragility-self-improving-agents.html` | Хрупкость self-improving агентов: шум оценки, порядок задач и недоопределённость (arXiv 2608.18066) |
+| `blind-curator-skill-retirement.html` | The Blind Curator: предвзятый LLM-судья и молчаливый отказ вывода плохих навыков (arXiv 2607.07436) |
+| `authorization-before-context.html` | Authorization before context: граница аудиторий против утечек памяти агента (arXiv 2608.17148) |
 | `toward-safe-llm-agents.html` | Безопасность LLM-агентов: обзор спецификации, верификации и enforcement (arXiv 2608.14590) |
 | `bounded-agents-delegation-security.html` | Bounded Agents: безопасное делегирование полномочий в мультиагентных системах (arXiv 2608.15888) |
 | `hallucination-snowball.html` | Hallucination Snowball: где размещать верификацию в мультиагентных пайплайнах (arXiv 2608.14588) |
