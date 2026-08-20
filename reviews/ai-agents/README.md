@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `mas-concurrency-control.html` | Конкурентность в мультиагентных системах: сбои как stale reads и lost updates (arXiv 2608.18092, position paper) |
+| `finskillbench-reliable-agent-skills.html` | FinSkillBench: оценка доменных навыков агентов, курируемые vs самогенерированные (arXiv 2608.18099) |
+| `reversible-forgetting-agent-memory.html` | Обратимое забывание: управление устаревшими знаниями в памяти агента (arXiv 2608.18177) |
 | `mcp-web3-attack-surface.html` | Атаки на агентов в Web3: поверхность атак MCP, навыков и вызова инструментов (arXiv 2608.17275) |
 | `skilleffect-memory-bounded-tools.html` | SkillEffect: проверяемое выполнение инструментов агента в ограниченной памяти (arXiv 2608.17007) |
 | `harnessrisk-harness-safety-benchmark.html` | HarnessRisk: бенчмарк безопасности харнесов по фазам жизненного цикла (arXiv 2608.17597) |
