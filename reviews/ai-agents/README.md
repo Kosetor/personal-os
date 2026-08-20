@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `mcp-web3-attack-surface.html` | Атаки на агентов в Web3: поверхность атак MCP, навыков и вызова инструментов (arXiv 2608.17275) |
+| `skilleffect-memory-bounded-tools.html` | SkillEffect: проверяемое выполнение инструментов агента в ограниченной памяти (arXiv 2608.17007) |
+| `harnessrisk-harness-safety-benchmark.html` | HarnessRisk: бенчмарк безопасности харнесов по фазам жизненного цикла (arXiv 2608.17597) |
 | `fragility-self-improving-agents.html` | Хрупкость self-improving агентов: шум оценки, порядок задач и недоопределённость (arXiv 2608.18066) |
 | `blind-curator-skill-retirement.html` | The Blind Curator: предвзятый LLM-судья и молчаливый отказ вывода плохих навыков (arXiv 2607.07436) |
 | `authorization-before-context.html` | Authorization before context: граница аудиторий против утечек памяти агента (arXiv 2608.17148) |
