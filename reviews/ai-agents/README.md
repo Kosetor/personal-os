@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `preaction-gates-composition.html` | Композиция stateful pre-action gates: remediation-induced coupling, remediate-and-regate, некоммутативность операторов (arXiv 2608.18360) |
+| `ledger-claim-evidence-trace-audit.html` | LEDGER: claim-to-evidence trace graphs для аудита LLM-агентов (arXiv 2608.18398) |
+| `least-privilege-terminal-mcp-agents.html` | Least-privilege пост-тренинг для terminal и MCP агентов, excess-authority errors (arXiv 2608.18351) |
 | `mas-concurrency-control.html` | Конкурентность в мультиагентных системах: сбои как stale reads и lost updates (arXiv 2608.18092, position paper) |
 | `finskillbench-reliable-agent-skills.html` | FinSkillBench: оценка доменных навыков агентов, курируемые vs самогенерированные (arXiv 2608.18099) |
 | `reversible-forgetting-agent-memory.html` | Обратимое забывание: управление устаревшими знаниями в памяти агента (arXiv 2608.18177) |
