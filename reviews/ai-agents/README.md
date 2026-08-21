@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `outcome-monitors-silent-tool-failures.html` | Тихие сбои инструментов: outcome-контракты и recovery-квитанции (arXiv 2608.19303) |
+| `statemem-evolving-state-memory.html` | Память и изменяющееся состояние: StateMemBench и StateMem (arXiv 2608.19652) |
+| `remember-verify-ask-memory-commit.html` | Граница «память—уточнение»: persist / re-verify / ask (arXiv 2608.19564) |
 | `preaction-gates-composition.html` | Композиция stateful pre-action gates: remediation-induced coupling, remediate-and-regate, некоммутативность операторов (arXiv 2608.18360) |
 | `ledger-claim-evidence-trace-audit.html` | LEDGER: claim-to-evidence trace graphs для аудита LLM-агентов (arXiv 2608.18398) |
 | `least-privilege-terminal-mcp-agents.html` | Least-privilege пост-тренинг для terminal и MCP агентов, excess-authority errors (arXiv 2608.18351) |
