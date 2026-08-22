@@ -1,6 +1,66 @@
 {
-  "updated": "2026-08-22T12:15:00Z",
+  "updated": "2026-08-23T09:30:00Z",
   "items": [
+    {
+      "id": "phantom-gains-self-improvement-audit",
+      "title": "Phantom Gains: как отличить реальное улучшение агента от шума измерений",
+      "category": "Self-improvement · evals",
+      "date": "2026-08-23",
+      "sourceName": "arXiv 2608.20290",
+      "sourceUrl": "https://arxiv.org/abs/2608.20290",
+      "sourceType": "Научная статья (препринт, аудит измерений + статистический метод)",
+      "summary": "Аудит трёх раундов LoRA self-training на Qwen3-8B против замороженного контроля в том же пайплайне: семь измерительных сбоев, каждый инвертирует вывод без контроля. Леджер на жадном декоде «создаёт» улучшения у необученной модели (артефакт батчинга); статистика expansion даёт ей rate 0,280. Per-problem exact test под FDR ничего не детектирует на удержанных репликах. Дистилляция улучшает задачи, недостижимые базе, три формы self-training — нет (p < 10⁻⁸).",
+      "takeaway": "Для каждого отчёта о self-improvement нужен измеренный нуль: замороженный контроль в том же пайплайне. Без него дельта «до/после» — артефакт измерения. Считайте переходы по задачам и тестируйте per-problem тестом под FDR, а не наивным порогом.",
+      "reviewUrl": "reviews/ai-agents/phantom-gains-self-improvement-audit.html",
+      "tags": [
+        "self-improvement",
+        "evals",
+        "reliability",
+        "statistics",
+        "measurement"
+      ],
+      "featured": false
+    },
+    {
+      "id": "cross-task-skill-transfer-induction",
+      "title": "Break It Down, Pass It On: как индукция навыков определяет их переносимость",
+      "category": "Память и навыки · self-improvement",
+      "date": "2026-08-23",
+      "sourceName": "arXiv 2608.20274",
+      "sourceUrl": "https://arxiv.org/abs/2608.20274",
+      "sourceType": "Научная статья (препринт, контролируемое исследование)",
+      "summary": "Контролируемое исследование переносимости навыков, индуцированных агентом: две оси — уровень индукции (задача vs подзадача) и формат (текст vs код). Task-level навыки в среднем ухудшают результат ниже no-memory бейзлайна, subtask-level — поднимают выше; текст переносится лучше кода. Специфичность и абстрактность по отдельности не предсказывают успех, совместно (skill utility score) — предсказывают; счёт считается без исполнения задач — дешёвый диагностик памяти навыков.",
+      "takeaway": "Индуцируйте навыки на уровне подзадач и храните текстом; перед записью в память считайте skill utility (специфичность × абстрактность) — дешёвый диагностик переносимости без исполнения задач.",
+      "reviewUrl": "reviews/ai-agents/cross-task-skill-transfer-induction.html",
+      "tags": [
+        "skills",
+        "memory",
+        "self-improvement",
+        "transfer",
+        "evals"
+      ],
+      "featured": false
+    },
+    {
+      "id": "ai4ai-bench-recursive-self-improvement",
+      "title": "AI4AI-Bench: умеет ли агент улучшать алгоритм, который его обучает",
+      "category": "Self-improvement · evals",
+      "date": "2026-08-23",
+      "sourceName": "arXiv 2608.20318",
+      "sourceUrl": "https://arxiv.org/abs/2608.20318",
+      "sourceType": "Научная статья (препринт, бенчмарк)",
+      "summary": "Бенчмарк RSI: 10 замороженных репозиториев, 10 семейств тренировочных алгоритмов. Агент за 4 часа на B300 переписывает алгоритм; код перезапускается с нуля до 12 часов, оценивается скрытым эвалуатором (0 — неинформативная модель, 0,1 — алгоритм репозитория, 1,0 — оптимум). По 29 конфигурациям 6 систем средний балл 0,166, лучшая — 0,250. Большинство сабмишенов не меняют, как модель учится; reasoning effort поднимает долю меняющих с 8% до 64%. Всё открыто.",
+      "takeaway": "«Самоулучшение» меряйте перезапуском с нуля и скрытым эвалуатором; отделяйте уровень навыков/памяти от уровня алгоритма обучения. Больше reasoning effort покупает готовность пробовать, а не качество результата.",
+      "reviewUrl": "reviews/ai-agents/ai4ai-bench-recursive-self-improvement.html",
+      "tags": [
+        "self-improvement",
+        "evals",
+        "benchmark",
+        "RSI",
+        "training"
+      ],
+      "featured": false
+    },
     {
       "id": "thinkingbox-stateful-workflow-sandbox",
       "title": "Thinkingbox: один успех — не надёжность. Sandbox и бенчмарк для агентов в stateful-бизнес-процессах",

@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `phantom-gains-self-improvement-audit.html` | Phantom Gains: аудит self-improvement против измеренного нуля — семь измерительных артефактов, замороженный контроль, per-problem exact test под FDR (arXiv 2608.20290) |
+| `cross-task-skill-transfer-induction.html` | Переносимость индуцированных навыков: task-level vs subtask-level, текст vs код, skill utility score (arXiv 2608.20274) |
+| `ai4ai-bench-recursive-self-improvement.html` | AI4AI-Bench: бенчмарк RSI — умеет ли агент переписывать тренировочный алгоритм (arXiv 2608.20318) |
 | `thinkingbox-stateful-workflow-sandbox.html` | Thinkingbox: sandbox и бенчмарк для агентов в stateful-бизнес-процессах, pass@1 против pass^20 (arXiv 2608.19741) |
 | `memtrapbench-memory-cognitive-traps.html` | MemTrapBench: когнитивные ловушки памяти — фиксация рассуждений и искажение убеждений (arXiv 2608.20202) |
 | `hermes-v0205-keyless-cron-release.html` | Hermes Agent v0.20.5: keyless web-тир, память cron-задач, runtime stall guards |
