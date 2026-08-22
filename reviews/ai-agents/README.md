@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `thinkingbox-stateful-workflow-sandbox.html` | Thinkingbox: sandbox и бенчмарк для агентов в stateful-бизнес-процессах, pass@1 против pass^20 (arXiv 2608.19741) |
+| `memtrapbench-memory-cognitive-traps.html` | MemTrapBench: когнитивные ловушки памяти — фиксация рассуждений и искажение убеждений (arXiv 2608.20202) |
+| `hermes-v0205-keyless-cron-release.html` | Hermes Agent v0.20.5: keyless web-тир, память cron-задач, runtime stall guards |
 | `outcome-monitors-silent-tool-failures.html` | Тихие сбои инструментов: outcome-контракты и recovery-квитанции (arXiv 2608.19303) |
 | `statemem-evolving-state-memory.html` | Память и изменяющееся состояние: StateMemBench и StateMem (arXiv 2608.19652) |
 | `remember-verify-ask-memory-commit.html` | Граница «память—уточнение»: persist / re-verify / ask (arXiv 2608.19564) |

@@ -1,6 +1,67 @@
 {
-  "updated": "2026-08-22T00:00:00Z",
+  "updated": "2026-08-22T12:15:00Z",
   "items": [
+    {
+      "id": "thinkingbox-stateful-workflow-sandbox",
+      "title": "Thinkingbox: один успех — не надёжность. Sandbox и бенчмарк для агентов в stateful-бизнес-процессах",
+      "category": "Надёжность · evals",
+      "date": "2026-08-22",
+      "sourceName": "arXiv 2608.19741",
+      "sourceUrl": "https://arxiv.org/abs/2608.19741",
+      "sourceType": "Научная статья (препринт, бенчмарк + песочница)",
+      "summary": "Thinkingbox — песочница для агентов: изолированные MCP-совместимые сессии инструментов, полные трассы и оценка по конечному состоянию бэкенда. Бенчмарк содержит 507 сценариев с политиками (retail, страхование, ИТ/HR): исполняемые проверки принимают валидные траектории и отвергают неверные, недостающие и лишние эффекты. Сильнейшая модель — 65,36% pass@1, но лишь 25,25% pass^20: большинство сценариев не проходят проверки даже за двадцать попыток; многие неудачные прогоны завершаются чисто с валидными действиями.",
+      "takeaway": "Один успешный прогон — не надёжность: оценивайте агента по фактическому конечному состоянию (исполняемые проверки), а не по ответу или валидности вызовов; меряйте повторяемость (pass^N), а не единичный успех.",
+      "reviewUrl": "reviews/ai-agents/thinkingbox-stateful-workflow-sandbox.html",
+      "tags": [
+        "evals",
+        "benchmark",
+        "sandbox",
+        "MCP",
+        "reliability",
+        "stateful"
+      ],
+      "featured": false
+    },
+    {
+      "id": "memtrapbench-memory-cognitive-traps",
+      "title": "MemTrapBench: даже верно записанная память может ухудшить рассуждения агента",
+      "category": "Память и навыки · evals",
+      "date": "2026-08-22",
+      "sourceName": "arXiv 2608.20202",
+      "sourceUrl": "https://arxiv.org/abs/2608.20202",
+      "sourceType": "Научная статья (препринт, бенчмарк + метод)",
+      "summary": "Бенчмарки памяти проверяют извлечение, но не то, как воспоминания меняют рассуждение. MemTrapBench измеряет когнитивные ловушки: Reasoning Fixation (модель застревает на прежнем ходе мысли) и Belief Distortion (воспоминание смещает убеждения вопреки текущему контексту). На двух семействах моделей и пяти memory-фреймворках все стратегии памяти хуже, чем отсутствие памяти, — сильнейшие теряют более 10%. AdaptiveMem (inference-time инструкция) смягчает ловушки, сохраняя стандартные memory-метрики.",
+      "takeaway": "Память — не бесплатный бонус: recall-метрики не показывают вред для рассуждений. Добавляйте контрольный замер «с памятью против без» на реальных задачах, подавайте воспоминания дозированно и предупреждайте модель о возможной устарелости.",
+      "reviewUrl": "reviews/ai-agents/memtrapbench-memory-cognitive-traps.html",
+      "tags": [
+        "memory",
+        "evals",
+        "benchmark",
+        "reasoning",
+        "retrieval"
+      ],
+      "featured": false
+    },
+    {
+      "id": "hermes-v0205-keyless-cron-release",
+      "title": "Hermes Agent v0.20.5: web-поиск без ключей, память для cron и защита от зависаний",
+      "category": "Hermes · релиз",
+      "date": "2026-08-22",
+      "sourceName": "Nous Research — Hermes Agent Releases",
+      "sourceUrl": "https://github.com/NousResearch/hermes-agent/releases/tag/v2026.8.19",
+      "sourceType": "Release notes",
+      "summary": "Патч-релиз v0.20.5 (тег v2026.8.19, ~323 merged PR за окно): keyless web-тир с ротацией пяти бесплатных провайдеров и ring failover — поиск на свежей установке без API-ключей; cron-задачи получили персистентную память и per-job reasoning effort; runtime stall guards и execution-discipline внесены по итогам eval-находок Composio; Bot Mode group-комнаты, вложения drag & drop; CLI: fuzzy /model, Ctrl+P, /status; квитанции hermes update и проверка fleet-планов. Полные курируемые release notes обещаны с v0.21.0.",
+      "takeaway": "Для фоновых агентов ценны память cron-задач (контекст между запусками, меньше дубликатов) и stall guards (зависшие вызовы завершаются, а не молчат). Обновляться — после проверки совместимости плагинов.",
+      "reviewUrl": "reviews/ai-agents/hermes-v0205-keyless-cron-release.html",
+      "tags": [
+        "Hermes",
+        "release",
+        "cron",
+        "reliability",
+        "web"
+      ],
+      "featured": false
+    },
     {
       "id": "outcome-monitors-silent-tool-failures",
       "title": "Outcome Monitors: как ловить тихие сбои инструментов, которые агент принимает за факт",
