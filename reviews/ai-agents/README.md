@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `midtool-agentic-tool-use-midtraining.html` | MidTool: mid-training для агентного tool use — синтез данных из API, MCP-навыков и документных воркфлоу (arXiv 2608.20314) |
+| `task-model-induction-computer-use-traces.html` | TMI: индукция символических аудируемых моделей задач из компьютерных трасс — скриншоты, мышь, клавиатура (arXiv 2608.20319) |
+| `learning-when-to-think-adaptive-reasoning.html` | Learning When to Think: адаптивное выделение compute — NoThink/Short/Long, до 76% меньше токенов (arXiv 2608.20256) |
 | `phantom-gains-self-improvement-audit.html` | Phantom Gains: аудит self-improvement против измеренного нуля — семь измерительных артефактов, замороженный контроль, per-problem exact test под FDR (arXiv 2608.20290) |
 | `cross-task-skill-transfer-induction.html` | Переносимость индуцированных навыков: task-level vs subtask-level, текст vs код, skill utility score (arXiv 2608.20274) |
 | `ai4ai-bench-recursive-self-improvement.html` | AI4AI-Bench: бенчмарк RSI — умеет ли агент переписывать тренировочный алгоритм (arXiv 2608.20318) |
