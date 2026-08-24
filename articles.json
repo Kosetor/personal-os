@@ -1,6 +1,66 @@
 {
-  "updated": "2026-08-24T12:15:00Z",
+  "updated": "2026-08-24T15:15:00Z",
   "items": [
+    {
+      "id": "primeagentorchestrator-memory-primed-spawning",
+      "title": "PrimeAgentOrchestrator: спавн агентов с предзагруженной памятью из личных баз — опыт 4 месяцев",
+      "category": "Память и навыки · агентная инфраструктура",
+      "date": "2026-08-24",
+      "sourceName": "arXiv 2608.20342",
+      "sourceUrl": "https://arxiv.org/abs/2608.20342",
+      "sourceType": "Научная статья (препринт, опыт эксплуатации)",
+      "summary": "Кодинг-агенты стартуют с пустого контекста, выбрасывая накопленное знание. PrimeAgentOrchestrator спавнит инстансы Claude Code с предзагруженным брифингом из личных баз: параллельный опрос PostgreSQL и семантического индекса Cloudflare, fusion по backend-стратегиям, доставка через filesystem-инъекцию. Жизненный цикл: trust pre-seeding, readiness-поллинг. Experience report о четырёх месяцах: три поколения механизмов доставки, отказы, мотивировавшие редизайн, трейдоффы моста между гетерогенными memory-системами.",
+      "takeaway": "Подавайте агенту память при спавне через файловую систему, а не промпт: связка из 2–3 существующих хранилищ дешевле унифицированной базы; планируйте 2–3 итерации механизма доставки — первые версии сломаются.",
+      "reviewUrl": "reviews/ai-agents/primeagentorchestrator-memory-primed-spawning.html",
+      "tags": [
+        "memory",
+        "agent-spawning",
+        "context",
+        "infrastructure",
+        "experience-report"
+      ],
+      "featured": false
+    },
+    {
+      "id": "cotas-tiny-advisors-runtime-intervention",
+      "title": "COTA: крошечный компаратор вместо дорогого критика — runtime-интервенция без переобучения",
+      "category": "Надёжность · runtime-интервенция",
+      "date": "2026-08-24",
+      "sourceName": "arXiv 2608.21027",
+      "sourceUrl": "https://arxiv.org/abs/2608.21027",
+      "sourceType": "Научная статья (препринт, метод + эксперименты)",
+      "summary": "Runtime-интервенция повышает надёжность агентов без переобучения, но обычно требует второго сильного солвера. COTA (Comparison-Only Tiny Advisor) ломает связку: крошечный компаратор судит, ведут ли альтернативные продолжения к лучшему исходу, чем предложение актора; повторные сравнения решают, когда вмешаться. Обучение — на pairwise-супервизии из контрфактических веток. На WebShop, ALFWorld и tau^3-Retail с тремя акторами COTA улучшает все девять настроек и обходит базлайны при более слабой вспомогательной модели.",
+      "takeaway": "Для контроля агента не нужно уметь решать задачу — достаточно сравнивать продолжения. Дешёвый компаратор на парах «лучше/хуже» может заменить дорогого критика; совет оставляйте необязательным.",
+      "reviewUrl": "reviews/ai-agents/cotas-tiny-advisors-runtime-intervention.html",
+      "tags": [
+        "runtime-intervention",
+        "reliability",
+        "supervision",
+        "cost",
+        "agents"
+      ],
+      "featured": false
+    },
+    {
+      "id": "memory-poisoning-content-screening",
+      "title": "Отравление памяти агента: 1,2% ложных записей роняют точность с 0,85 до 0,30 — контент-скрининг бессилен",
+      "category": "Безопасность агентов · память",
+      "date": "2026-08-24",
+      "sourceName": "arXiv 2608.21230",
+      "sourceUrl": "https://arxiv.org/abs/2608.21230",
+      "sourceType": "Научная статья (препринт, эмпирическое исследование безопасности)",
+      "summary": "Стойкая память делает ложь долговечной: сохранённое утверждение всплывает в будущих сессиях. Отравление 1,2% корпуса LongMemEval снижает точность с 0,850 до 0,300 — простыми ложными утверждениями, без триггеров. Write-time скрининг с recall 0,832 на indirect prompt injection отклоняет 0 из 360 отравленных записей: истинность не выводится из текста без внешнего grounding. Provenance-взвешивание: штатный вес бесполезен (p=0,80), сильный душит легитимный untrusted-контент. Решение — bounded occupancy.",
+      "takeaway": "Не защищайте память контент-скринингом — он не отличает ложь от правды. Разделяйте записи по доверию, ограничивайте долю untrusted-контента в выдаче и проверяйте внешние факты перед записью.",
+      "reviewUrl": "reviews/ai-agents/memory-poisoning-content-screening.html",
+      "tags": [
+        "memory",
+        "security",
+        "poisoning",
+        "retrieval",
+        "grounding"
+      ],
+      "featured": false
+    },
     {
       "id": "artic-nl-workflow-compiler",
       "title": "Artic: NL-воркфлоу — не софт. Компиляция процедур в артефакт-графы поднимает resolve rate на 28 п.п.",
