@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `aces-continuous-skill-evaluation.html` | ACES: непрерывная оценка навыков живым агентом — парные live-прогоны, ATIF, Skill Lift (arXiv 2608.20614) |
+| `skill-representation-retrieval-harness.html` | Представление навыка в промпте управляет выбором: tool-skills vs workflow-skills, лексическая конкуренция (arXiv 2608.20389) |
+| `aegis-mcp-resource-abuse.html` | AEGIS: ресурсные лимиты для MCP-инструментов — модальности, OPA, ContextForge (arXiv 2608.20481) |
 | `midtool-agentic-tool-use-midtraining.html` | MidTool: mid-training для агентного tool use — синтез данных из API, MCP-навыков и документных воркфлоу (arXiv 2608.20314) |
 | `task-model-induction-computer-use-traces.html` | TMI: индукция символических аудируемых моделей задач из компьютерных трасс — скриншоты, мышь, клавиатура (arXiv 2608.20319) |
 | `learning-when-to-think-adaptive-reasoning.html` | Learning When to Think: адаптивное выделение compute — NoThink/Short/Long, до 76% меньше токенов (arXiv 2608.20256) |
