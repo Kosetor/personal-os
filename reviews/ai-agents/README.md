@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `mcp-universe-rl-training-tool-use.html` | MCP-Universe RL: RL-обучение tool-use агентов — MCP-серверы как окружение тренировки, оркестрация сред и rollout (arXiv 2608.22167) |
+| `repo2skill-evo-stale-skills.html` | Repo2Skill-Evo: навыки репозиториев устаревают молча, даже frontier-агенты не справляются с обслуживанием (arXiv 2608.21964) |
+| `collaboration-tax-multi-agent-cost.html` | Collaboration Tax: измеримая цена координации мультиагентных систем, четырёхстадийный каскад (arXiv 2608.22152) |
 | `aces-continuous-skill-evaluation.html` | ACES: непрерывная оценка навыков живым агентом — парные live-прогоны, ATIF, Skill Lift (arXiv 2608.20614) |
 | `skill-representation-retrieval-harness.html` | Представление навыка в промпте управляет выбором: tool-skills vs workflow-skills, лексическая конкуренция (arXiv 2608.20389) |
 | `aegis-mcp-resource-abuse.html` | AEGIS: ресурсные лимиты для MCP-инструментов — модальности, OPA, ContextForge (arXiv 2608.20481) |
