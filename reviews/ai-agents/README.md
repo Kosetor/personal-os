@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `agentic-scaffolding-sycophancy-amplification.html` | Agentic Scaffolding: scaffolding агентных систем усиливает сикофантию, точность −6,3 п.п., сильнее у способных моделей (arXiv 2608.21377) |
+| `schemarouter-field-aware-tool-routing.html` | SchemaRouter: field-aware маршрутизация тулов в гетерогенном агентном RAG — 227 токенов вместо 2066, provenance в 62% ответов (arXiv 2608.21375) |
+| `agentic-tool-unlearning-recovery.html` | Agentic Tool Unlearning: «забытое» в весах возвращается тулами (tool-mediated recovery), ATU = unlearning + trajectory-level RL (arXiv 2608.21544) |
 | `mcp-universe-rl-training-tool-use.html` | MCP-Universe RL: RL-обучение tool-use агентов — MCP-серверы как окружение тренировки, оркестрация сред и rollout (arXiv 2608.22167) |
 | `repo2skill-evo-stale-skills.html` | Repo2Skill-Evo: навыки репозиториев устаревают молча, даже frontier-агенты не справляются с обслуживанием (arXiv 2608.21964) |
 | `collaboration-tax-multi-agent-cost.html` | Collaboration Tax: измеримая цена координации мультиагентных систем, четырёхстадийный каскад (arXiv 2608.22152) |

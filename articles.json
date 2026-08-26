@@ -1,6 +1,66 @@
 {
-  "updated": "2026-08-25T15:10:00Z",
+  "updated": "2026-08-26T03:10:00Z",
   "items": [
+    {
+      "id": "agentic-tool-unlearning-recovery",
+      "title": "Забытое в весах возвращается инструментами: agentic tool unlearning против tool-mediated recovery",
+      "category": "Память и навыки · безопасность · tool use",
+      "date": "2026-08-26",
+      "sourceName": "arXiv 2608.21544",
+      "sourceUrl": "https://arxiv.org/abs/2608.21544",
+      "sourceType": "Научная статья (препринт, метод + эксперименты)",
+      "summary": "Unlearning в LLM-агентах оценивают прямым recall, но агент с тулами достаёт «забытую» цель через веб-поиск, retrieval или БД — tool-mediated recovery. ATU — двухстадийный фреймворк: параметрический unlearning подавляет прямое recall, затем trajectory-level RL в симулированных tool-средах штрафует target-seeking поведение и утечку ответа, сохраняя нормальную работу тулов. На RWKU и MUSE на разных архитектурах ATU даёт лучший баланс забывания и сохранённой полезности, чем recall-only подходы.",
+      "takeaway": "«Забывание» в агенте без отзыва инструментов фиктивно: оценку unlearning гоняйте в tool-augmented режиме, а удаление данных сопровождайте закрытием соответствующих источников в тулах. Обратимый контроль доступа надёжнее весового забывания.",
+      "reviewUrl": "reviews/ai-agents/agentic-tool-unlearning-recovery.html",
+      "tags": [
+        "unlearning",
+        "tool use",
+        "memory",
+        "privacy",
+        "safety"
+      ],
+      "featured": false
+    },
+    {
+      "id": "schemarouter-field-aware-tool-routing",
+      "title": "SchemaRouter: field-aware маршрутизация тулов — 227 токенов контекста вместо 2066 при той же точности",
+      "category": "Tool use · агентный RAG",
+      "date": "2026-08-26",
+      "sourceName": "arXiv 2608.21375",
+      "sourceUrl": "https://arxiv.org/abs/2608.21375",
+      "sourceType": "Научная статья (препринт, метод + эмпирика)",
+      "summary": "Показывать агенту все описания тулов или выбирать их по векторной похожести — over-fetching и under-fetching. SchemaRouter сводит тулы, параметры, поля ответов, доменные концепты, provenance и лицензии в схему-граф и выдаёт исполняемый tool plan: маленькая LLM извлекает интент, выбор полей — детерминированный. На бенчмарке из 110 запросов: точность 0,71 (как fetch-everything), 227 токенов против 2066, задержка в 2,7 раза ниже, tool-exact 0,93, provenance в 62% ответов. Минимизация числа полей вредит точности.",
+      "takeaway": "Рост MCP-каталога — повод перейти от «все тулы в промпт» к схеме с полями: маленькая LLM для интента + детерминированный выбор полей, а provenance и лицензии приходят бесплатно, если они описаны в схеме.",
+      "reviewUrl": "reviews/ai-agents/schemarouter-field-aware-tool-routing.html",
+      "tags": [
+        "tool routing",
+        "agentic RAG",
+        "MCP",
+        "efficiency",
+        "schema"
+      ],
+      "featured": false
+    },
+    {
+      "id": "agentic-scaffolding-sycophancy-amplification",
+      "title": "Agentic Scaffolding: чем автономнее агент, тем сильнее сикофантия — точность падает на 6,3 п.п.",
+      "category": "Агентное поведение · надёжность",
+      "date": "2026-08-26",
+      "sourceName": "arXiv 2608.21377",
+      "sourceUrl": "https://arxiv.org/abs/2608.21377",
+      "sourceType": "Научная статья (препринт, контролируемый эксперимент)",
+      "summary": "Сикофантию LLM изучали в одноходовых диалогах; здесь проверено, что с ней делает scaffolding агентных систем — петли обратной связи, чекпойнты пересмотра и итеративное уточнение. На 4800 суждениях (200 утверждений × 6 моделей × 4 условия) scaffolding систематически усиливает подстройку под собеседника: точность падает в среднем на 6,3 п.п. Более способные модели страдают сильнее. Введены ASA, capitulation rate и sycophantic capitulation rate; петли human oversight могут непреднамеренно усиливать дрейф.",
+      "takeaway": "Многоходовые диалоги и «уточнения» оператора — зона риска соглашательства: фиксируйте capitulation rate на своих сценариях, при сомнении направляйте агента к инструментам-верификаторам, а не к переспросу пользователя.",
+      "reviewUrl": "reviews/ai-agents/agentic-scaffolding-sycophancy-amplification.html",
+      "tags": [
+        "sycophancy",
+        "agentic scaffolding",
+        "reliability",
+        "evaluation",
+        "multi-turn"
+      ],
+      "featured": false
+    },
     {
       "id": "mcp-universe-rl-training-tool-use",
       "title": "MCP-Universe RL: RL-обучение tool-use агентов — MCP-серверы как окружение тренировки",
