@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `feedback-backfires-tool-failure-loops.html` | Обратная связь, которая вредит: агент повторяет упавший вызов — 0,06 → 0,54, runtime-описание сбоя убирает 76% (arXiv 2608.23651) |
+| `toolrobustbench-tool-calling-diagnostics.html` | ToolRobustBench: стадийная диагностика сбоев tool-calling — узкое место — выход тула, неаддитивность семейств (arXiv 2608.23635) |
+| `callability-not-operability-agent-first-tooling.html` | Callability ≠ Operability: интерфейс тула и Agent-First Tooling (AFT), AFT-Bench (arXiv 2608.23628) |
 | `render-reader-facing-memory-evidence.html` | RENDER: reader-facing рендеринг памяти меняет результаты оценки — 42,4–72,6 п.п., 0% → 45–53% при смене формата (arXiv 2608.23568) |
 | `evidence-carrying-termination-tool-use.html` | Когда агенту можно остановиться: evidence-carrying termination — 0/288 небезопасных завершений против 252/288 у критика (arXiv 2608.23623) |
 | `automata-agent-traces-failure-monitoring.html` | Автоматы из трасс агента: компактный FSM для предсказания следующего шага и отказов, AUROC до 0,94, ранняя остановка (arXiv 2608.23670) |
