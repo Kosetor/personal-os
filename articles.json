@@ -1,6 +1,66 @@
 {
-  "updated": "2026-08-27T08:30:00Z",
+  "updated": "2026-08-28T00:00:00Z",
   "items": [
+    {
+      "id": "hermes-v0206-stable-rollup",
+      "title": "Hermes Agent v0.20.6: consent-браузинг, MCP-каталог 50+ серверов и шифрование секретов",
+      "category": "Hermes · релиз · безопасность",
+      "date": "2026-08-27",
+      "sourceName": "Hermes Agent v0.20.6 (v2026.8.27) — release notes",
+      "sourceUrl": "https://github.com/NousResearch/hermes-agent/releases/tag/v2026.8.27",
+      "sourceType": "Официальные release notes (GitHub)",
+      "summary": "Патч-релиз, собравший ~525 merged PR: consent-gated браузинг с реальным Chromium-профилем (Windows — close-with-approval), Desktop Browser в отдельном окне ОС, remote MCP-каталог до 50+ live-проверенных серверов (Cloudflare, Grafana Cloud, Better Stack, Railway), TTL-кэш web_search/web_extract и lean-tail compression, opt-in шифрование секретов в OS-keychain, апдейты с паузой гейтвея вместо tree-kill, cron durable-incident квитанции, новые модели (GLM-5.3-Flash, MiniMax M3 free). Полные заметки обещаны в v0.21.0.",
+      "takeaway": "Обновляйтесь через hermes update: пауза гейтвея вместо tree-kill. PIN моста и PAT — в OS-keychain: шифрование секретов стало штатной опцией. TTL-кэш web-поиска ускорит цикл обзоров, но проверки доступности эндпоинтов держите без кэша.",
+      "reviewUrl": "reviews/ai-agents/hermes-v0206-stable-rollup.html",
+      "tags": [
+        "hermes agent",
+        "release",
+        "MCP",
+        "security",
+        "infrastructure"
+      ],
+      "featured": false
+    },
+    {
+      "id": "toolminimize-tool-call-privacy",
+      "title": "ToolMinimize: 81–88% вызовов тулов утекают лишними данными — переписывание аргументов режет утечку",
+      "category": "Tool use · приватность · MCP",
+      "date": "2026-08-27",
+      "sourceName": "arXiv 2608.24957",
+      "sourceUrl": "https://arxiv.org/abs/2608.24957",
+      "sourceType": "Научная статья (препринт, измерения + middleware)",
+      "summary": "Замер на GPT-4o, Claude 3.5 Sonnet, Llama-3.3-70B: 81–88% вызовов тулов содержат приватные данные (PSD), не нужные сервису; инструкции оставляют 36–76% over-sharing. PII-детекторы не ловят неявные PSD, гейты и information-flow control не переписывают аргументы. ToolMinimize — middleware: schema-aware necessity analysis + removal/generalization/substitution/truncation. Результат: −81,2–92,0% privacy cost при 100% валидности аргументов (307 вызовов), −79,0% на неразмеченных MCP-схемах, латентность 1,77 мс.",
+      "takeaway": "Не полагайтесь на инструкции и PII-детекторы: реально снижает утечку только переписывание аргументов на границе вызова. Аудит аргументов тулов, минимизация схем MCP и middleware-слой с обобщением/подстановкой/обрезанием — дешёвая защита (1,77 мс на вызов).",
+      "reviewUrl": "reviews/ai-agents/toolminimize-tool-call-privacy.html",
+      "tags": [
+        "tool use",
+        "privacy",
+        "MCP",
+        "security",
+        "middleware"
+      ],
+      "featured": false
+    },
+    {
+      "id": "repair-or-resample-mas-debugging",
+      "title": "Repair or Resample: перезапуск не чинит мультиагентные системы — воспроизводимость отказа 68%, починка 6,9%",
+      "category": "Multi-agent · отладка · надёжность",
+      "date": "2026-08-27",
+      "sourceName": "arXiv 2608.25920",
+      "sourceUrl": "https://arxiv.org/abs/2608.25920",
+      "sourceType": "Научная статья (препринт, контролируемый фреймворк + эмпирическое исследование)",
+      "summary": "Стандартная «починка» сбойных мультиагентных систем — перезапуск с пересэмплированием всей траектории. Вопрос: чинит ли это каузально или стохастически? SymTrace: траектория записывается, ставятся intervention anchors, при повторе исполнение до якоря восстанавливается из логов, регенерируется downstream. SymFail — 536 размеченных траекторий. На трёх MAS-фреймворках rerun даёт воспроизводимость отказов 67,97% и починку 6,90%; симптом-интервенция — 20,15% (+191,89% к SOTA).",
+      "takeaway": "«Упало — перезапусти» — лотерея: ~93% отказов вернутся. Сначала воспроизведите отказ по логам (якорная реконструкция дешевле), затем интервенция по симптому. Добавьте метрику воспроизводимости в observability; ретрай — только для транзиентных сбоев.",
+      "reviewUrl": "reviews/ai-agents/repair-or-resample-mas-debugging.html",
+      "tags": [
+        "multi-agent",
+        "debugging",
+        "reliability",
+        "evaluation",
+        "observability"
+      ],
+      "featured": false
+    },
     {
       "id": "feedback-backfires-tool-failure-loops",
       "title": "Обратная связь, которая вредит: агент повторяет только что упавший вызов — 0,06 → 0,54",
