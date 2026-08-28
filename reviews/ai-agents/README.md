@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `toolcall-rate-representation-steering.html` | Tunable Tool-Call Rates: направление в residual stream управляет частотой вызова тулов — 0→90%+, QA 0,29→0,56 (arXiv 2608.25198) |
+| `routed-graph-handoff.html` | Routed Graph Handoff: роутер выбирает формат передачи между агентами — граф или текст, до 3,2× компрессии (arXiv 2608.25277) |
+| `hips-personalized-memory-strategy.html` | HiPS: иерархическая персонализация стратегии памяти агента — глобальные принципы + правила пользователя (arXiv 2608.25329) |
 | `feedback-backfires-tool-failure-loops.html` | Обратная связь, которая вредит: агент повторяет упавший вызов — 0,06 → 0,54, runtime-описание сбоя убирает 76% (arXiv 2608.23651) |
 | `toolrobustbench-tool-calling-diagnostics.html` | ToolRobustBench: стадийная диагностика сбоев tool-calling — узкое место — выход тула, неаддитивность семейств (arXiv 2608.23635) |
 | `callability-not-operability-agent-first-tooling.html` | Callability ≠ Operability: интерфейс тула и Agent-First Tooling (AFT), AFT-Bench (arXiv 2608.23628) |
