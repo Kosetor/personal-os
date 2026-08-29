@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `wikiskill-persistent-knowledge-skill-evolution.html` | WikiSkill: компиляция опыта агента в персистентную базу знаний — навыки переносимы между моделями, чужие навыки могут быть лучше своих (arXiv 2608.27454) |
+| `persona-execution-separation.html` | Persona-Execution Separation: персона и исполнение в разных trust-доменах под execution audit, governed contract bridge (arXiv 2608.27427) |
+| `spa-plan-first-information-flow-control.html` | SPA: защита персистентных агентов между запросами — plan-first архитектура и dual-lattice IFC, tool_knowledge 0%/0,2% (arXiv 2608.27234) |
 | `pilot-live-self-improvement.html` | PILOT in the Loop: live self-improvement для long-horizon агентов — супервизор перенаправляет воркера на лету, дистилляция процедур и сбоев в навыки и память (arXiv 2608.26530) |
 | `agent-mesh-delegation-reliability.html` | Agent Mesh: примитивы надёжности делегирования — 147 инцидентов продакшена против retry/timeout, identity adequacy и evidence adequacy (arXiv 2608.26225) |
 | `context-privilege-escalation-harness.html` | When Context Gets Root: instruction privilege escalation в LLM-харнесах — 13/13 целей атак (arXiv 2608.27299) |

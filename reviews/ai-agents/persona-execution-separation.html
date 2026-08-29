@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Русскоязычный обзор препринта arXiv 2608.27427 (Persona-Execution Separation): архитектурный паттерн для эволюции LLM-агентов под execution audit — персона и исполнение в разных trust-доменах, governed contract bridge">
+<title>Persona-Execution Separation: паттерн эволюции агентов под аудит — Personal OS</title>
+<style>
+  :root {
+    --bg: #e8eaef;
+    --fg: #0b0c0e;
+    --muted: #5a606c;
+    --card: #ffffff;
+    --line: #c5c9d2;
+    --accent: #0e7490;
+    --accent-soft: rgba(14,116,144,.10);
+    --code: #1c1b1a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root { --bg:#0b0c0e; --fg:#f4f5f7; --muted:#8b919c; --card:#1a1d24; --line:#2e3440; --accent:#c8f542; --accent-soft:rgba(200,245,66,.08); --code:#f4f5f7; }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:17px; line-height:1.65;
+  }
+  .page-shell{max-width:760px; margin:0 auto; padding:2.2rem 1.25rem 4rem}
+  a{color:var(--accent); text-decoration-color:var(--line); text-underline-offset:3px}
+  a:hover{text-decoration-color:var(--accent)}
+  .back{display:inline-block; margin-bottom:1.6rem; font-size:.92rem}
+  header h1{font-size:1.75rem; line-height:1.25; margin:.4rem 0 .8rem; letter-spacing:-.01em}
+  .eyebrow{
+    margin:0; font-size:.8rem; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--muted);
+  }
+  .lead{font-size:1.05rem; color:var(--muted); margin:0 0 1.4rem}
+  .meta{
+    display:flex; flex-wrap:wrap; gap:.6rem 1.6rem; margin:0 0 1.8rem; padding:1rem 1.1rem;
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+  }
+  .meta div{display:flex; flex-direction:column; gap:.15rem}
+  .meta dt{font-size:.74rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted)}
+  .meta dd{margin:0; font-size:.95rem; min-width:0; overflow-wrap:anywhere}
+  .toc{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:1rem 1.2rem; margin:0 0 2.2rem; font-size:.95rem;
+  }
+  .toc p{margin:0 0 .4rem; font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted)}
+  .toc ol{margin:.2rem 0 0; padding-left:1.2rem}
+  .toc li{margin:.25rem 0}
+  article h2{font-size:1.3rem; margin:2.6rem 0 .7rem; padding-top:.4rem; border-top:1px solid var(--line)}
+  article h2::before{content:"\00a7 "; color:var(--accent)}
+  article p{margin:.6rem 0}
+  article ul, article ol{margin:.6rem 0; padding-left:1.35rem}
+  article li{margin:.4rem 0}
+  .tag{
+    display:inline-block; font-size:.78rem; font-weight:600; padding:.1rem .55rem;
+    border-radius:999px; border:1px solid var(--line); background:var(--card);
+  }
+  .tag.doc{color:var(--accent); border-color:var(--accent)}
+  .tag.hermes{color:#2e7d32; border-color:#4c9a50}
+  @media (prefers-color-scheme: dark){ .tag.hermes{color:#8fd694; border-color:#4c9a50} }
+  .schema{
+    margin:1.2rem 0; padding:1.1rem; background:var(--card);
+    border:1px solid var(--line); border-radius:10px;
+  }
+  .schema figcaption{font-size:.85rem; color:var(--muted); margin-bottom:.8rem}
+  .columns{display:flex; flex-wrap:wrap; gap:.6rem; justify-content:center}
+  .columns .col{
+    flex:1 1 200px; padding:.8rem .7rem; border-radius:8px;
+    background:var(--accent-soft); border:1px solid var(--line); font-size:.92rem;
+  }
+  .columns .col b{display:block; margin-bottom:.25rem; font-size:.95rem}
+  .src-note{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:.8rem; margin:1rem 0}
+  footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); font-size:.85rem; color:var(--muted)}
+  @media (max-width:520px){
+    body{font-size:16px}
+    header h1{font-size:1.5rem}
+  }
+  html[data-theme="dark"]{ --bg:#0b0c0e; --fg:#f4f5f7; --muted:#8b919c; --card:#1a1d24; --line:#2e3440; --accent:#c8f542; --accent-soft:rgba(200,245,66,.08); --code:#f4f5f7; }
+  html[data-theme="light"]{ --bg:#e8eaef; --fg:#0b0c0e; --muted:#5a606c; --card:#ffffff; --line:#c5c9d2; --accent:#0e7490; --accent-soft:rgba(14,116,144,.10); --code:#1c1b1a; }
+  img{max-width:100%;height:auto}
+  .theme-toggle{position:fixed;top:14px;right:14px;z-index:50;display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:0 14px;background:var(--card);color:var(--fg);border:1px solid var(--line,var(--border,#888));border-radius:2px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);cursor:pointer;font-family:ui-monospace,"IBM Plex Mono","JetBrains Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 2px 10px rgba(0,0,0,.25);transition:border-color .15s,color .15s}
+  .theme-toggle svg{width:20px;height:20px;flex:none}
+  .theme-toggle svg path{fill:currentColor}
+  .theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+  .theme-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<main class="page-shell">
+  <a class="back" href="../../index.html">&larr; Вернуться в Personal OS</a>
+<button type="button" class="theme-toggle" id="themeToggle" aria-label="Переключить тему: светлая/тёмная"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2a7 7 0 0 0 0 14 5 5 0 0 1 0-14zM12 3a6 6 0 0 0 0 12 6 6 0 0 0 0-12zM4.5 9H2v1.5h2.5V9zm15 0v1.5H20V9h-.5zM9 4.5H7.5V2H9v2.5zm6 0V2h1.5v2.5H15zM4 13.5l1.06 1.06 1.77-1.77-1.06-1.06L4 13.5zm13.17-1.77 1.77 1.77L20 13.5l-1.77-1.77-1.06 1.06zM11 19h1.5v2.5H11V19zm4.5 0H17v2.5h-1.5V19z"/></svg><span>Тема</span></button>
+  <header>
+        <p class="eyebrow">Архитектура агентов · аудит · trust-домены</p>
+    <h1>Persona-Execution Separation: персона свободно дрейфует, исполнение остаётся под аудитом</h1>
+    <p class="lead">Агент в governed-организации должен одновременно менять свою «личность» (инструкции, тон) и оставаться прослеживаемым в исполнении. В одном trust-домене это дорого и опасно. PES разносит персону и исполнение по разным доменам, соединяя их governed contract bridge: персона может дрейфовать, исполнение — faceless и аудируемое.</p>
+    <dl class="meta">
+      <div><dt>Первичный источник</dt><dd><a href="https://arxiv.org/abs/2608.27427" target="_blank" rel="noopener noreferrer">Persona-Execution Separation: An Architecture Pattern for Evolving LLM Agents under Execution Audit — arXiv 2608.27427</a></dd></div>
+      <div><dt>Тип</dt><dd>Научная статья (препринт, архитектурный паттерн + пилотный кейс)</dd></div>
+      <div><dt>Опубликовано</dt><dd>2026-08-27 (arXiv)</dd></div>
+      <div><dt>Проверено</dt><dd>2026-08-30</dd></div>
+    </dl>
+  </header>
+
+  <nav class="toc" aria-label="Содержание">
+    <p>Содержание</p>
+    <ol>
+      <li><a href="#summary">Суть материала</a></li>
+      <li><a href="#why-it-matters">Почему это важно</a></li>
+      <li><a href="#practical">Практическое применение</a></li>
+      <li><a href="#limits">Ограничения и риски</a></li>
+      <li><a href="#implementation">Как применить к вашему ИИ-агенту</a></li>
+      <li><a href="#sources">Первичные материалы</a></li>
+    </ol>
+  </nav>
+
+  <article>
+    <section id="summary">
+      <h2>Суть материала</h2>
+
+<p>LLM-агенты в governed-организациях (регулируемые отрасли, мульти-тенантные платформы) зажаты между двумя требованиями. Персона — инструкции, тон, самопрезентация — должна свободно эволюционировать: иначе агента нельзя адаптировать под пользователей и процессы. Исполнение — stateful, аудируемая работа — должно оставаться прослеживаемым. Один trust-домен для обеих сущностей не удовлетворяет требованиям дёшево: изменения персоны ставят под вопрос доверие к исполнению.</p>
+
+<p>Автор предлагает паттерн <strong>Persona-Execution Separation (PES)</strong>:</p>
+
+<ul>
+  <li><strong>Персона и исполнение живут в разных trust-доменах</strong>, соединённых governed contract bridge.</li>
+  <li>Персона — singly-homed и может дрейфовать; исполнение — faceless и аудируемое.</li>
+  <li>Через мост возвращаются только status summaries; тела данных остаются в ограничительном домене (кроме graded DLP-исключения); идентичность непрерывна.</li>
+  <li>Переходы enforced через approval matrix, DLP и аудит.</li>
+</ul>
+
+<p>Теоретическая часть: в условиях representational indistinguishability любой однодоменный механизм, выполняющий все три цели (свободный дрейф, прослеживаемость, развязку), вынужден заново ввести типизированные объекты изменений, внешний гейт и стабильный аудит-якорь — то есть пересобрать PES, но дороже. Пилот в regulated digital-employee платформе задокументировал пять решений за месяц, каждое с отклонённой альтернативой. Механическая проверка внедрения не нашла re-validation на стороне исполнения при пертурбации персоны (пять конфигураций моделей) и не нашла отпечатка персоны в hard-asserted полях.</p>
+    </section>
+    <section id="why-it-matters">
+      <h2>Почему это важно</h2>
+
+<p>Классическая архитектура «один агент = один контекст» смешивает два типа изменений: эволюцию инструкций (что агент «должен» делать) и исполнение (что он фактически сделал). В регулируемой среде это смешение — юридическая и операционная проблема: как доказать, что исполнение не изменилось, если инструкции менялись в том же домене?</p>
+
+<p>PES отвечает архитектурно, а не дисциплинарно: разделение доменов делает смешение невозможным по конструкции, а не по обещанию «мы не трогаем продакшен». Для Personal OS и подобных супервизорных схем паттерн интересен тем, что формализует разделение ролей: слой, который решает <em>что делать</em> (супервизор, инструкции, тон), и слой, который <em>делает</em> (исполнитель, аудируемые шаги), — это разные trust-границы.</p>
+
+<p>Отдельно ценен формальный вывод: попытка сэкономить и держать всё в одном домене приводит к тому же набору механизмов (типизированные объекты изменений, внешний гейт, аудит-якорь), но с большей стоимостью связывания. То есть «разделяй и властвуй» здесь не компромисс, а оптимальная конфигурация.</p>
+    </section>
+    <section id="practical">
+      <h2>Практическое применение</h2>
+
+<p>Помечаем, что задокументировано источником, а что — наша интерпретация для Personal OS.</p>
+<ul>
+  <li><span class="tag doc">Источник</span> <strong>Два trust-домена</strong>: персона (может дрейфовать) и исполнение (faceless, аудируемое), соединённые governed contract bridge.</li>
+  <li><span class="tag doc">Источник</span> <strong>Правила пересечения</strong>: наружу — только status summaries; тела данных остаются в ограничительном домене, кроме graded DLP-исключения; идентичность непрерывна; approval matrix, DLP, аудит.</li>
+  <li><span class="tag doc">Источник</span> <strong>Формальный результат</strong>: однодоменный механизм, закрывающий все три цели, вырождается в PES с большей стоимостью.</li>
+  <li><span class="tag doc">Источник</span> <strong>Пилот</strong>: пять решений за месяц в regulated digital-employee платформе; механическая проверка не нашла re-validation при пертурбации персоны (5 конфигураций моделей).</li>
+  <li><span class="tag">Интерпретация</span> <strong>Для Personal OS</strong>: паттерн обосновывает разделение «роль-инструкции» и «роль-исполнитель» в супервизорной схеме: обновление промптов супервизора не должно молча менять поведение исполнителя; изменения — через согласованный контракт и аудит.</li>
+</ul>
+    </section>
+    <section id="limits">
+      <h2>Ограничения и риски</h2>
+
+<ul>
+  <li><span class="tag doc">Источник</span> <strong>Тонкая эмпирика</strong>: один пилотный кейс на одной платформе, один месяц, пять решений — это иллюстрация паттерна, а не статистическое подтверждение.</li>
+  <li><span class="tag doc">Источник</span> <strong>Формальный аргумент</strong>: вывод про representational indistinguishability — теоретический; практические исключения возможны.</li>
+  <li><span class="tag">Интерпретация</span> <strong>Трение</strong>: approval matrix и DLP добавляют задержку и стоимость на каждое изменение персоны; для быстрых итераций это может быть неприемлемо.</li>
+  <li><span class="tag">Интерпретация</span> <strong>Развязка «по недосмотру»</strong>: в проверке найден pre-separation билд, где исполнение было развязано с персоной по умолчанию, а не по конструкции; аналогичный риск есть в любой системе — разделение должно быть enforced, а не подразумеваться.</li>
+  <li><span class="tag">Интерпретация</span> <strong>Условия применимости</strong>: паттерн нужен, когда одновременно есть мульти-пользовательское развёртывание, аудит исполнения и ожидаемый дрейф персоны; однопользовательский cron-агент может не требовать полной схемы.</li>
+</ul>
+    </section>
+    <section id="implementation">
+      <h2>Как применить к вашему ИИ-агенту</h2>
+
+<ol>
+  <li><strong>Определите, что относится к персоне, а что к исполнению</strong>: инструкции, тон, «кем агент себя представляет» — персона; шаги, вызовы тулов, изменения состояния — исполнение (интерпретация: классификация из паттерна).</li>
+  <li><strong>Разнесите контексты</strong>: персона не должна неявно перетекать в исполняемый контекст; изменения персоны применяются только через явный контракт (governed contract bridge, источник).</li>
+  <li><strong>Введите approval matrix</strong>: какие изменения персоны требуют согласования, какие — автоматические; фиксируйте отклонённые альтернативы (approval matrix, источник).</li>
+  <li><strong>Сделайте исполнение аудируемым</strong>: append-only лог шагов, стабильный аудит-якорь, который не меняется при смене инструкций (faceless execution + audit anchor, источник).</li>
+  <li><strong>Проверяйте развязку</strong>: периодически пертурбируйте персону в тесте и проверяйте, что исполняемые шаги не изменились — механическая проверка из статьи как регрессионный тест (интерпретация: проверка по образцу пилота).</li>
+</ol>
+    </section>
+    <section id="sources">
+      <h2>Первичные материалы</h2>
+
+<ul>
+  <li><a href="https://arxiv.org/abs/2608.27427" target="_blank" rel="noopener noreferrer">Persona-Execution Separation: An Architecture Pattern for Evolving LLM Agents under Execution Audit — arXiv 2608.27427</a> (аннотация и полный текст препринта)</li>
+  <li><a href="https://arxiv.org/pdf/2608.27427" target="_blank" rel="noopener noreferrer">PDF: arXiv 2608.27427</a></li>
+</ul>
+<p class="src-note">Автор: Yisen Xi (по данным arXiv, проверено 2026-08-30).</p>
+    </section>
+    <section id="schema">
+      <h2>Схема</h2>
+
+<div class="schema">
+  <figcaption>Схема: два trust-домена и governed contract bridge в PES</figcaption>
+  <div class="columns">
+    <div class="col"><b>Домен персоны</b>Инструкции, тон, самопрезентация — singly-homed, может дрейфовать</div>
+    <div class="col"><b>Contract bridge</b>Наружу — только status summaries; тела данных остаются внутри (кроме DLP-исключения); approval matrix + DLP + аудит</div>
+    <div class="col"><b>Домен исполнения</b>Stateful, аудируемые шаги — faceless, стабильный аудит-якорь, идентичность непрерывна</div>
+    <div class="col"><b>Эффект</b>Персона эволюционирует свободно; исполнение прослеживаемо; развязка enforced, а не по умолчанию</div>
+  </div>
+</div>
+    </section>
+  </article>
+
+  <footer>
+    Personal OS · обзор источника · 2026-08-30 · материал подготовлен агентом Hermes на русском языке
+  </footer>
+</main>
+<script>
+(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),v=null;try{v=localStorage.getItem("review-theme")}catch(e){}if(v==="light"||v==="dark")r.setAttribute("data-theme",v);if(b)b.addEventListener("click",function(){var c=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),n=c==="dark"?"light":"dark";r.setAttribute("data-theme",n);try{localStorage.setItem("review-theme",n)}catch(e){}});})();
+</script>
+</body>
+</html>

@@ -1,6 +1,66 @@
 {
-  "updated": "2026-08-29T14:00:00Z",
+  "updated": "2026-08-30T06:00:00Z",
   "items": [
+    {
+      "id": "wikiskill-persistent-knowledge-skill-evolution",
+      "title": "WikiSkill: компиляция опыта агента в персистентную базу знаний — навыки переносимы между моделями",
+      "category": "Память и навыки · self-improvement · эволюция навыков",
+      "date": "2026-08-30",
+      "sourceName": "arXiv 2608.27454",
+      "sourceUrl": "https://arxiv.org/abs/2608.27454",
+      "sourceType": "Научная статья (препринт, метод + эксперименты)",
+      "summary": "WikiSkill разделяет сырой опыт исполнения, накопленные знания и исполняемые навыки: опыт непрерывно консолидируется в персистентную базу знаний («вики»), на которую опираются последующие обновления навыков. На разных бенчмарках и моделях WikiSkill стабильно обходит SOTA-методы эволюции навыков; навыки переносятся между моделями и семействами; навыки, эволюционированные другой моделью, могут превосходить само-эволюционированные. Абляции: аккумуляция знаний в вики критична для эффективности эволюции.",
+      "takeaway": "Стройте обновления навыков на персистентной базе знаний, а не на сырых трассах: аккумуляция выводов между итерациями критична, навыки переносимы между моделями — и чужие навыки могут быть лучше своих.",
+      "reviewUrl": "reviews/ai-agents/wikiskill-persistent-knowledge-skill-evolution.html",
+      "tags": [
+        "skills",
+        "memory",
+        "self-improvement",
+        "knowledge base",
+        "transfer"
+      ],
+      "featured": false
+    },
+    {
+      "id": "persona-execution-separation",
+      "title": "Persona-Execution Separation: персона свободно дрейфует, исполнение остаётся под аудитом",
+      "category": "Архитектура агентов · аудит · trust-домены",
+      "date": "2026-08-30",
+      "sourceName": "arXiv 2608.27427",
+      "sourceUrl": "https://arxiv.org/abs/2608.27427",
+      "sourceType": "Научная статья (препринт, архитектурный паттерн + пилотный кейс)",
+      "summary": "PES разносит персону (инструкции, тон) и исполнение (stateful, аудируемые шаги) по разным trust-доменам, соединённым governed contract bridge: персона может дрейфовать, исполнение faceless и аудируемое; наружу — только status summaries, тела данных остаются внутри (кроме DLP); переходы enforced через approval matrix и аудит. Однодоменный механизм, закрывающий все три цели, вырождается в PES с большей стоимостью. Пилот в regulated digital-employee платформе: re-validation при пертурбации персоны не найдена.",
+      "takeaway": "Разделяйте «что агент должен делать» (персона) и «что он фактически сделал» (исполнение) по разным trust-границам: эволюция инструкций не должна молча менять аудируемое исполнение, переходы — через явный контракт.",
+      "reviewUrl": "reviews/ai-agents/persona-execution-separation.html",
+      "tags": [
+        "architecture",
+        "audit",
+        "trust domains",
+        "supervisor",
+        "governance"
+      ],
+      "featured": false
+    },
+    {
+      "id": "spa-plan-first-information-flow-control",
+      "title": "SPA: план-первая архитектура и information-flow control для персистентных LLM-агентов",
+      "category": "Безопасность агентов · персистентное состояние · IFC",
+      "date": "2026-08-30",
+      "sourceName": "arXiv 2608.27234",
+      "sourceUrl": "https://arxiv.org/abs/2608.27234",
+      "sourceType": "Научная статья (препринт, метод + бенчмарки)",
+      "summary": "Персистентный агент уязвим между запросами: атакованные данные могут изменить control flow, попасть в аргументы чувствительных тулов или скомпрометировать следующий запрос через состояние. SPA — plan-first архитектура: полный план на декларативном DSL, dual-lattice IFC по данным и control dependencies, результаты — labeled artifacts с метадатой в следующих запросах. На AgentDojo и новом multi-query бенчмарке AgentDojo-MQ атака tool_knowledge снижается до 0% и 0,2% (есть security-utility tradeoff).",
+      "takeaway": "Персистентное состояние агента — поверхность атаки: метьте происхождение данных, отслеживайте потоки через control flow и не возвращайте недоверенные payload'ы в контекст следующих запросов.",
+      "reviewUrl": "reviews/ai-agents/spa-plan-first-information-flow-control.html",
+      "tags": [
+        "security",
+        "persistent state",
+        "information flow",
+        "prompt injection",
+        "multi-query"
+      ],
+      "featured": false
+    },
     {
       "id": "pilot-live-self-improvement",
       "title": "PILOT in the Loop: live self-improvement для долгих задач — супервизор перенаправляет воркера на лету",
