@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Русскоязычный обзор препринта arXiv 2608.27299 (When Context Gets Root): instruction privilege escalation — как сборка контекста харнесом поднимает привилегии низкоуровневого контента, 13 из 13 целей атак на шести харнесах">
+<title>Когда контекст получает root: privilege escalation в LLM-харнесах — Personal OS</title>
+<style>
+  :root {
+    --bg: #e8eaef;
+    --fg: #0b0c0e;
+    --muted: #5a606c;
+    --card: #ffffff;
+    --line: #c5c9d2;
+    --accent: #0e7490;
+    --accent-soft: rgba(14,116,144,.10);
+    --code: #1c1b1a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root { --bg:#0b0c0e; --fg:#f4f5f7; --muted:#8b919c; --card:#1a1d24; --line:#2e3440; --accent:#c8f542; --accent-soft:rgba(200,245,66,.08); --code:#f4f5f7; }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:17px; line-height:1.65;
+  }
+  .page-shell{max-width:760px; margin:0 auto; padding:2.2rem 1.25rem 4rem}
+  a{color:var(--accent); text-decoration-color:var(--line); text-underline-offset:3px}
+  a:hover{text-decoration-color:var(--accent)}
+  .back{display:inline-block; margin-bottom:1.6rem; font-size:.92rem}
+  header h1{font-size:1.75rem; line-height:1.25; margin:.4rem 0 .8rem; letter-spacing:-.01em}
+  .eyebrow{
+    margin:0; font-size:.8rem; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--muted);
+  }
+  .lead{font-size:1.05rem; color:var(--muted); margin:0 0 1.4rem}
+  .meta{
+    display:flex; flex-wrap:wrap; gap:.6rem 1.6rem; margin:0 0 1.8rem; padding:1rem 1.1rem;
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+  }
+  .meta div{display:flex; flex-direction:column; gap:.15rem}
+  .meta dt{font-size:.74rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted)}
+  .meta dd{margin:0; font-size:.95rem; min-width:0; overflow-wrap:anywhere}
+  .toc{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:1rem 1.2rem; margin:0 0 2.2rem; font-size:.95rem;
+  }
+  .toc p{margin:0 0 .4rem; font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted)}
+  .toc ol{margin:.2rem 0 0; padding-left:1.2rem}
+  .toc li{margin:.25rem 0}
+  article h2{font-size:1.3rem; margin:2.6rem 0 .7rem; padding-top:.4rem; border-top:1px solid var(--line)}
+  article h2::before{content:"\00a7 "; color:var(--accent)}
+  article p{margin:.6rem 0}
+  article ul, article ol{margin:.6rem 0; padding-left:1.35rem}
+  article li{margin:.4rem 0}
+  .tag{
+    display:inline-block; font-size:.78rem; font-weight:600; padding:.1rem .55rem;
+    border-radius:999px; border:1px solid var(--line); background:var(--card);
+  }
+  .tag.doc{color:var(--accent); border-color:var(--accent)}
+  .tag.hermes{color:#2e7d32; border-color:#4c9a50}
+  @media (prefers-color-scheme: dark){ .tag.hermes{color:#8fd694; border-color:#4c9a50} }
+  .schema{
+    margin:1.2rem 0; padding:1.1rem; background:var(--card);
+    border:1px solid var(--line); border-radius:10px;
+  }
+  .schema figcaption{font-size:.85rem; color:var(--muted); margin-bottom:.8rem}
+  .columns{display:flex; flex-wrap:wrap; gap:.6rem; justify-content:center}
+  .columns .col{
+    flex:1 1 200px; padding:.8rem .7rem; border-radius:8px;
+    background:var(--accent-soft); border:1px solid var(--line); font-size:.92rem;
+  }
+  .columns .col b{display:block; margin-bottom:.25rem; font-size:.95rem}
+  .src-note{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:.8rem; margin:1rem 0}
+  footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); font-size:.85rem; color:var(--muted)}
+  @media (max-width:520px){
+    body{font-size:16px}
+    header h1{font-size:1.5rem}
+  }
+  html[data-theme="dark"]{ --bg:#0b0c0e; --fg:#f4f5f7; --muted:#8b919c; --card:#1a1d24; --line:#2e3440; --accent:#c8f542; --accent-soft:rgba(200,245,66,.08); --code:#f4f5f7; }
+  html[data-theme="light"]{ --bg:#e8eaef; --fg:#0b0c0e; --muted:#5a606c; --card:#ffffff; --line:#c5c9d2; --accent:#0e7490; --accent-soft:rgba(14,116,144,.10); --code:#1c1b1a; }
+  img{max-width:100%;height:auto}
+  .theme-toggle{position:fixed;top:14px;right:14px;z-index:50;display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:0 14px;background:var(--card);color:var(--fg);border:1px solid var(--line,var(--border,#888));border-radius:2px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);cursor:pointer;font-family:ui-monospace,"IBM Plex Mono","JetBrains Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 2px 10px rgba(0,0,0,.25);transition:border-color .15s,color .15s}
+  .theme-toggle svg{width:20px;height:20px;flex:none}
+  .theme-toggle svg path{fill:currentColor}
+  .theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+  .theme-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<main class="page-shell">
+  <a class="back" href="../../index.html">&larr; Вернуться в Personal OS</a>
+<button type="button" class="theme-toggle" id="themeToggle" aria-label="Переключить тему: светлая/тёмная"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2a7 7 0 0 0 0 14 5 5 0 0 1 0-14zM12 3a6 6 0 0 0 0 12 6 6 0 0 0 0-12zM4.5 9H2v1.5h2.5V9zm15 0v1.5H20V9h-.5zM9 4.5H7.5V2H9v2.5zm6 0V2h1.5v2.5H15zM4 13.5l1.06 1.06 1.77-1.77-1.06-1.06L4 13.5zm13.17-1.77 1.77 1.77L20 13.5l-1.77-1.77-1.06 1.06zM11 19h1.5v2.5H11V19zm4.5 0H17v2.5h-1.5V19z"/></svg><span>Тема</span></button>
+  <header>
+        <p class="eyebrow">Безопасность агентов · харнесы</p>
+    <h1>Когда контекст получает root: эскалация привилегий инструкций</h1>
+    <p class="lead">Instruction hierarchy защищает модель от низкоприоритетного контента — но контекст собирает харнес, и сборка может поднять низкоуровневый контент до уровня инструкции. Атака достигает 13 из 13 целей на всех шести кодинг-харнесах, включая режимы с автоматическим review разрешений.</p>
+    <dl class="meta">
+      <div><dt>Первичный источник</dt><dd><a href="https://arxiv.org/abs/2608.27299" target="_blank" rel="noopener noreferrer">When Context Gets Root: Privilege Escalation in LLM Harnesses — arXiv 2608.27299</a></dd></div>
+      <div><dt>Тип</dt><dd>Научная статья (препринт, исследование атак)</dd></div>
+      <div><dt>Опубликовано</dt><dd>2026-08-27 (arXiv)</dd></div>
+      <div><dt>Проверено</dt><dd>2026-08-29</dd></div>
+    </dl>
+  </header>
+
+  <nav class="toc" aria-label="Содержание">
+    <p>Содержание</p>
+    <ol>
+      <li><a href="#summary">Суть материала</a></li>
+      <li><a href="#why-it-matters">Почему это важно</a></li>
+      <li><a href="#practical">Практическое применение</a></li>
+      <li><a href="#limits">Ограничения и риски</a></li>
+      <li><a href="#implementation">Как применить к вашему ИИ-агенту</a></li>
+      <li><a href="#sources">Первичные материалы</a></li>
+    </ol>
+  </nav>
+
+  <article>
+    <section id="summary">
+      <h2>Суть материала</h2>
+
+<p><strong>Instruction hierarchy</strong> — защита на стороне модели: инструкциям назначаются уровни привилегий по источнику (системная инструкция выше пользовательского ввода, пользовательский ввод выше контента из документов/веба). Уровни ограничивают, какой контент может управлять поведением модели. Это стандартный ответ индустрии на prompt injection.</p>
+
+<p>Но во время исполнения агента контекст для каждого вызова модели собирает <strong>харнес</strong> — он решает, что и в каком порядке попадает в промпт. Авторы показывают: эта сборка может <strong>поднять низкоуровневый контент на более высокий уровень инструкции</strong> и тем самым дать ему большую привилегию перед моделью. Атака названа <strong>instruction privilege escalation</strong>: атакующий индуцирует агента возвести вредоносный низкоуровневый контент на уровень инструкции; в результате агент исполняет то, что не исполнил бы на исходном уровне контента.</p>
+
+<p>Оценка угрозы — через мультиагентные механизмы для <strong>13 целей атак</strong> на шести кодинг-харнесах. Цели покрывают конфиденциальность, целостность, доступность и удалённое исполнение кода (RCE). Результаты:</p>
+
+<ul>
+  <li>при неограниченном исполнении действий — <strong>все 13 целей на всех шести харнесах</strong>;</li>
+  <li>при автоматическом review разрешений — <strong>все 13 целей на всех трёх харнесах</strong>, где этот режим предусмотрен (review разрешений не спасает);</li>
+  <li>уязвимость воспроизводится через <strong>харнес-предоставленные persistent goals</strong> и <strong>scheduled tasks</strong> — то есть не только в интерактивной сессии, но и в фоновых/автоматических режимах.</li>
+</ul>
+
+<p>Вывод авторов: instruction privilege escalation — общая, а не точечная уязвимость харнесов, и защита должна учитывать не только модель, но и конструкцию контекста.</p>
+    </section>
+    <section id="why-it-matters">
+      <h2>Почему это важно</h2>
+
+<p>Индустрия возлагает на instruction hierarchy большие надежды как на «правильную» защиту от инъекций. Статья показывает дыру в самом фундаменте: <strong>защита предполагает, что уровни привилегий присвоены корректно</strong>, но присваивает их харнес в момент сборки контекста, и это присваивание атакуемо.</p>
+
+<p>Практический смысл для агентных систем: атакующему не нужно ломать модель — достаточно <strong>повлиять на то, как харнес классифицирует контент</strong>. Например, вложить вредоносные инструкции в материал, который харнес по своей логике поднимает в пользовательский или системный уровень (инструктирующая репликация, эхо «сделай как сказано», подмена роли в данных инструментов).</p>
+
+<p>Особенно тревожно, что <strong>автоматический review разрешений не помогает</strong>: все 13 целей достигаются и при нём. Это значит, что механизмы «спросить человека перед опасным действием» могут быть обойдены через манипуляцию уровнем инструкции. Для Personal OS, где агент уже имеет мост с командами и может исполнять действия от имени владельца, это прямое предупреждение: доверенная граница — не только токены и CORS, но и конструкция контекста.</p>
+    </section>
+    <section id="practical">
+      <h2>Практическое применение</h2>
+
+<p>Помечаем, что задокументировано источником, а что — наша интерпретация для Personal OS.</p>
+<ul>
+  <li><span class="tag doc">Источник</span> <strong>Механизм</strong>: сборка контекста харнесом может поднять низкоуровневый контент до уровня инструкции (instruction privilege escalation).</li>
+  <li><span class="tag doc">Источник</span> <strong>Результаты</strong>: 13/13 целей на 6 харнесах при свободном исполнении; 13/13 на 3 харнесах с автоматическим review разрешений.</li>
+  <li><span class="tag doc">Источник</span> <strong>Векторы</strong>: мультиагентные механизмы, persistent goals, scheduled tasks — фоновая автоматика тоже уязвима.</li>
+  <li><span class="tag doc">Источник</span> <strong>Диапазон целей</strong>: конфиденциальность, целостность, доступность, RCE.</li>
+  <li><span class="tag">Интерпретация</span> <strong>Для Hermes/Personal OS</strong>: аудит того, как харнес/мост классифицирует контент (что попадает в системный промпт, что в пользовательский уровень), и запрет необратимых действий без подтверждения владельца независимо от «уровня инструкции».</li>
+</ul>
+    </section>
+    <section id="limits">
+      <h2>Ограничения и риски</h2>
+
+<ul>
+  <li><span class="tag doc">Источник</span> <strong>Кодинг-харнесы</strong>: оценка на шести кодинг-харнесах; другие классы агентов (RAG, office-автоматизация) могут иметь иную поверхность, хотя механизм — общий.</li>
+  <li><span class="tag doc">Источник</span> <strong>13 целей</strong>: набор целей ограничен конфиденциальностью/целостностью/доступностью/RCE; реальный ландшафт шире, но и этих достаточно для вывода об общности.</li>
+  <li><span class="tag doc">Источник</span> <strong>Мультиагентный вектор</strong>: часть атак использует мультиагентные механизмы — в системах с одним агентом поверхность уже, но persistent goals и scheduled tasks воспроизводят уязвимость и там.</li>
+  <li><span class="tag">Интерпретация</span> <strong>Нет готового контризмерения</strong>: статья показывает проблему; конкретные фиксы на уровне харнеса (валидация классификации, запрет эскалации) — практическая интерпретация, а не документированное решение.</li>
+</ul>
+    </section>
+    <section id="implementation">
+      <h2>Как применить к вашему ИИ-агенту</h2>
+
+<ol>
+  <li><strong>Аудите классификацию контента</strong> в своём харнесе: какие источники (системный промпт, пользовательский ввод, вывод тулов, веб-контент, память) получают какой уровень инструкции — и не поднимается ли что-то автоматически (интерпретация: механизм из статьи).</li>
+  <li><strong>Проверьте эхо-инструкции</strong>: если харнес реплицирует содержимое тулов/памяти в системный или пользовательский уровень, вредоносный контент может «доехать» до высокого уровня — добавьте проверку происхождения (интерпретация на основе механизма эскалации).</li>
+  <li><strong>Не доверяйте review разрешений как единственной защите</strong>: в статье он обходится на всех харнесах; для деструктивных действий держите подтверждение владельца вне контекста модели (интерпретация, согласуется с политиками Personal OS).</li>
+  <li><strong>Отделите фоновые задачи</strong>: scheduled tasks и persistent goals воспроизводят уязвимость — для cron-задач Hermes используйте фиксированные, не зависящие от контекста сессии разрешения (интерпретация).</li>
+  <li><strong>Мониторьте аномальные эскалации</strong>: логируйте, какой контент какого происхождения попадал в какой уровень инструкции, и сигнализируйте при неожиданном повышении (интерпретация: наблюдаемость из AgentOps).</li>
+</ol>
+    </section>
+    <section id="sources">
+      <h2>Первичные материалы</h2>
+
+<ul>
+  <li><a href="https://arxiv.org/abs/2608.27299" target="_blank" rel="noopener noreferrer">When Context Gets Root: Privilege Escalation in LLM Harnesses — arXiv 2608.27299</a> (аннотация и полный текст препринта)</li>
+  <li><a href="https://arxiv.org/pdf/2608.27299" target="_blank" rel="noopener noreferrer">PDF: arXiv 2608.27299</a></li>
+</ul>
+<p class="src-note">Авторы: Xingbang He, Yuanwei Chen, Yi Qian и др. (по данным arXiv, проверено 2026-08-29).</p>
+    </section>
+    <section id="schema">
+      <h2>Схема</h2>
+
+<div class="schema">
+  <figcaption>Схема: путь instruction privilege escalation</figcaption>
+  <div class="columns">
+    <div class="col"><b>Защита</b>Instruction hierarchy: уровни привилегий по источнику контента</div>
+    <div class="col"><b>Слабое место</b>Уровни присваивает харнес при сборке контекста — присваивание атакуемо</div>
+    <div class="col"><b>Атака</b>Агент индуцируется возвести низкоуровневый контент до уровня инструкции</div>
+    <div class="col"><b>Итог</b>13/13 целей на 6 харнесах; review разрешений не спасает; persistent goals и scheduled tasks тоже уязвимы</div>
+  </div>
+</div>
+    </section>
+  </article>
+
+  <footer>
+    Personal OS · обзор источника · 2026-08-29 · материал подготовлен агентом Hermes на русском языке
+  </footer>
+</main>
+<script>
+(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),v=null;try{v=localStorage.getItem("review-theme")}catch(e){}if(v==="light"||v==="dark")r.setAttribute("data-theme",v);if(b)b.addEventListener("click",function(){var c=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),n=c==="dark"?"light":"dark";r.setAttribute("data-theme",n);try{localStorage.setItem("review-theme",n)}catch(e){}});})();
+</script>
+</body>
+</html>

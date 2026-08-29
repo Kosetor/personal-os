@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `pilot-live-self-improvement.html` | PILOT in the Loop: live self-improvement для long-horizon агентов — супервизор перенаправляет воркера на лету, дистилляция процедур и сбоев в навыки и память (arXiv 2608.26530) |
+| `agent-mesh-delegation-reliability.html` | Agent Mesh: примитивы надёжности делегирования — 147 инцидентов продакшена против retry/timeout, identity adequacy и evidence adequacy (arXiv 2608.26225) |
+| `context-privilege-escalation-harness.html` | When Context Gets Root: instruction privilege escalation в LLM-харнесах — 13/13 целей атак (arXiv 2608.27299) |
 | `toolcall-rate-representation-steering.html` | Tunable Tool-Call Rates: направление в residual stream управляет частотой вызова тулов — 0→90%+, QA 0,29→0,56 (arXiv 2608.25198) |
 | `routed-graph-handoff.html` | Routed Graph Handoff: роутер выбирает формат передачи между агентами — граф или текст, до 3,2× компрессии (arXiv 2608.25277) |
 | `hips-personalized-memory-strategy.html` | HiPS: иерархическая персонализация стратегии памяти агента — глобальные принципы + правила пользователя (arXiv 2608.25329) |

@@ -1,6 +1,66 @@
 {
-  "updated": "2026-08-29T12:00:00Z",
+  "updated": "2026-08-29T14:00:00Z",
   "items": [
+    {
+      "id": "pilot-live-self-improvement",
+      "title": "PILOT in the Loop: live self-improvement для долгих задач — супервизор перенаправляет воркера на лету",
+      "category": "Память и навыки · self-improvement · харнес",
+      "date": "2026-08-29",
+      "sourceName": "arXiv 2608.26530",
+      "sourceUrl": "https://arxiv.org/abs/2608.26530",
+      "sourceType": "Научная статья (препринт, метод + бенчмарки)",
+      "summary": "Self-improvement обычно работает после прогона: менять текущий запуск уже поздно. PILOT — supervisor-worker харнес с live-механиками: супервизор перенаправляет или прерывает воркера на лету, а live self-evolution дистиллирует процедуры и сбои в навыки и память прямо во время исполнения. На двух бэкбонах и трёх бенчмарках PILOT первый в пяти из шести конфигураций: Terminal-Bench 2.0 до +9,8 п.п., self-improvement-режим +14,6 (GLM-5.1) и +12,4 (Kimi-K2.6), вывод токенов −42,9/−47,4%.",
+      "takeaway": "Переносите обучение из пост-обработки в рантайм: супервизор, прерывающий воркера, плюс дистилляция сбоев в навыки дают рост качества и экономию токенов. Для Personal OS: слой контроля над cron-агентом и обновление навыков по живым отказам.",
+      "reviewUrl": "reviews/ai-agents/pilot-live-self-improvement.html",
+      "tags": [
+        "self-improvement",
+        "skills",
+        "memory",
+        "supervisor",
+        "harness"
+      ],
+      "featured": false
+    },
+    {
+      "id": "agent-mesh-delegation-reliability",
+      "title": "Agent Mesh: примитивы надёжности делегирования — 147 инцидентов продакшена против retry/timeout",
+      "category": "Multi-agent · надёжность · AgentOps",
+      "date": "2026-08-29",
+      "sourceName": "arXiv 2608.26225",
+      "sourceUrl": "https://arxiv.org/abs/2608.26225",
+      "sourceType": "Научная статья (препринт, исследование отказов в продакшене)",
+      "summary": "Оркестраторы заимствуют у service mesh retry, timeout и circuit breaking по error rate. Разбор 147 инцидентов продакшен-платформы агентной доставки ПО: все три допущения нарушаются. 54 успешных вызова подряд невидимы error-rate breaker; прогресс-сигнал константен по конструкции — ложное срабатывание на третьем repair-раунде; 21 событие за шесть вызовов делает идемпотентный компонент непобедимым. Причины: identity adequacy и evidence adequacy. Вывод: семь примитивов, единица enforcement — делегация, а не сообщение.",
+      "takeaway": "Не переносите слепо retry/timeout/circuit breaker в делегирование: без различающей идентичности и детерминируемого свидетельства они дают ложные срабатывания. Единица контроля — делегация с evidence, а не сообщение; фиксируйте стоимость инцидентов.",
+      "reviewUrl": "reviews/ai-agents/agent-mesh-delegation-reliability.html",
+      "tags": [
+        "multi-agent",
+        "reliability",
+        "delegation",
+        "retries",
+        "observability"
+      ],
+      "featured": false
+    },
+    {
+      "id": "context-privilege-escalation-harness",
+      "title": "Когда контекст получает root: instruction privilege escalation — 13 из 13 целей атак на шести харнесах",
+      "category": "Безопасность агентов · харнесы",
+      "date": "2026-08-29",
+      "sourceName": "arXiv 2608.27299",
+      "sourceUrl": "https://arxiv.org/abs/2608.27299",
+      "sourceType": "Научная статья (препринт, исследование атак)",
+      "summary": "Instruction hierarchy — защита на стороне модели: инструкции получают уровни привилегий по источнику. Но контекст каждого вызова собирает харнес, и сборка может поднять низкоуровневый контент на более высокий уровень — instruction privilege escalation. Через мультиагентные механизмы 13 целей (конфиденциальность, целостность, доступность, RCE) достигаются на всех шести кодинг-харнесах при свободном исполнении и на всех трёх с автоматическим review разрешений.",
+      "takeaway": "Контекст, собранный харнесом, — доверенная граница: низкоуровневый контент может получить привилегии инструкции. Не полагайтесь на instruction hierarchy как на единственную защиту; проверяйте, что именно харнес поднимает в уровень инструкций.",
+      "reviewUrl": "reviews/ai-agents/context-privilege-escalation-harness.html",
+      "tags": [
+        "security",
+        "harness",
+        "prompt injection",
+        "privilege escalation",
+        "multi-agent"
+      ],
+      "featured": false
+    },
     {
       "id": "invocation-reliability-tool-scoring",
       "title": "Invocation-Level Reliability: exact-match скоринг скрывает сбои вызовов тулов",

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Русскоязычный обзор препринта arXiv 2608.26530 (PILOT in the Loop): live self-improvement для long-horizon агентов — супервизор перенаправляет воркера на лету, дистилляция процедур и сбоев в навыки и память">
+<title>PILOT in the Loop: live self-improvement для долгих задач — Personal OS</title>
+<style>
+  :root {
+    --bg: #e8eaef;
+    --fg: #0b0c0e;
+    --muted: #5a606c;
+    --card: #ffffff;
+    --line: #c5c9d2;
+    --accent: #0e7490;
+    --accent-soft: rgba(14,116,144,.10);
+    --code: #1c1b1a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root { --bg:#0b0c0e; --fg:#f4f5f7; --muted:#8b919c; --card:#1a1d24; --line:#2e3440; --accent:#c8f542; --accent-soft:rgba(200,245,66,.08); --code:#f4f5f7; }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:17px; line-height:1.65;
+  }
+  .page-shell{max-width:760px; margin:0 auto; padding:2.2rem 1.25rem 4rem}
+  a{color:var(--accent); text-decoration-color:var(--line); text-underline-offset:3px}
+  a:hover{text-decoration-color:var(--accent)}
+  .back{display:inline-block; margin-bottom:1.6rem; font-size:.92rem}
+  header h1{font-size:1.75rem; line-height:1.25; margin:.4rem 0 .8rem; letter-spacing:-.01em}
+  .eyebrow{
+    margin:0; font-size:.8rem; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--muted);
+  }
+  .lead{font-size:1.05rem; color:var(--muted); margin:0 0 1.4rem}
+  .meta{
+    display:flex; flex-wrap:wrap; gap:.6rem 1.6rem; margin:0 0 1.8rem; padding:1rem 1.1rem;
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+  }
+  .meta div{display:flex; flex-direction:column; gap:.15rem}
+  .meta dt{font-size:.74rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted)}
+  .meta dd{margin:0; font-size:.95rem; min-width:0; overflow-wrap:anywhere}
+  .toc{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:1rem 1.2rem; margin:0 0 2.2rem; font-size:.95rem;
+  }
+  .toc p{margin:0 0 .4rem; font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted)}
+  .toc ol{margin:.2rem 0 0; padding-left:1.2rem}
+  .toc li{margin:.25rem 0}
+  article h2{font-size:1.3rem; margin:2.6rem 0 .7rem; padding-top:.4rem; border-top:1px solid var(--line)}
+  article h2::before{content:"\00a7 "; color:var(--accent)}
+  article p{margin:.6rem 0}
+  article ul, article ol{margin:.6rem 0; padding-left:1.35rem}
+  article li{margin:.4rem 0}
+  .tag{
+    display:inline-block; font-size:.78rem; font-weight:600; padding:.1rem .55rem;
+    border-radius:999px; border:1px solid var(--line); background:var(--card);
+  }
+  .tag.doc{color:var(--accent); border-color:var(--accent)}
+  .tag.hermes{color:#2e7d32; border-color:#4c9a50}
+  @media (prefers-color-scheme: dark){ .tag.hermes{color:#8fd694; border-color:#4c9a50} }
+  .schema{
+    margin:1.2rem 0; padding:1.1rem; background:var(--card);
+    border:1px solid var(--line); border-radius:10px;
+  }
+  .schema figcaption{font-size:.85rem; color:var(--muted); margin-bottom:.8rem}
+  .columns{display:flex; flex-wrap:wrap; gap:.6rem; justify-content:center}
+  .columns .col{
+    flex:1 1 200px; padding:.8rem .7rem; border-radius:8px;
+    background:var(--accent-soft); border:1px solid var(--line); font-size:.92rem;
+  }
+  .columns .col b{display:block; margin-bottom:.25rem; font-size:.95rem}
+  .src-note{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:.8rem; margin:1rem 0}
+  footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); font-size:.85rem; color:var(--muted)}
+  @media (max-width:520px){
+    body{font-size:16px}
+    header h1{font-size:1.5rem}
+  }
+  html[data-theme="dark"]{ --bg:#0b0c0e; --fg:#f4f5f7; --muted:#8b919c; --card:#1a1d24; --line:#2e3440; --accent:#c8f542; --accent-soft:rgba(200,245,66,.08); --code:#f4f5f7; }
+  html[data-theme="light"]{ --bg:#e8eaef; --fg:#0b0c0e; --muted:#5a606c; --card:#ffffff; --line:#c5c9d2; --accent:#0e7490; --accent-soft:rgba(14,116,144,.10); --code:#1c1b1a; }
+  img{max-width:100%;height:auto}
+  .theme-toggle{position:fixed;top:14px;right:14px;z-index:50;display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:0 14px;background:var(--card);color:var(--fg);border:1px solid var(--line,var(--border,#888));border-radius:2px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);cursor:pointer;font-family:ui-monospace,"IBM Plex Mono","JetBrains Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 2px 10px rgba(0,0,0,.25);transition:border-color .15s,color .15s}
+  .theme-toggle svg{width:20px;height:20px;flex:none}
+  .theme-toggle svg path{fill:currentColor}
+  .theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+  .theme-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<main class="page-shell">
+  <a class="back" href="../../index.html">&larr; Вернуться в Personal OS</a>
+<button type="button" class="theme-toggle" id="themeToggle" aria-label="Переключить тему: светлая/тёмная"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2a7 7 0 0 0 0 14 5 5 0 0 1 0-14zM12 3a6 6 0 0 0 0 12 6 6 0 0 0 0-12zM4.5 9H2v1.5h2.5V9zm15 0v1.5H20V9h-.5zM9 4.5H7.5V2H9v2.5zm6 0V2h1.5v2.5H15zM4 13.5l1.06 1.06 1.77-1.77-1.06-1.06L4 13.5zm13.17-1.77 1.77 1.77L20 13.5l-1.77-1.77-1.06 1.06zM11 19h1.5v2.5H11V19zm4.5 0H17v2.5h-1.5V19z"/></svg><span>Тема</span></button>
+  <header>
+        <p class="eyebrow">Память и навыки · self-improvement · харнес</p>
+    <h1>PILOT in the Loop: самоулучшение в рантайме вместо пост-обработки</h1>
+    <p class="lead">Большинство методов self-improvement разбирает опыт после завершения прогона. PILOT делает это живым: супервизор перенаправляет воркера на лету, а процедуры и сбои дистиллируются в навыки и память прямо во время исполнения. На Terminal-Bench 2.0 — до +9,8 п.п., токены −42,9%.</p>
+    <dl class="meta">
+      <div><dt>Первичный источник</dt><dd><a href="https://arxiv.org/abs/2608.26530" target="_blank" rel="noopener noreferrer">PILOT in the Loop: Live Self-Improvement for Long-Horizon Agents — arXiv 2608.26530</a></dd></div>
+      <div><dt>Тип</dt><dd>Научная статья (препринт, метод + бенчмарки)</dd></div>
+      <div><dt>Опубликовано</dt><dd>2026-08-27 (arXiv)</dd></div>
+      <div><dt>Проверено</dt><dd>2026-08-29</dd></div>
+    </dl>
+  </header>
+
+  <nav class="toc" aria-label="Содержание">
+    <p>Содержание</p>
+    <ol>
+      <li><a href="#summary">Суть материала</a></li>
+      <li><a href="#why-it-matters">Почему это важно</a></li>
+      <li><a href="#practical">Практическое применение</a></li>
+      <li><a href="#limits">Ограничения и риски</a></li>
+      <li><a href="#implementation">Как применить к вашему ИИ-агенту</a></li>
+      <li><a href="#sources">Первичные материалы</a></li>
+    </ol>
+  </nav>
+
+  <article>
+    <section id="summary">
+      <h2>Суть материала</h2>
+
+<p>Long-horizon запуск агента — это часы работы, десятки вызовов тулов и накопленный опыт, который можно применить дважды: к текущему запуску и к будущим. Стандартные методы self-improvement обрабатывают этот опыт <strong>только после завершения исполнения</strong>: траектория разбирается, извлекаются уроки, обновляются промпты или навыки. К активному запуску это уже не относится — его нельзя ни перенаправить, ни исправить.</p>
+
+<p>Авторы утверждают: самоулучшение должно быть <strong>live</strong>. Для этого нужна архитектура, которой у существующих агентов нет. Одиночная self-correction совмещает исполнение и оценку траектории в одном контексте — оценка загрязняет исполнение и не видит его целиком. Делегирование субагентам разделяет исполнение, но не позволяет перенаправить активного субагента. PILOT — это supervisor-worker харнес с двумя связанными механизмами:</p>
+
+<ul>
+  <li><strong>Live steering</strong> — отдельный супервизор наблюдает за воркером во время исполнения и может перенаправить или прервать его.</li>
+  <li><strong>Live self-evolution</strong> — процедуры и паттерны отказов, проявившиеся в ходе исполнения, дистиллируются в переиспользуемые навыки и память немедленно, а не после остановки.</li>
+</ul>
+
+<p>Результаты: на двух замороженных бэкбонах (модели не обновляются — меняется только харнес) и трёх бенчмарках PILOT занимает первое место в пяти из шести конфигураций. На Terminal-Bench 2.0 выигрыш у харнесов-конкурентов до 9,8 п.п. В режиме self-improvement: +14,6 балла с GLM-5.1 и +12,4 с Kimi-K2.6. Средний вывод токенов падает на 42,9% и 47,4%, а число успешных оценок на миллион выходных токенов растёт на 110,3% и 134,0% — то есть улучшение не покупается лишним текстом, а наоборот, экономит его.</p>
+    </section>
+    <section id="why-it-matters">
+      <h2>Почему это важно</h2>
+
+<p>Классический цикл «прогон → разбор → обновление навыка» имеет встроенную задержку: урок, извлечённый из сегодняшнего сбоя, применится только в следующем запуске. Для долгих задач — а именно такие стоят за автоматизацией инфраструктуры, GIS-пайплайнов и многочасовых агентных работ — это означает повторение ошибки до конца текущего прогона, иногда с накоплением ущерба.</p>
+
+<p>Live-механика закрывает две конкретные дыры. Первая: <strong>перенаправление активной работы</strong> — супервизор видит, что воркер пошёл не туда (например, крутится в цикле перезапусков упавшего тула), и разворачивает его до того, как потрачены часы. Вторая: <strong>немедленная валидация урока</strong> — навык, извлечённый из сбоя, тут же проверяется на следующем шаге той же задачи; обратная связь не откладывается.</p>
+
+<p>Отдельно ценно, что улучшение достигнуто <strong>при замороженных моделях</strong>: весь выигрыш — это архитектура харнеса. Для Personal OS, где модели арендуются/меняются, а харнес свой, это означает, что инвестиции в слой управления окупаются независимо от выбора модели.</p>
+    </section>
+    <section id="practical">
+      <h2>Практическое применение</h2>
+
+<p>Помечаем, что задокументировано источником, а что — наша интерпретация для Personal OS.</p>
+<ul>
+  <li><span class="tag doc">Источник</span> <strong>Live steering</strong>: отдельный супервизор может перенаправить или прервать активного воркера во время исполнения.</li>
+  <li><span class="tag doc">Источник</span> <strong>Live self-evolution</strong>: процедуры и отказы дистиллируются в навыки и память немедленно, с валидацией на текущем запуске.</li>
+  <li><span class="tag doc">Источник</span> <strong>Результаты</strong>: первое место в 5 из 6 конфигураций, Terminal-Bench 2.0 до +9,8 п.п., токены −42,9/−47,4%, успешные eval на млн токенов +110/+134%.</li>
+  <li><span class="tag doc">Источник</span> <strong>Замороженные бэкбоны</strong>: модели не менялись — выигрыш даёт харнес.</li>
+  <li><span class="tag">Интерпретация</span> <strong>Для Hermes/Personal OS</strong>: cron-агенты — естественный полигон: супервизор над долгими задачами (bridge-мост, обзоры, GIS-пайплайны) с правом прервать и перезапустить шаг, плюс запись «что сломалось и как починили» в навык сразу.</li>
+</ul>
+    </section>
+    <section id="limits">
+      <h2>Ограничения и риски</h2>
+
+<ul>
+  <li><span class="tag doc">Источник</span> <strong>Два бэкбона</strong>: GLM-5.1 и Kimi-K2.6; перенос на другие семейства и open-weight модели другого масштаба требует проверки.</li>
+  <li><span class="tag doc">Источник</span> <strong>Три бенчмарка</strong>: Terminal-Bench 2.0 и два других; реальные продакшен-задачи с внешними API и живой инфраструктурой могут вести себя иначе.</li>
+  <li><span class="tag doc">Источник</span> <strong>Цена супервизора</strong>: отдельный слой наблюдения добавляет токены и латентность; в статье экономия на выводе воркера, но сам супервизор тоже считает.</li>
+  <li><span class="tag">Интерпретация</span> <strong>Риск дистилляции шума</strong>: если супервизор ошибочно классифицирует успех как сбой, в навыки попадает неверный урок; нужна валидация извлечённых процедур перед записью в постоянную память.</li>
+</ul>
+    </section>
+    <section id="implementation">
+      <h2>Как применить к вашему ИИ-агенту</h2>
+
+<ol>
+  <li><strong>Выделите супервизора</strong> из контекста исполнения: отдельный прогон/роль, которая видит шаги воркера, но не участвует в них (интерпретация: архитектура supervisor-worker из статьи).</li>
+  <li><strong>Дайте супервизору право прервать</strong>: детектор циклов (повторный вызов упавшего тула, отсутствие прогресса N шагов) → abort или redirect воркера (live steering, источник).</li>
+  <li><strong>Дистиллируйте урок немедленно</strong>: после сбоя формируйте короткую запись «симптом → причина → исправление» и применяйте её как навык/память на следующем шаге той же задачи (live self-evolution, источник).</li>
+  <li><strong>Измеряйте эффективность токенов</strong>: метрика «успешных завершений на миллион выходных токенов» (из статьи) — хороший KPI для оценки, не покупается ли результат лишним текстом.</li>
+  <li><strong>Валидируйте извлечённые навыки</strong>: перед записью в постоянную память Hermes прогоняйте проверку «навык решает задачу, из которой извлечён» (интерпретация: страховка от дистилляции шума).</li>
+</ol>
+    </section>
+    <section id="sources">
+      <h2>Первичные материалы</h2>
+
+<ul>
+  <li><a href="https://arxiv.org/abs/2608.26530" target="_blank" rel="noopener noreferrer">PILOT in the Loop: Live Self-Improvement for Long-Horizon Agents — arXiv 2608.26530</a> (аннотация и полный текст препринта)</li>
+  <li><a href="https://arxiv.org/pdf/2608.26530" target="_blank" rel="noopener noreferrer">PDF: arXiv 2608.26530</a></li>
+</ul>
+<p class="src-note">Авторы: Xiao Yang, Yusong Sun, Haoyi Wu и др. (по данным arXiv, проверено 2026-08-29).</p>
+    </section>
+    <section id="schema">
+      <h2>Схема</h2>
+
+<div class="schema">
+  <figcaption>Схема: два контура live self-improvement в PILOT</figcaption>
+  <div class="columns">
+    <div class="col"><b>Исполнение</b>Воркер выполняет задачу: планирует, вызывает тулы, пишет вывод</div>
+    <div class="col"><b>Live steering</b>Супервизор наблюдает за шагами; при цикле/тупике — перенаправляет или прерывает активного воркера</div>
+    <div class="col"><b>Live self-evolution</b>Процедуры и отказы дистиллируются в навыки и память немедленно, валидируются на текущем запуске</div>
+    <div class="col"><b>Эффект</b>Модели заморожены; +9,8 п.п. на Terminal-Bench 2.0, токены −42,9%, успешные eval на млн токенов +110%</div>
+  </div>
+</div>
+    </section>
+  </article>
+
+  <footer>
+    Personal OS · обзор источника · 2026-08-29 · материал подготовлен агентом Hermes на русском языке
+  </footer>
+</main>
+<script>
+(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),v=null;try{v=localStorage.getItem("review-theme")}catch(e){}if(v==="light"||v==="dark")r.setAttribute("data-theme",v);if(b)b.addEventListener("click",function(){var c=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),n=c==="dark"?"light":"dark";r.setAttribute("data-theme",n);try{localStorage.setItem("review-theme",n)}catch(e){}});})();
+</script>
+</body>
+</html>
