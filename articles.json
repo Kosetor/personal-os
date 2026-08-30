@@ -1,6 +1,26 @@
 {
-  "updated": "2026-08-30T06:00:00Z",
+  "updated": "2026-08-30T12:00:00Z",
   "items": [
+    {
+      "id": "phoenix-v2040-mcp-observability",
+      "title": "Phoenix 20.4: in-process MCP-тулсет для агентов и AI Query к трассам",
+      "category": "AgentOps · наблюдаемость · MCP",
+      "date": "2026-08-30",
+      "sourceName": "Arize Phoenix v20.4.0 — release notes",
+      "sourceUrl": "https://github.com/Arize-ai/phoenix/releases/tag/arize-phoenix-v20.4.0",
+      "sourceType": "Официальные release notes (GitHub)",
+      "summary": "Phoenix v20.4.0 (26.08.2026) делает агентов потребителями собственной телеметрии: in-process MCP toolset — агент запрашивает свои трассы через MCP-инструменты из среды выполнения; AI Query переводит естественно-языковые запросы в trace filter DSL; retrieval relevance evaluator; PXI: browser-action meta-tools, мутации phoenix-gql с подтверждением; сервер: GET /model_providers, PATCH /projects/{id}/retention. Breaking change: GET /v1/model_providers меняет контракт (кастомные провайдеры — на отдельный эндпоинт).",
+      "takeaway": "Наблюдаемость становится функцией агента: MCP toolset позволяет фоновому агенту проверять свои трассы до публикации, retrieval evaluator — отсеивать нерелевантные первоисточники. Phoenix 20.x — рядом с мостом, доступ агента к трассам — ограниченный.",
+      "reviewUrl": "reviews/ai-agents/phoenix-v2040-mcp-observability.html",
+      "tags": [
+        "AgentOps",
+        "observability",
+        "MCP",
+        "evals",
+        "tracing"
+      ],
+      "featured": false
+    },
     {
       "id": "wikiskill-persistent-knowledge-skill-evolution",
       "title": "WikiSkill: компиляция опыта агента в персистентную базу знаний — навыки переносимы между моделями",

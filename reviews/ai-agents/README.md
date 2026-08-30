@@ -23,6 +23,7 @@
 
 | Файл | Тема |
 |---|---|
+| `phoenix-v2040-mcp-observability.html` | Phoenix 20.4: in-process MCP-тулсет для агентов, AI Query к trace filter DSL, retrieval relevance evaluator (release notes) |
 | `wikiskill-persistent-knowledge-skill-evolution.html` | WikiSkill: компиляция опыта агента в персистентную базу знаний — навыки переносимы между моделями, чужие навыки могут быть лучше своих (arXiv 2608.27454) |
 | `persona-execution-separation.html` | Persona-Execution Separation: персона и исполнение в разных trust-доменах под execution audit, governed contract bridge (arXiv 2608.27427) |
 | `spa-plan-first-information-flow-control.html` | SPA: защита персистентных агентов между запросами — plan-first архитектура и dual-lattice IFC, tool_knowledge 0%/0,2% (arXiv 2608.27234) |
