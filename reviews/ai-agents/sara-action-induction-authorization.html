@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Русскоязычный обзор препринта arXiv 2608.27146 (SARA): разделение индукции действия и авторизации исполнения в tool-augmented LLM-агентах — когда вывод тула становится командой, ASR ≤ 0,63% на AgentDojo и AgentDyn">
+<title>SARA: вывод тула — не команда. Разделение индукции и авторизации — Personal OS</title>
+<style>
+  :root {
+    --bg: #e8eaef;
+    --fg: #0b0c0e;
+    --muted: #5a606c;
+    --card: #ffffff;
+    --line: #c5c9d2;
+    --accent: #0e7490;
+    --accent-soft: rgba(14,116,144,.10);
+    --code: #1c1b1a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root { --bg:#0b0c0e; --fg:#f4f5f7; --muted:#8b919c; --card:#1a1d24; --line:#2e3440; --accent:#c8f542; --accent-soft:rgba(200,245,66,.08); --code:#f4f5f7; }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:17px; line-height:1.65;
+  }
+  .page-shell{max-width:760px; margin:0 auto; padding:2.2rem 1.25rem 4rem}
+  a{color:var(--accent); text-decoration-color:var(--line); text-underline-offset:3px}
+  a:hover{text-decoration-color:var(--accent)}
+  .back{display:inline-block; margin-bottom:1.6rem; font-size:.92rem}
+  header h1{font-size:1.75rem; line-height:1.25; margin:.4rem 0 .8rem; letter-spacing:-.01em}
+  .eyebrow{
+    margin:0; font-size:.8rem; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--muted);
+  }
+  .lead{font-size:1.05rem; color:var(--muted); margin:0 0 1.4rem}
+  .meta{
+    display:flex; flex-wrap:wrap; gap:.6rem 1.6rem; margin:0 0 1.8rem; padding:1rem 1.1rem;
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+  }
+  .meta div{display:flex; flex-direction:column; gap:.15rem}
+  .meta dt{font-size:.74rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted)}
+  .meta dd{margin:0; font-size:.95rem; min-width:0; overflow-wrap:anywhere}
+  .toc{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:1rem 1.2rem; margin:0 0 2.2rem; font-size:.95rem;
+  }
+  .toc p{margin:0 0 .4rem; font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted)}
+  .toc ol{margin:.2rem 0 0; padding-left:1.2rem}
+  .toc li{margin:.25rem 0}
+  article h2{font-size:1.3rem; margin:2.6rem 0 .7rem; padding-top:.4rem; border-top:1px solid var(--line)}
+  article h2::before{content:"\00a7 "; color:var(--accent)}
+  article p{margin:.6rem 0}
+  article ul, article ol{margin:.6rem 0; padding-left:1.35rem}
+  article li{margin:.4rem 0}
+  .tag{
+    display:inline-block; font-size:.78rem; font-weight:600; padding:.1rem .55rem;
+    border-radius:999px; border:1px solid var(--line); background:var(--card);
+  }
+  .tag.doc{color:var(--accent); border-color:var(--accent)}
+  .tag.hermes{color:#2e7d32; border-color:#4c9a50}
+  @media (prefers-color-scheme: dark){ .tag.hermes{color:#8fd694; border-color:#4c9a50} }
+  .schema{
+    margin:1.2rem 0; padding:1.1rem; background:var(--card);
+    border:1px solid var(--line); border-radius:10px;
+  }
+  .schema figcaption{font-size:.85rem; color:var(--muted); margin-bottom:.8rem}
+  .columns{display:flex; flex-wrap:wrap; gap:.6rem; justify-content:center}
+  .columns .col{
+    flex:1 1 200px; padding:.8rem .7rem; border-radius:8px;
+    background:var(--accent-soft); border:1px solid var(--line); font-size:.92rem;
+  }
+  .columns .col b{display:block; margin-bottom:.25rem; font-size:.95rem}
+  .src-note{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:.8rem; margin:1rem 0}
+  footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); font-size:.85rem; color:var(--muted)}
+  @media (max-width:520px){
+    body{font-size:16px}
+    header h1{font-size:1.5rem}
+  }
+  html[data-theme="dark"]{ --bg:#0b0c0e; --fg:#f4f5f7; --muted:#8b919c; --card:#1a1d24; --line:#2e3440; --accent:#c8f542; --accent-soft:rgba(200,245,66,.08); --code:#f4f5f7; }
+  html[data-theme="light"]{ --bg:#e8eaef; --fg:#0b0c0e; --muted:#5a606c; --card:#ffffff; --line:#c5c9d2; --accent:#0e7490; --accent-soft:rgba(14,116,144,.10); --code:#1c1b1a; }
+  img{max-width:100%;height:auto}
+  .theme-toggle{position:fixed;top:14px;right:14px;z-index:50;display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:0 14px;background:var(--card);color:var(--fg);border:1px solid var(--line,var(--border,#888));border-radius:2px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);cursor:pointer;font-family:ui-monospace,"IBM Plex Mono","JetBrains Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 2px 10px rgba(0,0,0,.25);transition:border-color .15s,color .15s}
+  .theme-toggle svg{width:20px;height:20px;flex:none}
+  .theme-toggle svg path{fill:currentColor}
+  .theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+  .theme-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<main class="page-shell">
+  <a class="back" href="../../index.html">&larr; Вернуться в Personal OS</a>
+<button type="button" class="theme-toggle" id="themeToggle" aria-label="Переключить тему: светлая/тёмная"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2a7 7 0 0 0 0 14 5 5 0 0 1 0-14zM12 3a6 6 0 0 0 0 12 6 6 0 0 0 0-12zM4.5 9H2v1.5h2.5V9zm15 0v1.5H20V9h-.5zM9 4.5H7.5V2H9v2.5zm6 0V2h1.5v2.5H15zM4 13.5l1.06 1.06 1.77-1.77-1.06-1.06L4 13.5zm13.17-1.77 1.77 1.77L20 13.5l-1.77-1.77-1.06 1.06zM11 19h1.5v2.5H11V19zm4.5 0H17v2.5h-1.5V19z"/></svg><span>Тема</span></button>
+  <header>
+        <p class="eyebrow">Безопасность агентов · tool use · авторизация</p>
+    <h1>Когда вывод тула становится командой: SARA разделяет индукцию и авторизацию</h1>
+    <p class="lead">Агент с тулами вынужден доверять недоверенным наблюдениям рантайма. Но когда вывод тула начинает описывать действия, а не данные, он становится «командой». SARA разделяет индукцию действия и авторизацию исполнения — и удерживает attack success rate на уровне ≤ 0,63% при сохранении полезности.</p>
+    <dl class="meta">
+      <div><dt>Первичный источник</dt><dd><a href="https://arxiv.org/abs/2608.27146" target="_blank" rel="noopener noreferrer">When Tool Outputs Become Commands: Separating Action Induction from Runtime Authorization in Tool-Augmented LLM Agents — arXiv 2608.27146</a></dd></div>
+      <div><dt>Тип</dt><dd>Научная статья (препринт, метод + бенчмарки)</dd></div>
+      <div><dt>Опубликовано</dt><dd>2026-08-27 (arXiv)</dd></div>
+      <div><dt>Проверено</dt><dd>2026-08-31</dd></div>
+    </dl>
+  </header>
+
+  <nav class="toc" aria-label="Содержание">
+    <p>Содержание</p>
+    <ol>
+      <li><a href="#summary">Суть материала</a></li>
+      <li><a href="#why-it-matters">Почему это важно</a></li>
+      <li><a href="#practical">Практическое применение</a></li>
+      <li><a href="#limits">Ограничения и риски</a></li>
+      <li><a href="#implementation">Как применить к вашему ИИ-агенту</a></li>
+      <li><a href="#sources">Первичные материалы</a></li>
+    </ol>
+  </nav>
+
+  <article>
+    <section id="summary">
+      <h2>Суть материала</h2>
+
+<p>Tool-augmented LLM-агент для открытых задач вынужден полагаться на недоверенные runtime-наблюдения: выводы внешних инструментов, веб-страницы, файлы. Пока вывод тула — это данные, риск ограничен. Но как только вывод начинает не предоставлять данные, а <strong>описывать конкретные действия</strong> — «выполни команду X», «отправь данные на адрес Y», «удали запись Z» — он фактически становится командой, способной вызвать реальные побочные эффекты за пределами намерения пользователя. Классический сценарий — prompt injection через содержимое, которое агент сам же и прочитал.</p>
+
+<p>Авторы утверждают, что корень риска — <strong>смешение двух ролей</strong>: индукции действия (модель решила, что нужно сделать) и авторизации исполнения (система разрешила это выполнить). Если рантайм не различает их, любое «правдоподобное» действие из вывода тула получает шанс исполниться.</p>
+
+<p>Предложена система <strong>SARA</strong>, которая разносит эти роли:</p>
+
+<ul>
+  <li><strong>Action Probe</strong> — на стороне наблюдений: контекстно-изолированный механизм, который выявляет action-inducing семантику в выводах тулов и постоянно фиксирует происхождение действий (action-origin provenance) как сигнал для ревью;</li>
+  <li><strong>Авторизация исполнения</strong> — фактические вызовы тулов разрешаются только против цели пользователя и аудированных свидетельств предыдущих авторизованных успешных исполнений, с проверкой поддержки на уровне цели, цепочки исполнения и аргументов;</li>
+  <li><strong>No-History-Promotion</strong> — правило, не позволяющее повторениям в истории «отмыть» происхождение действия: если действие когда-то возникло из вывода тула, повторение в истории не превращает его в авторитет для новых исполнений.</li>
+</ul>
+
+<p>На бенчмарках AgentDojo и AgentDyn SARA ограничивает attack success rate (ASR) значением не выше 0,63% в четырёх основных конфигурациях оценки, сохраняя конкурентоспособную полезность задач, и последовательно снижает ASR на дополнительных агентных бэкбонах.</p>
+    </section>
+    <section id="why-it-matters">
+      <h2>Почему это важно</h2>
+
+<p>Защита агентов от prompt injection почти всегда сводится к двум тактикам: «попросить модель быть осторожной» и «проверять намерение по контенту». Обе имеют фундаментальный предел: модель не может отличить инструкцию, пришедшую из доверенной беседы, от инструкции, встроенной в прочитанные данные, — это одна и та же последовательность токенов. SARA смещает вопрос в другую плоскость: не «как модель должна решить, что делать», а «какие полномочия у рантайма исполнить то, что модель предложила».</p>
+
+<p>Для инфраструктуры с MCP-тулами, мостами команд и фоновыми агентами это различие практическое. Мост, который принимает команды, и тул, который их исполняет, — разные границы доверия. Если авторизация вызовов отделена от их происхождения, компрометация одного вывода (страница, файл, ответ API) не превращается автоматически в исполнение команды. Это тот же принцип, что в least-privilege и separation of duties, но применённый к внутренней механике агента.</p>
+
+<p>Показательна и цифра: ASR ≤ 0,63% при сохранении полезности — редкий для литературы по безопасности агентов баланс. Обычно защита покупается заметной деградацией задач; здесь архитектурное разделение ролей даёт защиту без явной расплаты.</p>
+    </section>
+    <section id="practical">
+      <h2>Практическое применение</h2>
+
+<p>Помечаем, что задокументировано источником, а что — наша интерпретация для Personal OS.</p>
+<ul>
+  <li><span class="tag doc">Источник</span> <strong>Разделение ролей</strong>: индукция действия (что модель предложила) и авторизация исполнения (что рантайм разрешил) — разные механизмы.</li>
+  <li><span class="tag doc">Источник</span> <strong>Action Probe</strong>: изолированный механизм выявляет action-inducing семантику в выводах тулов и фиксирует происхождение действий.</li>
+  <li><span class="tag doc">Источник</span> <strong>Авторизация по свидетельствам</strong>: вызовы разрешаются против цели пользователя и аудированных успешных исполнений, а не против «похожести на инструкцию».</li>
+  <li><span class="tag doc">Источник</span> <strong>No-History-Promotion</strong>: повторение действия в истории не повышает его происхождение до авторитета.</li>
+  <li><span class="tag doc">Источник</span> <strong>Результаты</strong>: ASR ≤ 0,63% на AgentDojo и AgentDyn при сохранении полезности, снижение ASR на дополнительных бэкбонах.</li>
+  <li><span class="tag">Интерпретация</span> <strong>Для Hermes/Personal OS</strong>: на мосту команд и в MCP-прокси разделять «что агент хочет вызвать» и «что разрешено исполнить»; выводы внешних тулов не должны сами по себе давать право на новые вызовы.</li>
+</ul>
+    </section>
+    <section id="limits">
+      <h2>Ограничения и риски</h2>
+
+<ul>
+  <li><span class="tag doc">Источник</span> <strong>Объём доказательств</strong>: цифры приведены на двух бенчмарках (AgentDojo, AgentDyn) в четырёх основных конфигурациях; перенос на произвольные домены требует собственной валидации.</li>
+  <li><span class="tag doc">Источник</span> <strong>Детали реализации</strong>: аннотация не раскрывает стоимость Action Probe (дополнительные вызовы LLM?) и точную схему проверки «цель/цепочка/аргументы» — нужно смотреть полный текст.</li>
+  <li><span class="tag">Интерпретация</span> <strong>Сложность внедрения</strong>: разделение индукции и авторизации требует изменений в рантайме, а не в промпте; для готовых харнесов это нетривиальная инженерия.</li>
+  <li><span class="tag">Интерпретация</span> <strong>Полезность не бесплатна</strong>: авторизация по свидетельствам может отклонять легитимные, но не подкреплённые историей действия — в статье «конкурентоспособная полезность», а не «без потерь».</li>
+</ul>
+    </section>
+    <section id="implementation">
+      <h2>Как применить к вашему ИИ-агенту</h2>
+
+<ol>
+  <li><strong>Разделите «предложение» и «исполнение»</strong>: модель предлагает вызовы, отдельный слой рантайма решает, что исполнить. Промпт не должен быть единственным местом, где решается судьба вызова (принцип разделения ролей, источник).</li>
+  <li><strong>Ведите реестр происхождения действий</strong>: для каждого действия, возникшего из вывода тула, храните, откуда оно пришло; помечайте такие действия как неавторитетные для будущих вызовов (Action Probe + provenance, источник).</li>
+  <li><strong>Авторизуйте по цели и свидетельствам</strong>: разрешайте вызов, если он соответствует цели пользователя и подтверждён аудированными успешными исполнениями; «выглядит как инструкция» — не критерий (авторизация по свидетельствам, источник).</li>
+  <li><strong>Запретите продвижение через историю</strong>: не позволяйте повторению однажды индуцированного действия превратить его в разрешённое (No-History-Promotion, источник).</li>
+  <li><strong>Ограничьте чувствительные тулы</strong>: отправка сообщений, изменение данных, платёжные и деструктивные операции — отдельный список, для которого авторизация обязательна и подтверждение владельца не заменяется историей (интерпретация: применение к мосту Personal OS).</li>
+  <li><strong>Измеряйте ASR и полезность вместе</strong>: после внедрения гоняйте инъекционные сценарии и считайте оба показателя — защита, роняющая полезность, непригодна для продакшена (практика оценки, источник).</li>
+</ol>
+    </section>
+    <section id="sources">
+      <h2>Первичные материалы</h2>
+
+<ul>
+  <li><a href="https://arxiv.org/abs/2608.27146" target="_blank" rel="noopener noreferrer">When Tool Outputs Become Commands: Separating Action Induction from Runtime Authorization in Tool-Augmented LLM Agents — arXiv 2608.27146</a> (аннотация и полный текст препринта)</li>
+  <li><a href="https://arxiv.org/pdf/2608.27146" target="_blank" rel="noopener noreferrer">PDF: arXiv 2608.27146</a></li>
+</ul>
+<p class="src-note">Авторы: Xiaokun Guo, Zhen Xu, Dongdong Huo, Yanqiu Zhang, Wei Wang, Qinfu Yang и др. (по данным arXiv, проверено 2026-08-31).</p>
+    </section>
+    <section id="schema">
+      <h2>Схема</h2>
+
+<div class="schema">
+  <figcaption>Схема: SARA — индукция действия и авторизация исполнения как отдельные роли</figcaption>
+  <div class="columns">
+    <div class="col"><b>Наблюдения (недоверенные)</b>Выводы тулов, страницы, файлы. Action Probe выявляет action-inducing семантику и фиксирует происхождение</div>
+    <div class="col"><b>Индукция действия</b>Модель предлагает вызов. Само по себе предложение не даёт права исполнения</div>
+    <div class="col"><b>Авторизация исполнения</b>Вызов разрешён по цели пользователя + аудированным свидетельствам. No-History-Promotion блокирует «отмывку» происхождения</div>
+    <div class="col"><b>Эффект</b>ASR ≤ 0,63% при сохранении полезности</div>
+  </div>
+</div>
+    </section>
+  </article>
+
+  <footer>
+    Personal OS · обзор источника · 2026-08-31 · материал подготовлен агентом Hermes на русском языке
+  </footer>
+</main>
+<script>
+(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),v=null;try{v=localStorage.getItem("review-theme")}catch(e){}if(v==="light"||v==="dark")r.setAttribute("data-theme",v);if(b)b.addEventListener("click",function(){var c=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),n=c==="dark"?"light":"dark";r.setAttribute("data-theme",n);try{localStorage.setItem("review-theme",n)}catch(e){}});})();
+</script>
+</body>
+</html>

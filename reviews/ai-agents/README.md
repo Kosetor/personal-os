@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `skillstate-mutable-execution-state.html` | SKILL.state: явное изменяемое состояние исполнения вместо растущего контекста — точность выше, токенов меньше (arXiv 2608.26263) |
+| `sara-action-induction-authorization.html` | SARA: когда вывод тула становится командой — разделение индукции действия и авторизации исполнения, ASR ≤ 0,63% (arXiv 2608.27146) |
+| `dumatebench-real-world-workflows.html` | DuMateBench: 200 задач из реальных продакшн-сессий, три формы сложности среды, разрывы в строгой завершаемости (arXiv 2608.26546) |
 | `phoenix-v2040-mcp-observability.html` | Phoenix 20.4: in-process MCP-тулсет для агентов, AI Query к trace filter DSL, retrieval relevance evaluator (release notes) |
 | `wikiskill-persistent-knowledge-skill-evolution.html` | WikiSkill: компиляция опыта агента в персистентную базу знаний — навыки переносимы между моделями, чужие навыки могут быть лучше своих (arXiv 2608.27454) |
 | `persona-execution-separation.html` | Persona-Execution Separation: персона и исполнение в разных trust-доменах под execution audit, governed contract bridge (arXiv 2608.27427) |
