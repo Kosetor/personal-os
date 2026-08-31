@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Русскоязычный обзор препринта arXiv 2608.28363 (EvoUndo): recoverability-constrained self-evolution для LLM-агентов — как проверять, что самоизменение харнеса можно безопасно откатить">
+<title>EvoUndo: самоизменение агента, которое можно откатить — Personal OS</title>
+<style>
+  :root {
+    --bg: #e8eaef;
+    --fg: #0b0c0e;
+    --muted: #5a606c;
+    --card: #ffffff;
+    --line: #c5c9d2;
+    --accent: #0e7490;
+    --accent-soft: rgba(14,116,144,.10);
+    --code: #1c1b1a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root { --bg:#0b0c0e; --fg:#f4f5f7; --muted:#8b919c; --card:#1a1d24; --line:#2e3440; --accent:#c8f542; --accent-soft:rgba(200,245,66,.08); --code:#f4f5f7; }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:17px; line-height:1.65;
+  }
+  .page-shell{max-width:760px; margin:0 auto; padding:2.2rem 1.25rem 4rem}
+  a{color:var(--accent); text-decoration-color:var(--line); text-underline-offset:3px}
+  a:hover{text-decoration-color:var(--accent)}
+  .back{display:inline-block; margin-bottom:1.6rem; font-size:.92rem}
+  header h1{font-size:1.75rem; line-height:1.25; margin:.4rem 0 .8rem; letter-spacing:-.01em}
+  .eyebrow{
+    margin:0; font-size:.8rem; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--muted);
+  }
+  .lead{font-size:1.05rem; color:var(--muted); margin:0 0 1.4rem}
+  .meta{
+    display:flex; flex-wrap:wrap; gap:.6rem 1.6rem; margin:0 0 1.8rem; padding:1rem 1.1rem;
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+  }
+  .meta div{display:flex; flex-direction:column; gap:.15rem}
+  .meta dt{font-size:.74rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted)}
+  .meta dd{margin:0; font-size:.95rem; min-width:0; overflow-wrap:anywhere}
+  .toc{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:1rem 1.2rem; margin:0 0 2.2rem; font-size:.95rem;
+  }
+  .toc p{margin:0 0 .4rem; font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted)}
+  .toc ol{margin:.2rem 0 0; padding-left:1.2rem}
+  .toc li{margin:.25rem 0}
+  article h2{font-size:1.3rem; margin:2.6rem 0 .7rem; padding-top:.4rem; border-top:1px solid var(--line)}
+  article h2::before{content:"\00a7 "; color:var(--accent)}
+  article p{margin:.6rem 0}
+  article ul, article ol{margin:.6rem 0; padding-left:1.35rem}
+  article li{margin:.4rem 0}
+  .tag{
+    display:inline-block; font-size:.78rem; font-weight:600; padding:.1rem .55rem;
+    border-radius:999px; border:1px solid var(--line); background:var(--card);
+  }
+  .tag.doc{color:var(--accent); border-color:var(--accent)}
+  .tag.hermes{color:#2e7d32; border-color:#4c9a50}
+  @media (prefers-color-scheme: dark){ .tag.hermes{color:#8fd694; border-color:#4c9a50} }
+  .schema{
+    margin:1.2rem 0; padding:1.1rem; background:var(--card);
+    border:1px solid var(--line); border-radius:10px;
+  }
+  .schema figcaption{font-size:.85rem; color:var(--muted); margin-bottom:.8rem}
+  .columns{display:flex; flex-wrap:wrap; gap:.6rem; justify-content:center}
+  .columns .col{
+    flex:1 1 200px; padding:.8rem .7rem; border-radius:8px;
+    background:var(--accent-soft); border:1px solid var(--line); font-size:.92rem;
+  }
+  .columns .col b{display:block; margin-bottom:.25rem; font-size:.95rem}
+  .src-note{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:.8rem; margin:1rem 0}
+  footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); font-size:.85rem; color:var(--muted)}
+  @media (max-width:520px){
+    body{font-size:16px}
+    header h1{font-size:1.5rem}
+  }
+  html[data-theme="dark"]{ --bg:#0b0c0e; --fg:#f4f5f7; --muted:#8b919c; --card:#1a1d24; --line:#2e3440; --accent:#c8f542; --accent-soft:rgba(200,245,66,.08); --code:#f4f5f7; }
+  html[data-theme="light"]{ --bg:#e8eaef; --fg:#0b0c0e; --muted:#5a606c; --card:#ffffff; --line:#c5c9d2; --accent:#0e7490; --accent-soft:rgba(14,116,144,.10); --code:#1c1b1a; }
+  img{max-width:100%;height:auto}
+  .theme-toggle{position:fixed;top:14px;right:14px;z-index:50;display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:0 14px;background:var(--card);color:var(--fg);border:1px solid var(--line,var(--border,#888));border-radius:2px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);cursor:pointer;font-family:ui-monospace,"IBM Plex Mono","JetBrains Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 2px 10px rgba(0,0,0,.25);transition:border-color .15s,color .15s}
+  .theme-toggle svg{width:20px;height:20px;flex:none}
+  .theme-toggle svg path{fill:currentColor}
+  .theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+  .theme-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<main class="page-shell">
+  <a class="back" href="../../index.html">&larr; Вернуться в Personal OS</a>
+<button type="button" class="theme-toggle" id="themeToggle" aria-label="Переключить тему: светлая/тёмная"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2a7 7 0 0 0 0 14 5 5 0 0 1 0-14zM12 3a6 6 0 0 0 0 12 6 6 0 0 0 0-12zM4.5 9H2v1.5h2.5V9zm15 0v1.5H20V9h-.5zM9 4.5H7.5V2H9v2.5zm6 0V2h1.5v2.5H15zM4 13.5l1.06 1.06 1.77-1.77-1.06-1.06L4 13.5zm13.17-1.77 1.77 1.77L20 13.5l-1.77-1.77-1.06 1.06zM11 19h1.5v2.5H11V19zm4.5 0H17v2.5h-1.5V19z"/></svg><span>Тема</span></button>
+  <header>
+        <p class="eyebrow">Self-improvement · рантайм · безопасность</p>
+    <h1>EvoUndo: самоизменение агента, которое можно откатить</h1>
+    <p class="lead">Агент, который правит собственные промпты, тулы и харнес, может стать способнее — но удачная мутация нередко оставляет эффекты, которые нельзя безопасно откатить. EvoUndo проверяет «откатываемость» самоизменений до того, как они закрепятся: из 197 способных мутаций классические стратегии восстановили 0, а расширенный язык восстановления — 191.</p>
+    <dl class="meta">
+      <div><dt>Первичный источник</dt><dd><a href="https://arxiv.org/abs/2608.28363" target="_blank" rel="noopener noreferrer">EvoUndo: Recoverability-Constrained Self-Evolution for LLM Agent Harnesses — arXiv 2608.28363</a></dd></div>
+      <div><dt>Тип</dt><dd>Научная статья (препринт, метод + эксперименты)</dd></div>
+      <div><dt>Опубликовано</dt><dd>2026-08-28 (arXiv)</dd></div>
+      <div><dt>Проверено</dt><dd>2026-08-31</dd></div>
+    </dl>
+  </header>
+
+  <nav class="toc" aria-label="Содержание">
+    <p>Содержание</p>
+    <ol>
+      <li><a href="#summary">Суть материала</a></li>
+      <li><a href="#why-it-matters">Почему это важно</a></li>
+      <li><a href="#practical">Практическое применение</a></li>
+      <li><a href="#limits">Ограничения и риски</a></li>
+      <li><a href="#implementation">Как применить к вашему ИИ-агенту</a></li>
+      <li><a href="#sources">Первичные материалы</a></li>
+    </ol>
+  </nav>
+
+  <article>
+    <section id="summary">
+      <h2>Суть материала</h2>
+
+<p>LLM-агенты всё чаще изменяют собственные промпты, инструменты, middleware, ресурсы и исполняемый харнес прямо в рантайме. Такая self-evolution способна повысить возможности, но у неё есть скрытая цена: успешная мутация может оставить <strong>персистентные эффекты</strong>, которые невозможно безопасно отменить — особенно если система уже перешла в состояние, отличное от того, в котором мутация создавалась. Простое «сделай обратно» перестаёт работать, когда окружение изменилось.</p>
+
+<p>Авторы вводят <strong>EvoUndo</strong> — фреймворк для представления, синтеза, диагностики и независимой проверки <em>recoverability</em> (откатываемости) модельных самоизменений в контрфактических состояниях. То есть проверяется не только «мутация работает», но и «если она сломается, мы сможем вернуться в рабочее состояние из любого последующего состояния системы».</p>
+
+<p>Ключевые цифры эксперимента на 600 невиданных one-shot задачах self-evolution:</p>
+<ul>
+  <li>197 мутаций, улучшающих возможности, проваливают проверку recoverability;</li>
+  <li>обычные стратегии восстановления (в исходном языке восстановления) — <strong>0/197</strong> успешных откатов;</li>
+  <li>детерминированный оракул на исходном языке L0 — <strong>48/197</strong>;</li>
+  <li>расширенное исчисление восстановления — <strong>191/197</strong>.</li>
+</ul>
+
+<p>Дальше авторы разделяют два узких места через интервенцию 2×2 «grounding × expressivity»: точная привязка адресов состояния поднимает восстановление с 0/48 до 38/48 (79,2%), когда исходного языка достаточно; расширение языка восстановления позволяет восстановить 142/143 (99,3%) сбоев в стратуме S1. Интересная деталь: на основной модели gpt-oss-120b добавление точных адресных диагностик к более богатому языку <em>снижает</em> восстановление до 133/143 (93,0%), а на Qwen3.8-27B такого негативного взаимодействия нет — эффект модельно-зависим.</p>
+
+<p>Вывод авторов: надёжная self-evolution требует совместного проектирования верификации, привязки к состоянию, семантики свидетельств и выразительности языка восстановления — а не надежды на итеративный промптинг.</p>
+    </section>
+    <section id="why-it-matters">
+      <h2>Почему это важно</h2>
+
+<p>Self-improving агенты — модная и опасная тема. Большинство дискуссий сосредоточено на том, <em>как сделать агента способнее</em>: обновить промпт, добавить тул, переписать навык. Работа EvoUndo смещает фокус на вопрос, который в продакшене встаёт первым: <strong>а что будет, если новая версия хуже?</strong> Возможность отката — базовое требование любой системы, которую меняет она сама, а не человек.</p>
+
+<p>Практическая ценность — в конкретике. Статья показывает, что «откат» нельзя считать тривиальной операцией: представление восстановления (язык, в котором описано «как вернуть назад») и привязка к точному состоянию системы — это отдельные, измеримые факторы. Без выразительного языка восстановления даже идеальный оракул достаёт лишь 48 из 197 сбоев; без точной привязки к состоянию — 0 из 48. Оба узла решаются по отдельности, и это проверяемые инженерные решения, а не философия.</p>
+
+<p>Для инфраструктуры, где агенты правят собственные навыки и конфиги (Hermes, автономные воркеры, cron-агенты), это прямое предупреждение: любая автономная правка должна проходить проверку «сможем ли мы откатить из будущего состояния» — а не «работает ли сейчас».</p>
+    </section>
+    <section id="practical">
+      <h2>Практическое применение</h2>
+
+<p>Помечаем, что задокументировано источником, а что — наша интерпретация для Personal OS.</p>
+<ul>
+  <li><span class="tag doc">Источник</span> <strong>Recoverability как отдельная проверка</strong>: самоизменение проходит не только проверку «улучшает ли возможности», но и независимую верификацию откатываемости в контрфактических состояниях.</li>
+  <li><span class="tag doc">Источник</span> <strong>Язык восстановления решает</strong>: расширенное исчисление восстановления поднимает успех оракула с 48/197 до 191/197; без выразительного языка классические стратегии восстанавливают 0/197.</li>
+  <li><span class="tag doc">Источник</span> <strong>Grounding и expressivity разделимы</strong>: точная привязка адресов состояния даёт 79,2% там, где языка достаточно, а расширение языка — 99,3% в стратуме S1; эффекты модельно-зависимы (gpt-oss-120b vs Qwen3.8-27B).</li>
+  <li><span class="tag hermes">Интерпретация</span> <strong>Для Hermes/Personal OS</strong>: перед автономным обновлением навыка или конфига фиксировать состояние (версии, хеши, бэкапы) и готовить обратный сценарий, проверяемый из будущих состояний, — а не полагаться на «git revert» вручную.</li>
+</ul>
+    </section>
+    <section id="limits">
+      <h2>Ограничения и риски</h2>
+
+<ul>
+  <li><span class="tag doc">Источник</span> <strong>Модельная зависимость</strong>: негативное взаимодействие диагностик и языка восстановления наблюдается на gpt-oss-120b, но не на Qwen3.8-27B — результаты не переносятся между моделями автоматически.</li>
+  <li><span class="tag doc">Источник</span> <strong>Объём эксперимента</strong>: 600 задач, из них 197 «естественных» сбоев; стратум S1 определён оракулом, что требует доверия к самому оракулу.</li>
+  <li><span class="tag doc">Источник</span> <strong>One-shot сценарий</strong>: оценка на одноразовых задачах self-evolution; долгие непрерывные циклы самоизменений в статье не покрыты.</li>
+  <li><span class="tag hermes">Интерпретация</span> <strong>Стоимость проверок</strong>: независимая верификация откатываемости — это дополнительный вычислительный и инженерный налог на каждую автономную правку; для простых изменений он может не окупаться.</li>
+</ul>
+    </section>
+    <section id="implementation">
+      <h2>Как применить к вашему ИИ-агенту</h2>
+
+<ol>
+  <li><strong>Фиксируйте состояние до мутации</strong>: перед любой автономной правкой (промпт, навык, тул, конфиг) сохраняйте версию и хеш исходного артефакта и снапшот окружения (интерпретация: применение идеи «состояния» из статьи).</li>
+  <li><strong>Готовьте откат заранее</strong>: для каждого типа изменения опишите обратную операцию на языке, который покрывает не только текущее, но и будущие состояния системы — «вернуть файл из бэкапа» слабее, чем «восстановить конфиг в состояние X с проверкой постусловий» (выразительность языка восстановления, источник).</li>
+  <li><strong>Проверяйте recoverability отдельно от полезности</strong>: критерий «мутация улучшила результат» и критерий «мутацию можно откатить» — разные проверки; проводите обе, а не только первую (двухэтапная верификация, источник).</li>
+  <li><strong>Используйте точные адреса состояния</strong>: в описании отката ссылайтесь на конкретные идентификаторы состояния (пути, хеши, версии), а не на расплывчатые «вернуть как было» (grounding-эффект, источник).</li>
+  <li><strong>Тестируйте на своей модели</strong>: раз поведение диагностик модельно-зависимо, прогоняйте набор проверок отката на той модели, которая реально будет править харнес (модельная зависимость, источник).</li>
+  <li><strong>Начинайте с малого</strong>: полный цикл EvoUndo для каждого изменения дорог; применяйте его к изменениям, которые трудно откатить вручную (конфиги, навыки, права), а не к безобидным правкам (интерпретация: баланс стоимости и риска).</li>
+</ol>
+    </section>
+    <section id="sources">
+      <h2>Первичные материалы</h2>
+
+<ul>
+  <li><a href="https://arxiv.org/abs/2608.28363" target="_blank" rel="noopener noreferrer">EvoUndo: Recoverability-Constrained Self-Evolution for LLM Agent Harnesses — arXiv 2608.28363</a> (аннотация и полный текст препринта)</li>
+  <li><a href="https://arxiv.org/pdf/2608.28363" target="_blank" rel="noopener noreferrer">PDF: arXiv 2608.28363</a></li>
+</ul>
+<p class="src-note">Авторы: Tanmay Sah, Dolly Sah, Harshul Jain, Tanya Sah (по данным arXiv, проверено 2026-08-31).</p>
+    </section>
+    <section id="schema">
+      <h2>Схема</h2>
+
+<div class="schema">
+  <figcaption>Схема: EvoUndo — самоизменение проходит проверку откатываемости до закрепления</figcaption>
+  <div class="columns">
+    <div class="col"><b>Мутация</b>Агент меняет промпт/тул/харнес в состоянии S0</div>
+    <div class="col"><b>Проверка полезности</b>Улучшает ли возможности? (197/600 прошли, но не откатываются)</div>
+    <div class="col"><b>Проверка recoverability</b>Можно ли вернуться из будущих состояний S1…Sn? (язык + привязка к состоянию)</div>
+    <div class="col"><b>Эффект</b>Язык восстановления: 0/197 → 191/197; grounding: 0/48 → 38/48</div>
+  </div>
+</div>
+    </section>
+  </article>
+
+  <footer>
+    Personal OS · обзор источника · 2026-08-31 · материал подготовлен агентом Hermes на русском языке
+  </footer>
+</main>
+<script>
+(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),v=null;try{v=localStorage.getItem("review-theme")}catch(e){}if(v==="light"||v==="dark")r.setAttribute("data-theme",v);if(b)b.addEventListener("click",function(){var c=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),n=c==="dark"?"light":"dark";r.setAttribute("data-theme",n);try{localStorage.setItem("review-theme",n)}catch(e){}});})();
+</script>
+</body>
+</html>

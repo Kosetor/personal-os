@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Русскоязычный обзор препринта arXiv 2608.28021 (GenIaC-SecBench): human-anchored бенчмарк безопасности LLM-генерируемого Infrastructure-as-Code — сравнение с реальными инженерами вместо сырых подсчётов уязвимостей">
+<title>GenIaC-SecBench: безопасность IaC от LLM против человеческого бейзлайна — Personal OS</title>
+<style>
+  :root {
+    --bg: #e8eaef;
+    --fg: #0b0c0e;
+    --muted: #5a606c;
+    --card: #ffffff;
+    --line: #c5c9d2;
+    --accent: #0e7490;
+    --accent-soft: rgba(14,116,144,.10);
+    --code: #1c1b1a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root { --bg:#0b0c0e; --fg:#f4f5f7; --muted:#8b919c; --card:#1a1d24; --line:#2e3440; --accent:#c8f542; --accent-soft:rgba(200,245,66,.08); --code:#f4f5f7; }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:17px; line-height:1.65;
+  }
+  .page-shell{max-width:760px; margin:0 auto; padding:2.2rem 1.25rem 4rem}
+  a{color:var(--accent); text-decoration-color:var(--line); text-underline-offset:3px}
+  a:hover{text-decoration-color:var(--accent)}
+  .back{display:inline-block; margin-bottom:1.6rem; font-size:.92rem}
+  header h1{font-size:1.75rem; line-height:1.25; margin:.4rem 0 .8rem; letter-spacing:-.01em}
+  .eyebrow{
+    margin:0; font-size:.8rem; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--muted);
+  }
+  .lead{font-size:1.05rem; color:var(--muted); margin:0 0 1.4rem}
+  .meta{
+    display:flex; flex-wrap:wrap; gap:.6rem 1.6rem; margin:0 0 1.8rem; padding:1rem 1.1rem;
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+  }
+  .meta div{display:flex; flex-direction:column; gap:.15rem}
+  .meta dt{font-size:.74rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted)}
+  .meta dd{margin:0; font-size:.95rem; min-width:0; overflow-wrap:anywhere}
+  .toc{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:1rem 1.2rem; margin:0 0 2.2rem; font-size:.95rem;
+  }
+  .toc p{margin:0 0 .4rem; font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted)}
+  .toc ol{margin:.2rem 0 0; padding-left:1.2rem}
+  .toc li{margin:.25rem 0}
+  article h2{font-size:1.3rem; margin:2.6rem 0 .7rem; padding-top:.4rem; border-top:1px solid var(--line)}
+  article h2::before{content:"\00a7 "; color:var(--accent)}
+  article p{margin:.6rem 0}
+  article ul, article ol{margin:.6rem 0; padding-left:1.35rem}
+  article li{margin:.4rem 0}
+  .tag{
+    display:inline-block; font-size:.78rem; font-weight:600; padding:.1rem .55rem;
+    border-radius:999px; border:1px solid var(--line); background:var(--card);
+  }
+  .tag.doc{color:var(--accent); border-color:var(--accent)}
+  .tag.hermes{color:#2e7d32; border-color:#4c9a50}
+  @media (prefers-color-scheme: dark){ .tag.hermes{color:#8fd694; border-color:#4c9a50} }
+  .schema{
+    margin:1.2rem 0; padding:1.1rem; background:var(--card);
+    border:1px solid var(--line); border-radius:10px;
+  }
+  .schema figcaption{font-size:.85rem; color:var(--muted); margin-bottom:.8rem}
+  .columns{display:flex; flex-wrap:wrap; gap:.6rem; justify-content:center}
+  .columns .col{
+    flex:1 1 200px; padding:.8rem .7rem; border-radius:8px;
+    background:var(--accent-soft); border:1px solid var(--line); font-size:.92rem;
+  }
+  .columns .col b{display:block; margin-bottom:.25rem; font-size:.95rem}
+  .src-note{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:.8rem; margin:1rem 0}
+  footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); font-size:.85rem; color:var(--muted)}
+  @media (max-width:520px){
+    body{font-size:16px}
+    header h1{font-size:1.5rem}
+  }
+  html[data-theme="dark"]{ --bg:#0b0c0e; --fg:#f4f5f7; --muted:#8b919c; --card:#1a1d24; --line:#2e3440; --accent:#c8f542; --accent-soft:rgba(200,245,66,.08); --code:#f4f5f7; }
+  html[data-theme="light"]{ --bg:#e8eaef; --fg:#0b0c0e; --muted:#5a606c; --card:#ffffff; --line:#c5c9d2; --accent:#0e7490; --accent-soft:rgba(14,116,144,.10); --code:#1c1b1a; }
+  img{max-width:100%;height:auto}
+  .theme-toggle{position:fixed;top:14px;right:14px;z-index:50;display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:0 14px;background:var(--card);color:var(--fg);border:1px solid var(--line,var(--border,#888));border-radius:2px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);cursor:pointer;font-family:ui-monospace,"IBM Plex Mono","JetBrains Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 2px 10px rgba(0,0,0,.25);transition:border-color .15s,color .15s}
+  .theme-toggle svg{width:20px;height:20px;flex:none}
+  .theme-toggle svg path{fill:currentColor}
+  .theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+  .theme-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<main class="page-shell">
+  <a class="back" href="../../index.html">&larr; Вернуться в Personal OS</a>
+<button type="button" class="theme-toggle" id="themeToggle" aria-label="Переключить тему: светлая/тёмная"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2a7 7 0 0 0 0 14 5 5 0 0 1 0-14zM12 3a6 6 0 0 0 0 12 6 6 0 0 0 0-12zM4.5 9H2v1.5h2.5V9zm15 0v1.5H20V9h-.5zM9 4.5H7.5V2H9v2.5zm6 0V2h1.5v2.5H15zM4 13.5l1.06 1.06 1.77-1.77-1.06-1.06L4 13.5zm13.17-1.77 1.77 1.77L20 13.5l-1.77-1.77-1.06 1.06zM11 19h1.5v2.5H11V19zm4.5 0H17v2.5h-1.5V19z"/></svg><span>Тема</span></button>
+  <header>
+        <p class="eyebrow">Безопасность IaC · бенчмарк · LLMOps</p>
+    <h1>GenIaC-SecBench: IaC от LLM против человеческого бейзлайна</h1>
+    <p class="lead">Сырой подсчёт уязвимостей в сгенерированном LLM коде инфраструктуры ничего не говорит, пока нет бейзлайна инженера. GenIaC-SecBench впервые сравнивает модели с 634 человеческими IaC-шаблонами на том же инструментарии: при выравнивании по размеру модели в 3,2–3,9 раза хуже человека, а на простых задачах — до 4,9 раза.</p>
+    <dl class="meta">
+      <div><dt>Первичный источник</dt><dd><a href="https://arxiv.org/abs/2608.28021" target="_blank" rel="noopener noreferrer">Compared to What? A Human-Anchored Security Benchmark for LLM-Generated Infrastructure-as-Code — arXiv 2608.28021</a></dd></div>
+      <div><dt>Тип</dt><dd>Научная статья (препринт, бенчмарк + эмпирическое исследование)</dd></div>
+      <div><dt>Опубликовано</dt><dd>2026-08-28 (arXiv)</dd></div>
+      <div><dt>Проверено</dt><dd>2026-08-31</dd></div>
+    </dl>
+  </header>
+
+  <nav class="toc" aria-label="Содержание">
+    <p>Содержание</p>
+    <ol>
+      <li><a href="#summary">Суть материала</a></li>
+      <li><a href="#why-it-matters">Почему это важно</a></li>
+      <li><a href="#practical">Практическое применение</a></li>
+      <li><a href="#limits">Ограничения и риски</a></li>
+      <li><a href="#implementation">Как применить к вашему ИИ-агенту</a></li>
+      <li><a href="#sources">Первичные материалы</a></li>
+    </ol>
+  </nav>
+
+  <article>
+    <section id="summary">
+      <h2>Суть материала</h2>
+
+<p>LLM всё чаще пишут Infrastructure-as-Code (Terraform, CloudFormation и аналоги), где одна небезопасная настройка по умолчанию может уйти прямо в продакшен. Предыдущие оценки сообщали сырые количества уязвимостей в сгенерированных артефактах — но без человеческого бейзлайна нельзя понять, хуже ли модели реальных инженеров. Автор вводит <strong>GenIaC-SecBench</strong>: 100 сценариев развёртывания, стратифицированных по архитектурной сложности, 12 конфигураций моделей от четырёх вендоров, 1 196 сгенерированных IaC-артефактов, проверенных тремя независимыми policy-движками (Checkov, Trivy, KICS).</p>
+
+<p>Ключевая инновация — <strong>первый size-matched человеческий бейзлайн</strong>: 634 шаблона IaC, написанных инженерами, просканированы тем же инструментарием. Это позволило обнаружить критический артефакт измерения: плотность уязвимостей обратно пропорциональна размеру артефакта (Spearman ρ = −0,55, p &lt; 10⁻⁷⁷). Несопоставимые сравнения, таким образом, измеряют не безопасность, а размер. При выравнивании по количеству объявленных ресурсов все конфигурации моделей попадают в диапазон <strong>3,21×–3,87× человеческой плотности уязвимостей</strong>, причём разрыв шире на простых задачах: 4,9× при одном ресурсе против 1,4× при двадцати и более.</p>
+
+<p>Дополнительно исследовано рассуждение: стандартная генерация, prompt-engineered chain-of-thought и vendor extended-thinking API. Extended thinking значительно лучше prompted CoT (−12,0%, p = 0,0013), тогда как prompted CoT неотличим от стандартной генерации (−1,3%, статистически незначимо). Инструментация токенов показывает: extended thinking использует менее 1% бюджета вывода — чем и объясняется ограниченный эффект. Ещё два отрицательных результата: разворачиваемость не коррелирует с уязвимостью (r = 0,158, p = 0,625), а классический complete-case тест Фридмана нереализуем для реалистичных дизайнов — нужен критерий Скиллингса–Мэка. Код, данные и скрипты регенерации опубликованы.</p>
+    </section>
+    <section id="why-it-matters">
+      <h2>Почему это важно</h2>
+
+<p>«Модель сгенерировала 12 уязвимостей» — фраза, которая звучит страшно, но ничего не говорит: инженер мог бы написать те же 12, а мог бы 3. Без анкера в виде человеческой практики все рейтинги безопасности генерации висят в воздухе. GenIaC-SecBench даёт этот анкер и одновременно показывает, как легко обмануться: если сравнивать сырые числа, разница между моделями и людьми может быть следствием того, что модели пишут более крупные шаблоны, а не более опасные.</p>
+
+<p>Для практика вывод двойной. Во-первых, методологический: любые метрики безопасности генерации кода должны контролировать размер артефакта, иначе сравнение бессмысленно. Во-вторых, практический: даже лучшие режимы рассуждения не закрывают разрыв с человеком (3,2× минимум), а «усиленное рассуждение» стоит почти ничего не тратя на вывод — то есть выигрыш доступен дёшево, но ограничен. Разворачиваемость не является прокси безопасности: «код собирается и деплоится» не значит «код безопасен».</p>
+
+<p>Для инфраструктуры, где IaC всё чаще пишут агенты (включая Hermes-воркеры и автоматизацию развёртываний), это прямое руководство: сканировать сгенерированный IaC policy-движками обязательно, сравнивать с человеческим уровнем — тоже, а «оно развернулось» считать успехом нельзя.</p>
+    </section>
+    <section id="practical">
+      <h2>Практическое применение</h2>
+
+<p>Помечаем, что задокументировано источником, а что — наша интерпретация для Personal OS.</p>
+<ul>
+  <li><span class="tag doc">Источник</span> <strong>Human-anchored дизайн</strong>: 634 человеческих IaC-шаблона просканированы тем же инструментарием (Checkov, Trivy, KICS), что и 1 196 артефактов от 12 конфигураций моделей.</li>
+  <li><span class="tag doc">Источник</span> <strong>Размер искажает измерение</strong>: плотность уязвимостей обратно пропорциональна размеру артефакта (ρ = −0,55); несопоставленные сравнения измеряют размер, а не безопасность.</li>
+  <li><span class="tag doc">Источник</span> <strong>Разрыв с человеком</strong>: при выравнивании по ресурсам модели в 3,21×–3,87× хуже человека; на простых задачах разрыв шире (4,9× при 1 ресурсе, 1,4× при 20+).</li>
+  <li><span class="tag doc">Источник</span> <strong>Extended thinking ≠ много токенов</strong>: vendor extended thinking обходит prompted CoT (−12,0%), используя менее 1% бюджета вывода; prompted CoT неотличим от обычной генерации.</li>
+  <li><span class="tag doc">Источник</span> <strong>Разворачиваемость ≠ безопасность</strong>: корреляция deployability с уязвимостями отсутствует (r = 0,158, n.s.).</li>
+  <li><span class="tag hermes">Интерпретация</span> <strong>Для Personal OS</strong>: сгенерированный IaC (Docker Compose, Caddyfile, конфиги) прогонять через статические сканеры и не полагаться на «успешный деплой» как индикатор безопасности.</li>
+</ul>
+    </section>
+    <section id="limits">
+      <h2>Ограничения и риски</h2>
+
+<ul>
+  <li><span class="tag doc">Источник</span> <strong>Статический анализ</strong>: оценки основаны на трёх policy-движках; динамическая безопасность развёртывания (реальные атаки на работающую инфраструктуру) в работе не измеряется.</li>
+  <li><span class="tag doc">Источник</span> <strong>Человеческий бейзлайн</strong>: 634 шаблона — выборка из доступных публичных IaC; их авторы и контекст (личные проекты vs продакшен) могут не отражать среду, где модели будут применяться.</li>
+  <li><span class="tag doc">Источник</span> <strong>Поколение моделей</strong>: 12 конфигураций от четырёх вендоров — срез на момент исследования; новые модели могут менять расклад.</li>
+  <li><span class="tag hermes">Интерпретация</span> <strong>Не все уязвимости равны</strong>: плотность уязвимостей не различает критичность (открытый порт vs косметическое предупреждение); при принятии решений нужен приоритизированный триаж.</li>
+</ul>
+    </section>
+    <section id="implementation">
+      <h2>Как применить к вашему ИИ-агенту</h2>
+
+<ol>
+  <li><strong>Сканируйте весь сгенерированный IaC</strong>: любой артефакт, созданный агентом (Compose, Caddyfile, cloud-init, terraform), прогоняйте через статические сканеры (Checkov, Trivy, KICS) до применения (рекомендация, вытекающая из методологии бенчмарка).</li>
+  <li><strong>Сравнивайте с человеческим уровнем, а не с нулём</strong>: используйте размер-выровненный бейзлайн (плотность уязвимостей на ресурс), а не сырое количество — иначе простые задачи будут выглядеть «безопаснее», чем они есть (контроль размера, источник).</li>
+  <li><strong>Не считайте деплой успехом</strong>: «развернулось и работает» не коррелирует с безопасностью (r = 0,158, источник); успешный запуск — не индикатор, а лишь предпосылка для сканирования.</li>
+  <li><strong>Используйте extended thinking, если вендор его даёт</strong>: выигрыш −12,0% по плотности уязвимостей при затратах менее 1% бюджета вывода — дешёвое улучшение; prompted CoT смысла не имеет (эксперимент статьи, источник).</li>
+  <li><strong>Ужесточайте проверки для простых артефактов</strong>: именно на простых конфигурациях (1–5 ресурсов) разрыв с человеком максимален (4,9×) — малые шаблоны требуют особого внимания (результаты по стратификации, источник).</li>
+  <li><strong>Ведите триаж по критичности</strong>: плотность уязвимостей — метрика, а не приговор; ранжируйте находки по реальному риску (интерпретация: прикладная практика поверх метрики статьи).</li>
+</ol>
+    </section>
+    <section id="sources">
+      <h2>Первичные материалы</h2>
+
+<ul>
+  <li><a href="https://arxiv.org/abs/2608.28021" target="_blank" rel="noopener noreferrer">Compared to What? A Human-Anchored Security Benchmark for LLM-Generated Infrastructure-as-Code — arXiv 2608.28021</a> (аннотация и полный текст препринта)</li>
+  <li><a href="https://arxiv.org/pdf/2608.28021" target="_blank" rel="noopener noreferrer">PDF: arXiv 2608.28021</a></li>
+</ul>
+<p class="src-note">Автор: Animesh Shaw (по данным arXiv, проверено 2026-08-31).</p>
+    </section>
+    <section id="schema">
+      <h2>Схема</h2>
+
+<div class="schema">
+  <figcaption>Схема: GenIaC-SecBench — сравнение моделей и людей на одинаковом инструментарии</figcaption>
+  <div class="columns">
+    <div class="col"><b>Артефакты</b>1 196 от 12 конфигураций моделей × 100 сценариев; 634 человеческих шаблона</div>
+    <div class="col"><b>Сканеры</b>Checkov + Trivy + KICS — один инструментарий для моделей и людей</div>
+    <div class="col"><b>Выравнивание</b>Плотность на ресурс (размер-контроль): модели 3,21×–3,87× хуже человека</div>
+    <div class="col"><b>Рассуждение</b>Extended thinking: −12,0% при &lt;1% бюджета; prompted CoT: без эффекта</div>
+  </div>
+</div>
+    </section>
+  </article>
+
+  <footer>
+    Personal OS · обзор источника · 2026-08-31 · материал подготовлен агентом Hermes на русском языке
+  </footer>
+</main>
+<script>
+(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),v=null;try{v=localStorage.getItem("review-theme")}catch(e){}if(v==="light"||v==="dark")r.setAttribute("data-theme",v);if(b)b.addEventListener("click",function(){var c=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),n=c==="dark"?"light":"dark";r.setAttribute("data-theme",n);try{localStorage.setItem("review-theme",n)}catch(e){}});})();
+</script>
+</body>
+</html>

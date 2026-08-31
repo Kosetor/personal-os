@@ -23,6 +23,9 @@
 
 | Файл | Тема |
 |---|---|
+| `evoundo-recoverability-self-evolution.html` | EvoUndo: самоизменение агента должно быть откатываемым — recoverability как отдельная проверка, 0/197 → 191/197 (arXiv 2608.28363) |
+| `longpibench-long-context-prompt-injection.html` | LongPIBench: prompt injection в длинном контексте — короткопромптовые оценки защит завышены (arXiv 2608.28411) |
+| `geniac-secbench-iac-security.html` | GenIaC-SecBench: IaC от LLM в 3,2–3,9 раза хуже человека по безопасности — первый human-anchored бенчмарк (arXiv 2608.28021) |
 | `skillstate-mutable-execution-state.html` | SKILL.state: явное изменяемое состояние исполнения вместо растущего контекста — точность выше, токенов меньше (arXiv 2608.26263) |
 | `sara-action-induction-authorization.html` | SARA: когда вывод тула становится командой — разделение индукции действия и авторизации исполнения, ASR ≤ 0,63% (arXiv 2608.27146) |
 | `dumatebench-real-world-workflows.html` | DuMateBench: 200 задач из реальных продакшн-сессий, три формы сложности среды, разрывы в строгой завершаемости (arXiv 2608.26546) |
