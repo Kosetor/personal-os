@@ -670,6 +670,44 @@ select:focus, textarea:focus {
 
 /* ---------- Блок 5b: карточки обзоров ИИ-агентов ---------- */
 
+/* Селектор «все обзоры» */
+.digest-select-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.digest-select-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+.digest-select {
+  flex: 1;
+  min-width: 0;
+  max-width: 560px;
+  background: var(--bg-elevated);
+  color: var(--ink-on-dark);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  padding: 6px 10px;
+  cursor: pointer;
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  transition: border-color var(--dur-fast) var(--ease),
+              background var(--dur-fast) var(--ease);
+}
+.digest-select:hover { border-color: var(--volt); }
+.digest-select:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+.digest-select option {
+  background: var(--bg-void);
+  color: var(--ink-on-dark);
+}
+
 .review-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

@@ -482,34 +482,63 @@ function renderDigest() {
     $("#digestMeta").textContent = "AI // REV";
     return;
   }
-  const items = digest.items.slice(0, 5);
-  if (!digest.mobile) {
-    // Desktop: все 5 карточек сразу, без пагинации
-    $("#digestMeta").textContent = `${items.length} · AI // REV`;
-    el.innerHTML = `<div class="review-grid">${items.map(reviewCard).join("")}</div>`;
-    return;
+
+  const all = digest.items;
+  // Селектор «все статьи»: -1 = последние 5 (по умолчанию), иначе индекс выбранной
+  if (digest.selected === undefined) digest.selected = -1;
+  const selOpts = [`<option value="-1">Последние 5 обзоров</option>`]
+    .concat(all.map((it, i) =>
+      `<option value="${i}" ${digest.selected === i ? "selected" : ""}>${escapeHtml(it.title || "Без названия")}</option>`))
+    .join("");
+
+  const sel = `<div class="digest-select-row">
+    <label class="digest-select-label mono" for="digestSelect">Все обзоры</label>
+    <select class="digest-select" id="digestSelect" aria-label="Выбрать обзор">${selOpts}</select>
+  </div>`;
+
+  if (digest.selected === -1) {
+    // По умолчанию: последние 5 (как раньше)
+    const items = all.slice(0, 5);
+    if (!digest.mobile) {
+      $("#digestMeta").textContent = `${items.length} · AI // REV`;
+      el.innerHTML = sel + `<div class="review-grid">${items.map(reviewCard).join("")}</div>`;
+    } else {
+      const n = items.length;
+      if (digest.idx >= n) digest.idx = 0;
+      const it = items[digest.idx];
+      $("#digestMeta").textContent = `${digest.idx + 1} / ${n} · AI // REV`;
+      el.innerHTML = sel + `
+        <div class="review-mobile">
+          ${reviewCard(it)}
+          <div class="digest-nav">
+            <button type="button" class="digest-btn mono" id="digPrev" aria-label="Предыдущий обзор" ${digest.idx === 0 ? "disabled" : ""}>◀</button>
+            <button type="button" class="digest-btn mono" id="digNext" aria-label="Следующий обзор" ${digest.idx >= n - 1 ? "disabled" : ""}>▶</button>
+          </div>
+        </div>`;
+      $("#digPrev").addEventListener("click", () => {
+        digest.idx = Math.max(0, digest.idx - 1);
+        renderDigest();
+      });
+      $("#digNext").addEventListener("click", () => {
+        digest.idx = Math.min(n - 1, digest.idx + 1);
+        renderDigest();
+      });
+    }
+  } else {
+    // Выбран конкретный обзор из всех
+    const it = all[digest.selected];
+    $("#digestMeta").textContent = `${digest.selected + 1} / ${all.length} · AI // REV`;
+    el.innerHTML = sel + `<div class="review-grid"><div class="review-card">${reviewCard(it)}</div></div>`;
   }
-  // Mobile: одна карточка + стрелки
-  const n = items.length;
-  if (digest.idx >= n) digest.idx = 0;
-  const it = items[digest.idx];
-  $("#digestMeta").textContent = `${digest.idx + 1} / ${n} · AI // REV`;
-  el.innerHTML = `
-    <div class="review-mobile">
-      ${reviewCard(it)}
-      <div class="digest-nav">
-        <button type="button" class="digest-btn mono" id="digPrev" aria-label="Предыдущий обзор" ${digest.idx === 0 ? "disabled" : ""}>◀</button>
-        <button type="button" class="digest-btn mono" id="digNext" aria-label="Следующий обзор" ${digest.idx >= n - 1 ? "disabled" : ""}>▶</button>
-      </div>
-    </div>`;
-  $("#digPrev").addEventListener("click", () => {
-    digest.idx = Math.max(0, digest.idx - 1);
-    renderDigest();
-  });
-  $("#digNext").addEventListener("click", () => {
-    digest.idx = Math.min(n - 1, digest.idx + 1);
-    renderDigest();
-  });
+
+  const selEl = $("#digestSelect");
+  if (selEl) {
+    selEl.addEventListener("change", (e) => {
+      digest.selected = parseInt(e.target.value, 10);
+      digest.idx = 0;
+      renderDigest();
+    });
+  }
 }
 
 async function loadDigest() {
