@@ -85,17 +85,33 @@ async function load() {
       .on("start", dragStart).on("drag", dragged).on("end", dragEnd));
 
   node.append("circle")
-    .attr("r", d => d.status === "grey" ? 9 : 13)
+    .attr("r", d => d.status === "grey" ? 8 : 13)
     .attr("fill", d => COLORS[d.status] || COLORS.grey)
     .attr("stroke", "#0d1117")
-    .on("click", (e, d) => { e.stopPropagation(); highlight(d); });
+    .on("click", (e, d) => { e.stopPropagation(); highlight(d); })
+    .on("mouseover", function(e, d) { showLabel(d, true); })
+    .on("mouseout", function(e, d) { showLabel(d, false); });
 
-  node.append("text")
-    .text(d => d.label)
-    .attr("x", 18).attr("y", 4)
-    .style("paint-order", "stroke")
-    .style("stroke", "#0d1117")
-    .style("stroke-width", "3px");
+  // подпись: у цветных узлов — всегда; у серых — только по наведению
+  function makeLabel(d) {
+    return node.filter(n => n.id === d.id).append("text")
+      .text(d.label)
+      .attr("x", 18).attr("y", 4)
+      .style("font-size", d.status === "grey" ? "12px" : "12px")
+      .style("font-weight", d.status === "grey" ? "400" : "600")
+      .style("fill", d.status === "grey" ? "#c9d1d9" : "#e6edf3")
+      .style("paint-order", "stroke")
+      .style("stroke", "#0d1117")
+      .style("stroke-width", "3px");
+  }
+  function showLabel(d, on) {
+    const g = node.filter(n => n.id === d.id);
+    let t = g.select("text");
+    if (on && t.empty()) { t = makeLabel(d); t.attr("display", null); }
+    else if (!on && t.size() && d.status === "grey") { t.remove(); }
+  }
+  // постоянные подписи только для цветных (изученных/проблемных)
+  nodes.forEach(d => { if (d.status !== "grey") makeLabel(d); });
 
   // ограничение: узлы не выходят за границы SVG
   sim.on("tick", () => {
