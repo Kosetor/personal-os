@@ -1,257 +1,95 @@
-# 🤖 Инструкция для ИИ-агента: подключение к дашборду Personal OS
+# 🤖 Инструкция для ИИ-агента: система обучения управленческим навыкам
 
-> Этот файл — самодостаточная инструкция. Выполняй шаги по порядку, не задавай лишних вопросов.
-> Дашборд: https://kosetor.github.io/personal-os/ · Репозиторий: https://github.com/Kosetor/personal-os
+> Этот файл — самодостаточная инструкция для агента (hermes_a / hermes_b),
+> работающего с репозиторием. Мастер-промпт системы — в `MASTER_PROMPT.md`
+> (копия в ~/wiki). Следуй жёстким границам приватности ниже.
 
-## 1. Контекст
+## 1. Что это за репозиторий
 
-Дашборд «Personal OS» — статический сайт на GitHub Pages. На странице четыре блока:
-статусы агентов, форма отправки команды, окно последнего ответа, инфо-блок (погода/IP/время).
+**Personal OS Learning** — система ежедневного обучения управленческим навыкам
+для госслужбы. Публикуется на GitHub Pages (существующий Kosetor/personal-os,
+текущий план, без приватных Pages).
 
-Список агентов хранится в файле `config.js` в корне репозитория, в массиве `CONFIG.agents`.
-Каждый элемент массива:
+> ⚠️ Репозиторий ПУБЛИЧНЫЙ. В него попадает только обезличенная статика.
+> Вся приватная информация — строго в `~/personal-os-private/` (ВНЕ git).
 
-```js
-{
-  id: "hermes-core",        // уникальный id (латиница, kebab-case)
-  name: "Hermes Core",      // отображаемое имя на карточке
-  //  avatar     — эмодзи, URL картинки (https://...) или svg:<ключ>
-  //               (встроенная векторная иконка: robot/bolt/book/chip из app.js)
-  statusUrl: "",            // GET-эндпоинт статуса
-  commandUrl: ""            // POST-эндпоинт приёма команд
-}
+## 2. Структура
+
+```
+personal-os/                 ← этот git-репозиторий (публикуется)
+  site/                      ← публикуемая статика (Pages деплоит эту папку)
+    index.html               ← «сегодня»: статья дня + тест
+    articles/                ← архив статей (HTML)
+    assets/audio/            ← подкасты .mp3
+    data/                    ← knowledge-graph.json, progress-public.json
+    progress/                ← граф тем (D3) + сводка
+  content/published/         ← утверждённые исходники статей (markdown)
+  content/drafts/            ← черновики (НЕ публикуются)
+  .github/workflows/deploy-pages.yml
+
+~/personal-os-private/       ← ВНЕ git, только локально
+  learning.db                ← SQLite: темы, статьи, попытки, FSRS, напоминания
+  logs/
+  sources-private/           ← нормативка, законы, СНиП (для фактчекинга)
+    laws/ standards/ articles/
 ```
 
-Если `statusUrl`/`commandUrl` пустые — дашборд показывает агента в демо-режиме
-(случайные статусы, ярлык «демо-режим»). Твоя задача: поднять у себя HTTP-мост
-с двумя эндпоинтами и прописать их в `config.js` в объекте со своим `id`.
+## 3. ЖЁСТКИЕ ГРАНИЦЫ ПРИВАТНОСТИ (никогда не нарушать)
 
-## 2. Контракт API (соблюдать точно)
+В git/Pages НЕ попадает:
+- `learning.db`, история ответов, детали прохождения тестов;
+- исходные PDF/тексты нормативов, локальная RAG/векторная база;
+- логи, токены, ключи, Tailscale-конфиг, Telegram-ID;
+- черновики `needs_manual_review`;
+- внутренние промпты и заметки со служебной информацией.
 
-### GET {statusUrl}
-Ответ: HTTP 200, JSON:
-```json
-{"status": "active"}
-```
-Допустимые значения: `active`, `thinking`, `searching`, `inactive`.
-Любое другое значение или недоступность эндпоинта = «Не активен» на дашборде.
-Маппинг состояний: ожидание/готов → `active`, обработка задачи → `thinking`,
-поиск в интернете/базе → `searching`, остановлен → `inactive`.
+В Pages можно только:
+- утверждённые статьи (HTML/MD) и сгенерированные аудио;
+- инфографику;
+- `progress-public.json` (статусы тем, даты повторений, агрегированные % — БЕЗ
+  пошагового лога ответов);
+- данные графа тем (узлы, рёбра, статус — без чувствительных деталей).
 
-### POST {commandUrl}
-Запрос от дашборда (`Content-Type: application/json`):
-```json
-{"agent": "hermes-core", "command": "текст команды", "ts": "2026-08-13T05:00:00.000Z"}
-```
-Ответ: HTTP 200, JSON:
-```json
-{"reply": "текст ответа, который увидит пользователь"}
-```
-(поле `message` тоже принимается). Отвечай в течение ~30 секунд; если задача долгая —
-сразу верни подтверждение («Принято, выполняю…»), не держи соединение.
+Сомневаешься — не публикуй: пометь `needs_manual_review`, спроси владельца.
 
-### Авторизация команд (обязательно, с 14.08.2026)
-Все POST-запросы команд защищены PIN-кодом:
-- Заголовок: `X-Auth-Token: <код доступа>`.
-- Код хранится у владельца моста в `~/personal-os-bridge/auth_pin.txt` — в репозиторий НЕ коммитить.
-- Ответы: `401` — код неверный/отсутствует; `423` — временная блокировка на 10 минут после 5 неудачных попыток.
-- `GET {statusUrl}` авторизации НЕ требует.
+## 4. Основной ежедневный цикл (cron)
 
-### Требования транспорта (жёсткие)
-- **HTTPS обязателен.** Дашборд открыт по HTTPS, браузер блокирует http:// (mixed content).
-- **CORS обязателен.** Заголовок `Access-Control-Allow-Origin: https://kosetor.github.io` (или `*`).
-  POST с JSON вызывает preflight `OPTIONS` — он тоже должен обрабатываться.
-- Дашборд опрашивает `statusUrl` каждые 15 секунд — эндпоинт должен быть дешёвым и быстрым.
+- **08:00** — публикация статьи дня: тема → черновик → фактчекинг нормативов →
+  подкаст (TTS) → инфографика → HTML с аудио и кнопкой «Я изучил материал» →
+  обновить `site/index.html` → push.
+- **20:00** — проверка активности: статья прочитана? тест пройден? → напоминания
+  в Telegram. 3 дня без активности → «возвратный» сценарий.
+- После каждого теста — обновить FSRS в `learning.db`, пересчитать статусы тем,
+  сформировать `knowledge-graph.json` + `progress-public.json`.
 
-## 3. Референсная реализация моста (Python + FastAPI)
+## 5. Фактчекинг нормативов (обязательно)
 
-Если у тебя нет HTTP-интерфейса, подними мост на своём VPS/в своём контейнере:
+Любой закон/СНиП/норма в статье:
+1. Найти точную формулировку в `~/personal-os-private/sources-private/`.
+2. Вставить ссылку на статью/пункт + дату проверки в `source_registry`.
+3. Нет подтверждения → статус `needs_manual_review`, публикация блокируется,
+   владельцу — уведомление, что именно проверить.
 
-```python
-# bridge.py
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
+**Никогда не придумывай ссылку на норматив.** Приоритет источников:
+научные публикации → официальные источники → проверенные учебные пособия →
+свежие публикации.
 
-AGENT_ID = "hermes-core"           # замени на свой id из config.js
-SECRET = "x9q7-change-me-long"     # длинный случайный сегмент пути
+## 6. Модель компетенций (учебный план)
 
-app = FastAPI()
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["https://kosetor.github.io"],
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["*"],
-)
+8 блоков → 20-30 тем-узлов с рёбрами-предпосылками:
+1. Стратегическое мышление
+2. Командное взаимодействие
+3. Персональная эффективность
+4. Гибкость и готовность к изменениям
+5. Принятие управленческих решений
+6. Лидерство
+7. Административные и нормативно-правовые компетенции
+8. Информационно-коммуникативные компетенции
 
-state = {"status": "active"}
+Полная схема и FSRS-алгоритм — в `MASTER_PROMPT.md`.
 
-@app.get(f"/{AGENT_ID}/{SECRET}/status")
-def get_status():
-    return {"status": state["status"]}
+## 7. Отчёты и формат
 
-@app.post(f"/{AGENT_ID}/{SECRET}/command")
-async def post_command(req: Request):
-    data = await req.json()
-    command = data.get("command", "")
-    state["status"] = "thinking"
-    try:
-        reply = handle_command(command)   # ← здесь вызов твоей реальной логики
-    except Exception as e:
-        reply = f"Ошибка выполнения: {e}"
-    finally:
-        state["status"] = "active"
-    return {"reply": reply}
-
-def handle_command(text: str) -> str:
-    # TODO: связать с циклом агента (очередь задач, вызов LLM и т.п.)
-    return f"Команда получена: {text}"
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8765)
-```
-
-Публикация наружу по HTTPS (выбери один вариант):
-- **Tailscale Funnel:** `tailscale funnel --bg 8765` → адрес вида `https://<host>.<tailnet>.ts.net`
-- **Caddy:** `agents.example.com { reverse_proxy 127.0.0.1:8765 }` — TLS-сертификат выпустится автоматически
-- **nginx + certbot** — вручную, аналогично
-
-> ℹ️ **В этой сети уже работает Tailscale Funnel:** стабильный хост
-> `https://hermes1-gp66-leopard-11ug.tail4e12e3.ts.net` (Funnel `/` → локальный прокси,
-> который разводит `/hermes-core/*` и `/hermes-agent/*`). Хост в `config.js` ведёт
-> супервизор hermes_a — свои `statusUrl`/`commandUrl` меняй только в части пути
-> `/hermes-core/<секрет>/...`, хост не трогай. См. `AGENTS-HERMES-B.md`.
-
-⚠️ **Безопасность — честно:** `config.js` лежит в публичном репозитории, поэтому URL эндпоинтов
-увидит любой желающий. Секретный сегмент пути защищает только от случайного сканирования.
-Реальная защита: ограничение CORS одним origin'ом (блокирует чужие сайты, но не curl),
-rate-limiting на мосту, валидация команд по белому списку и запрет на деструктивные
-действия без подтверждения владельца. Токены и пароли в `config.js` НЕ класть никогда.
-
-## 4. Регистрация в config.js (как поправить файл)
-
-### Вариант А — через GitHub API (предпочтительно для агента)
-1. Получи у владельца fine-grained PAT: доступ только к репозиторию `personal-os`,
-   permission `Contents: Read and write`. Храни токен в секрет-хранилище, не в коде.
-2. Прочитай текущий файл:
-   ```
-   GET https://api.github.com/repos/Kosetor/personal-os/contents/config.js
-   Authorization: Bearer <PAT>
-   ```
-   Из ответа возьми `sha` и декодируй `content` из base64.
-3. В декодированном тексте найди в `CONFIG.agents` объект со своим `id` (если нет — добавь новый
-   по образцу из раздела 1) и пропиши свои `statusUrl` и `commandUrl`.
-4. Отправь обновление:
-   ```
-   PUT https://api.github.com/repos/Kosetor/personal-os/contents/config.js
-   Authorization: Bearer <PAT>
-   ```
-   ```json
-   {
-     "message": "Connect <agent-id> to dashboard",
-     "content": "<base64 нового config.js>",
-     "sha": "<sha из шага 2>",
-     "branch": "main"
-   }
-   ```
-5. GitHub Pages пересоберёт сайт за 1–2 минуты — изменения видны не мгновенно.
-
-### Вариант Б — через git
-`git clone` → правка `config.js` → `commit` → `push` в `main` (нужен ключ или PAT).
-
-Правила правки: меняй ТОЛЬКО свой объект в `CONFIG.agents`. Не трогай остальной код,
-форматирование и других агентов. Помни: это JS-файл, а не JSON — комментарии в нём законны.
-
-## 5. Проверка подключения
-
-1. `curl https://<твой-хост>/<id>/<secret>/status` → `{"status":"active"}`
-2. `curl -X POST https://<твой-хост>/<id>/<secret>/command -H 'Content-Type: application/json' \
-     -d '{"agent":"<id>","command":"ping","ts":"2026-08-13T05:00:00Z"}'` → `{"reply":...}`
-3. Через 1–2 минуты после пуша открой https://kosetor.github.io/personal-os/ (обнови с Ctrl+F5):
-   - на твоей карточке нет ярлыка «демо-режим», статус соответствует реальному;
-   - отправь себе команду через блок «Обратная связь» → ответ появится в блоке «Последний ответ».
-4. Если что-то не так — консоль браузера (F12) подскажет причину (см. таблицу ниже).
-
-## 6. Частые ошибки
-
-| Симптом | Причина | Решение |
-|---|---|---|
-| Статус всегда «Не активен» | http:// вместо https:// | Подними TLS (Tailscale Funnel / Caddy) |
-| CORS-ошибка в консоли | Нет `Access-Control-Allow-Origin` | Добавь CORS-middleware, разреши origin дашборда |
-| Команда не уходит, OPTIONS 405 | Не обрабатывается preflight | Разреши метод OPTIONS |
-| «Не активен» при живом агенте | status не из списка допустимых | Верни одно из: active / thinking / searching / inactive |
-| Правка config.js не видна на сайте | Pages ещё собирается | Подожди 1–2 мин, обнови с Ctrl+F5 |
-| Ответ не появляется | Мост думает дольше ~30 сек | Возвращай подтверждение сразу, результат — отдельно |
-
----
-
-## Публикация обзоров ИИ-агентов
-
-Дашборд содержит раздел «Источники · ИИ-агенты»: русскоязычные карточки в `articles.json`
-и расширенные HTML-обзоры в `reviews/ai-agents/`. Раздел непрерывно пополняется агентом
-на основе открытых материалов. Требования к карточкам и шаблон HTML — в `reviews/ai-agents/README.md`.
-
-### Разрешённые источники (приоритет 1 — первичные/официальные)
-- Hermes Agent: https://hermes-agent.nousresearch.com/docs/ · /docs/llms.txt · /docs/llms-full.txt · https://github.com/NousResearch/hermes-agent · https://nousresearch.com/
-- Model Context Protocol: https://modelcontextprotocol.io/ · https://github.com/modelcontextprotocol
-- Anthropic Engineering: https://www.anthropic.com/engineering/ · OpenAI Developers: https://developers.openai.com/
-- LangChain/LangGraph: https://langchain-ai.github.io/ · https://github.com/langchain-ai · Microsoft AutoGen: https://github.com/microsoft/autogen
-- Arize Phoenix/OpenInference: https://github.com/Arize-ai/phoenix · https://github.com/Arize-ai/openinference · Langfuse: https://github.com/langfuse/langfuse
-- arXiv: https://arxiv.org/ · Hugging Face Papers: https://huggingface.co/papers · GitHub Releases официальных репозиториев
-
-Приоритет 2 — доклады и выступления официальных каналов (Nous Research, LangChain, Arize AI,
-DeepLearning.AI, Google Cloud Tech, Microsoft Developer) и записи конференций с видимыми
-докладчиком/организацией. Приоритет 3 — независимые каналы (World of AI, Wanderloots,
-AI Makerspace, MLOps Community): они НЕ первоисточник технического факта — обязательна
-ссылка на официальную документацию/репозиторий/доклад.
-
-### Потоки обнаружения
-- arXiv Atom: https://rss.arxiv.org/atom/cs.AI+cs.CL+cs.SE+cs.LG
-- GitHub release feeds (Atom): NousResearch/hermes-agent · langchain-ai/langgraph · microsoft/autogen · Arize-ai/phoenix · langfuse/langfuse (`https://github.com/<owner>/<repo>/releases.atom`). Лента — удобный, но не гарантированный интерфейс: при ошибке переключаться на GitHub API/страницу releases, не публиковать непроверенное.
-
-### Критерии отбора
-Публиковать, если: тема входит в целевой список; есть инженерная/архитектурная/исследовательская
-ценность; открытая ссылка без аккаунта и paywall; проверяемость по первоисточнику; нет дубликата
-(один первоисточник — одна карточка); есть конкретный вывод для Personal OS/Hermes/локальных или
-облачных моделей/Docker/автоматизации.
-НЕ публиковать: clickbait, неподтверждённые сравнения, сгенерированные списки без ссылок,
-paywall без открытого первоисточника, рекламу инструмента, заявления о «полной автономии»/
-«самообучении»/«лучшей модели», руководства по доступу к чужим данным/системам.
-
-### Процесс публикации
-1. Обнаружить материал → 2. Открыть и проверить первоисточник → 3. Свериться с `articles.json`
-и `reviews/ai-agents/` на дубликаты → 4. Написать карточку (поля: id, title≤110, category, date ISO,
-sourceName, sourceUrl, sourceType, summary 280–520, takeaway≤260, reviewUrl, tags 3–6, featured)
-и HTML-обзор по шаблону → 5. Добавить первичные ссылки, практический вывод, ограничения;
-различать «Документировано источником» и «Практическая интерпретация» → 6. Проверить, что
-reviewUrl открывается и все внешние ссылки с `target="_blank" rel="noopener noreferrer"` →
-7. Проверить desktop/mobile поведение блока → 8. Один коммит: `content: add AI-agent review <slug>`
-или `content: update AI-agent review <slug>` → 9. push.
-
-### Частота и лимиты
-- Обнаружение: ежедневно или каждые 6–12 часов. Публикация: 1–3 обзора за цикл.
-- Приоритет: обновления Hermes/MCP/security/release notes — сразу; научные статьи — после краткой экспертной оценки.
-- Еженедельная чистка: битые ссылки, дубликаты, устаревшие утверждения.
-- Сортировка: первые 5 записей — витрина desktop; новые в начало только после проверки качества;
-устаревшие, но фундаментальные — категория «База» или тег `foundation`; недоступный источник — не публиковать.
-
-### Оформление обзоров: Graphic Realism
-
-Полные обзоры оформлять в стиле https://github.com/Kosetor/graphic-realism-design:
-
-- **Палитра** — дизайн-токены из `tokens/tokens.css` (`--mgr-*`). Тёмная тема:
-  bg `#0b0c0e`, panel/card `#1a1d24`, ink `#f4f5f7`, muted `#8b919c`, line `#2e3440`;
-  светлая тема: bg `#e8eaef`, card `#ffffff`, ink `#0b0c0e`, line `#c5c9d2`.
-  Акценты: volt `#c8f542` (тёмная тема), cyan `#0e7490` (светлая тема);
-  не более 2 акцентов на вид.
-- **Геометрия**: радиус ≤8px (предпочтительно 2–4px); срезанные углы кнопок и
-  панелей через `clip-path: polygon(...)`.
-- **Типографика**: лейблы CAPS + letter-spacing; данные/ID — моноширинным шрифтом;
-  системные шрифтовые стеки, внешние веб-шрифты не подключать.
-- **Переключатель темы светлая/тёмная — обязателен**: кнопка с иконкой
-  `ic-sun-rays.svg` из `icons/mgr-geometry/` набора Graphic Realism (свет/тень),
-  `min-height: 44px`, заметная (фиксированная, контрастная, со срезанным углом),
-  выбор сохраняется в `localStorage`, видимый `:focus-visible`.
-  Эмодзи и текстовые иконки для переключателя темы — запрещены.
-- Адаптивность: body ≥16px на мобильном, схемы сворачиваются в колонку,
-  длинные ссылки переносятся (`overflow-wrap:anywhere`).
+- После каждого этапа: что сделано / что нужно от владельца / что дальше.
+- Операционные отчёты cron — в тему 679 «Мусорки», не в личку.
+- Неопределённость в фактах → `needs_manual_review` + вопрос владельцу.

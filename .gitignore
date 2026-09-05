@@ -1,0 +1,25 @@
+# Приватные данные — никогда в git (мастер-промпт, жёсткие границы)
+data-private/
+sources-private/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+logs/
+*.log
+
+# Черновики, требующие проверки
+content/drafts/needs_manual_review/
+*_needs_review*
+
+# Локальные конфиги и ключи
+.env
+*.key
+*.pem
+auth_*.txt
+
+# Системное
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
