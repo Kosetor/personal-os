@@ -8,7 +8,8 @@ sources-private/
 logs/
 *.log
 
-# Черновики, требующие проверки
+# Черновики — не публикуются до утверждения
+content/drafts/
 content/drafts/needs_manual_review/
 *_needs_review*
 
