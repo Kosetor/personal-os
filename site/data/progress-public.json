@@ -6,6 +6,11 @@
   "yellow": 3,
   "grey": 22
  },
- "next_review_count": 0,
- "upcoming": []
+ "next_review_count": 1,
+ "upcoming": [
+  {
+   "topic": 3,
+   "next_review": "2026-09-07"
+  }
+ ]
 }
