@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" font-family="system-ui">
+<rect width="640" height="520" fill="#0d1117"/>
+<text x="320.0" y="22" fill="#e6edf3" font-size="15" font-weight="700" text-anchor="middle">ИЕРАРХИЯ ДОКУМЕНТОВ СТРАТЕГИЧЕСКОГО ПЛАНИРОВАНИЯ</text>
+<rect x="70" y="30" width="500" height="90" rx="8" fill="#161b22" stroke="#d4a017" stroke-width="2"/>
+<rect x="70" y="30" width="8" height="90" fill="#d4a017" rx="2"/>
+<text x="94" y="56" fill="#d4a017" font-size="12" font-weight="700" letter-spacing="2">ЦЕЛИ ГОСУДАРСТВА</text>
+<text x="94" y="80" fill="#c9d1d9" font-size="13">Конституция · Указы Президента</text>
+<text x="94" y="100" fill="#c9d1d9" font-size="13">(Указ № 474, наццели до 2030)</text>
+<path d="M320 122 v10" stroke="#30363d" stroke-width="2"/>
+<path d="M315 126 l5 6 5-6" fill="none" stroke="#30363d" stroke-width="2"/>
+<rect x="70" y="136" width="500" height="90" rx="8" fill="#161b22" stroke="#3b82c4" stroke-width="2"/>
+<rect x="70" y="136" width="8" height="90" fill="#3b82c4" rx="2"/>
+<text x="94" y="162" fill="#3b82c4" font-size="12" font-weight="700" letter-spacing="2">СТРАТЕГИЧЕСКИЙ УРОВЕНЬ</text>
+<text x="94" y="186" fill="#c9d1d9" font-size="13">Стратегии · Нацпроекты</text>
+<text x="94" y="206" fill="#c9d1d9" font-size="13">(«Демография», «Цифровая экономика»)</text>
+<path d="M320 228 v10" stroke="#30363d" stroke-width="2"/>
+<path d="M315 232 l5 6 5-6" fill="none" stroke="#30363d" stroke-width="2"/>
+<rect x="70" y="242" width="500" height="90" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="2"/>
+<rect x="70" y="242" width="8" height="90" fill="#3fb950" rx="2"/>
+<text x="94" y="268" fill="#3fb950" font-size="12" font-weight="700" letter-spacing="2">ПРОГРАММНЫЙ УРОВЕНЬ</text>
+<text x="94" y="292" fill="#c9d1d9" font-size="13">Государственные программы РФ</text>
+<path d="M320 334 v10" stroke="#30363d" stroke-width="2"/>
+<path d="M315 338 l5 6 5-6" fill="none" stroke="#30363d" stroke-width="2"/>
+<rect x="70" y="348" width="500" height="90" rx="8" fill="#161b22" stroke="#8b949e" stroke-width="2"/>
+<rect x="70" y="348" width="8" height="90" fill="#8b949e" rx="2"/>
+<text x="94" y="374" fill="#8b949e" font-size="12" font-weight="700" letter-spacing="2">ОПЕРАЦИОННЫЙ УРОВЕНЬ</text>
+<text x="94" y="398" fill="#c9d1d9" font-size="13">Ведомственные планы · регламенты</text>
+<text x="94" y="418" fill="#c9d1d9" font-size="13">(работа служащего)</text>
+<text x="320.0" y="512" fill="#8b949e" font-size="11" text-anchor="middle">Закон № 172-ФЗ «О стратегическом планировании» · Указ № 474 · каскадирование целей</text>
+</svg>
