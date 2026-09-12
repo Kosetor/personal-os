@@ -22,9 +22,19 @@
   .node circle { stroke:#fff; stroke-width:1.5; cursor:pointer; }
   .node text { fill:var(--fg); font-size:11px; pointer-events:none; }
   .link { stroke:#30363d; stroke-opacity:.6; }
-  .back { display:inline-block; margin-top:16px; color:#1f6feb; text-decoration:none; font-size:14px; }
+  .back { display:inline-block; margin-top:16px; color:#79c0ff; text-decoration:none; font-size:14px; }
   .summary { margin-top:12px; color:var(--muted); font-size:14px; line-height:1.7; }
   .summary b { color:var(--fg); }
+  h2 { margin-top:24px; font-size:20px; }
+  .topics { list-style:none; padding:0; }
+  .topics li { padding:16px 0; border-bottom:1px solid var(--line); line-height:1.6; }
+  .topics span { display:block; color:var(--muted); font-size:14px; }
+  #graph { display:block; height:auto; margin-top:12px; }
+  .node text { font-size:12px; font-weight:700; }
+  .node:focus circle { stroke:#79c0ff; stroke-width:4; }
+  button { background:#161b22; border:1px solid var(--line); color:var(--fg); padding:10px 16px; border-radius:8px; margin:12px 0; cursor:pointer; }
+  a:focus-visible, button:focus-visible { outline:3px solid #79c0ff; outline-offset:4px; }
+  @media (max-width:600px) { .diagram { display:none; } }
 </style>
 </head>
 <body>
@@ -39,108 +49,20 @@
       <span class="gr">не изучено</span>
     </div>
   </header>
-  <svg id="graph" width="100%" height="560"></svg>
-  <div class="summary" id="summary">Загрузка…</div>
+  <div class="summary" id="summary" role="status">Загрузка прогресса…</div>
+  <noscript>Для загрузки графа и списка тем включите JavaScript.</noscript>
+  <div class="diagram">
+    <p id="selection" class="summary" role="status">Выберите номер темы. Полные названия и статусы — в списке ниже.</p>
+    <button type="button" id="reset-graph">Показать все связи</button>
+    <svg id="graph" width="100%" viewBox="0 0 900 500" aria-label="Связи между темами"></svg>
+  </div>
+  <h2>Темы и статусы</h2>
+  <p class="summary">Статусы отражают последний снимок прогресса. Дата повторения могла измениться у обучающего агента.</p>
+  <ul id="topics" class="topics"></ul>
   <a class="back" href="../index.html">← На главную</a>
 </div>
 
-<script src="../vendor/d3.min.js"></script>
-<script>
-const COLORS = { green:"#3fb950", yellow:"#d29922", red:"#f85149", grey:"#30363d" };
-
-async function load() {
-  const [g, p] = await Promise.all([
-    fetch("../data/knowledge-graph.json").then(r => r.json()),
-    fetch("../data/progress-public.json").then(r => r.json()),
-  ]);
-
-  const nodes = g.nodes.map(n => ({ id: n.id, label: n.label, status: n.status }));
-  const links = g.edges.map(e => ({ source: e.from, target: e.to }));
-
-  // сводка
-  const st = p.by_status;
-  document.getElementById("summary").innerHTML =
-    `Изучено тем: <b>${p.studied}</b> из ${p.total_topics} · ` +
-    `закреплено: <b>${st.green || 0}</b>, в работе: <b>${st.yellow || 0}</b>, ` +
-    `проблемных: <b>${st.red || 0}</b>`;
-
-  const width = document.getElementById("graph").clientWidth || 900;
-  const height = 560;
-
-  const svg = d3.select("#graph");
-  svg.selectAll("*").remove();
-  const sim = d3.forceSimulation(nodes)
-    .force("link", d3.forceLink(links).id(d => d.id).distance(110))
-    .force("charge", d3.forceManyBody().strength(-350))
-    .force("center", d3.forceCenter(width / 2, height / 2))
-    .force("x", d3.forceX(width / 2).strength(0.08))
-    .force("y", d3.forceY(height / 2).strength(0.08))
-    .force("collide", d3.forceCollide(70));
-
-  const link = svg.append("g").selectAll("line")
-    .data(links).join("line").attr("class", "link");
-
-  const node = svg.append("g").selectAll("g")
-    .data(nodes).join("g").call(d3.drag()
-      .on("start", dragStart).on("drag", dragged).on("end", dragEnd));
-
-  node.append("circle")
-    .attr("r", d => d.status === "grey" ? 8 : 13)
-    .attr("fill", d => COLORS[d.status] || COLORS.grey)
-    .attr("stroke", "#0d1117")
-    .on("click", (e, d) => { e.stopPropagation(); highlight(d); })
-    .on("mouseover", function(e, d) { showLabel(d, true); })
-    .on("mouseout", function(e, d) { showLabel(d, false); });
-
-  // подпись: у цветных узлов — всегда; у серых — только по наведению
-  function makeLabel(d) {
-    return node.filter(n => n.id === d.id).append("text")
-      .text(d.label)
-      .attr("x", 18).attr("y", 4)
-      .style("font-size", d.status === "grey" ? "12px" : "12px")
-      .style("font-weight", d.status === "grey" ? "400" : "600")
-      .style("fill", d.status === "grey" ? "#c9d1d9" : "#e6edf3")
-      .style("paint-order", "stroke")
-      .style("stroke", "#0d1117")
-      .style("stroke-width", "3px");
-  }
-  function showLabel(d, on) {
-    const g = node.filter(n => n.id === d.id);
-    let t = g.select("text");
-    if (on && t.empty()) { t = makeLabel(d); t.attr("display", null); }
-    else if (!on && t.size() && d.status === "grey") { t.remove(); }
-  }
-  // постоянные подписи только для цветных (изученных/проблемных)
-  nodes.forEach(d => { if (d.status !== "grey") makeLabel(d); });
-
-  // ограничение: узлы не выходят за границы SVG
-  sim.on("tick", () => {
-    nodes.forEach(n => {
-      n.x = Math.max(30, Math.min(width - 30, n.x));
-      n.y = Math.max(20, Math.min(height - 20, n.y));
-    });
-    link.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
-    node.attr("transform", d => `translate(${d.x},${d.y})`);
-  });
-
-  function highlight(d) {
-    const connected = new Set([d.id]);
-    links.forEach(l => {
-      if (l.source.id === d.id) connected.add(l.target.id);
-      if (l.target.id === d.id) connected.add(l.source.id);
-    });
-    node.select("circle").attr("opacity", n => connected.has(n.id) ? 1 : 0.15);
-    node.select("text").attr("opacity", n => connected.has(n.id) ? 1 : 0.15);
-    link.attr("opacity", l =>
-      (l.source.id === d.id || l.target.id === d.id) ? 1 : 0.08);
-  }
-
-  function dragStart(e, d) { if (!e.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; }
-  function dragged(e, d) { d.fx = e.x; d.fy = e.y; }
-  function dragEnd(e, d) { if (!e.active) sim.alphaTarget(0); d.fx = null; d.fy = null; }
-}
-load();
-</script>
+<script src="../vendor/d3.min.js" defer></script>
+<script src="../assets/progress.js" defer></script>
 </body>
 </html>

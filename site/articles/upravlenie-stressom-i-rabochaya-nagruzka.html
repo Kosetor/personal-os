@@ -11,6 +11,9 @@
   .wrap { max-width:760px; margin:0 auto; padding:28px 20px 60px; }
   h1 { font-size:26px; margin:8px 0 18px; }
   h2 { font-size:20px; margin:28px 0 10px; color:var(--accent); }
+  h4 { font-size:16px; margin:18px 0 8px; }
+  a:focus-visible, button:focus-visible { outline:3px solid #79c0ff; outline-offset:4px; }
+  .back { color:#79c0ff !important; }
   h3 { font-size:17px; margin:20px 0 8px; }
   p { margin:10px 0; color:#c9d1d9; }
   ul { margin:10px 0 10px 24px; color:#c9d1d9; }
@@ -49,6 +52,7 @@
 </head>
 <body>
 <div class="wrap">
+  <nav aria-label="Навигация по статье"><a class="back" href="../index.html">← Все статьи</a> · <a class="back" href="#podcast">Слушать подкаст ↓</a></nav>
   <div class="top">PERSONAL OS LEARNING · статья дня</div>
   <h1>Управление стрессом и рабочая нагрузка: инструменты для госслужащего</h1>
 <h2>Введение</h2>
@@ -94,13 +98,13 @@
 <p>Отдельная тема — <strong>многозадачность</strong>. Миф о том, что можно быстро переключаться между пятью делами, давно опровергнут нейрофизиологами: каждое переключение стоит 3–5 минут когнитивного рассеивания. Работайте блоками: утром до обеда — задачи высокой концентрации (написание документов, аналитика), после обеда — встречи и переписка. Выделите в календаре «защищённые часы» — и это сразу снизит фоновую тревожность.</p>
 <h3>4. Как снижать стресс на рабочем месте: техники саморегуляции</h3>
 <p>Стресс возникает не из-за события, а из-за нашей реакции на него — когнитивно-поведенческий подход здесь принципиален. Однако в момент острого напряжения рациональные рассуждения бесполезны: сначала нужно сбить физиологическую реакцию.</p>
-<p>#### Техника «Квадратное дыхание»</p>
+<h4>Техника «Квадратное дыхание»</h4>
 <p>Сделайте вдох на 4 счёта, задержите дыхание на 4 счёта, выдох на 4 счёта и паузу на 4 счёта. Повторите 3–4 цикла. Это включает парасимпатическую систему и снижает уровень кортизола в крови в течение 2–3 минут. Выполнимо даже в кабинете во время совещания незаметно для окружающих.</p>
-<p>#### Техника «Заземление» (5–4–3–2–1)</p>
+<h4>Техника «Заземление» (5–4–3–2–1)</h4>
 <p>При первых признаках тревоги найдите вокруг себя 5 предметов, которые видите, 4 звука, которые слышите, 3 ощущения в теле (например, стопы на полу), 2 запаха и 1 вкус. Это возвращает вас из будущего (где всё плохо) в настоящее (где всё контролируемо).</p>
-<p>#### Микропаузы</p>
+<h4>Микропаузы</h4>
 <p>Работа в одном и том же положении по 2–3 часа без смены активности — прямой путь к накоплению напряжения. Формируйте привычку вставать и растягиваться каждый час на 1 минуту. Поможет и взгляд вдаль на 20 секунд для снижения зрительного утомления.</p>
-<p>#### «Стоп-сигнал»</p>
+<h4>«Стоп-сигнал»</h4>
 <p>Договоритесь с собой о фразе, которую будете произносить мысленно, когда чувствуете, что начинаете раздражаться (например: «Я умею выбирать свою реакцию»). Затем сделайте медленный выдох и перефразируйте негативную мысль в более нейтральную: вместо «Этот гражданин специально меня выводит» — «Он расстроен и говорит это не лично мне».</p>
 <h3>5. Профилактика хронического стресса: работа на опережение</h3>
 <p>Хронический стресс — это не результат одного тяжёлого дня, а эффект комфортной «системы» без отдыха. Для госслужащего, особенно с ненормированным служебным днём, особенно важны три опоры.</p>
@@ -138,32 +142,20 @@
 <li>Сон, движение и поддерживающая среда — фундамент стрессоустойчивости, без которого никакие приёмы не будут работать.</li>
 </ul></div>
 
-  <div class="player">
+  <div class="player" id="podcast">
     <div class="player-label">🎧 Подкаст (читать или слушать)</div>
     <audio controls preload="none" src="../assets/audio/upravlenie-stressom-i-rabochaya-nagruzka.mp3"></audio>
   </div>
 
-  <img class="info-img" src="../assets/info-upravlenie-stressom-i-rabochaya-nagruzka.svg" alt="Инфографика по статье">
+  <a href="../assets/info-upravlenie-stressom-i-rabochaya-nagruzka.svg" target="_blank" rel="noopener noreferrer" aria-label="Открыть инфографику в полном размере"><img class="info-img" src="../assets/info-upravlenie-stressom-i-rabochaya-nagruzka.svg" alt="Инфографика по статье"></a>
+  <p><a class="back" href="../assets/info-upravlenie-stressom-i-rabochaya-nagruzka.svg" target="_blank" rel="noopener noreferrer">Открыть инфографику в полном размере ↗</a></p>
 
-  <button class="btn" id="learnBtn" onclick="markLearned()">✓ Я изучил материал</button>
-  <div class="msg" id="learnMsg"></div>
+  <button class="btn" id="learnBtn" type="button" aria-pressed="false">Отметить как прочитанное</button>
+  <div class="msg" id="learnMsg" role="status">Отметка о чтении сохраняется только в этом браузере. Тест на сайте пока недоступен.</div>
+  <noscript>Для сохранения отметки о чтении включите JavaScript.</noscript>
 
   <a class="back" href="../index.html">← На главную</a>
 </div>
-<script>
-  function markLearned() {
-    const btn = document.getElementById('learnBtn');
-    const msg = document.getElementById('learnMsg');
-    btn.classList.add('done');
-    btn.textContent = '✓ Материал изучен';
-    msg.textContent = 'Спасибо! Сегодняшний тест уже ждёт тебя на главной.';
-    try {
-      const today = new Date().toISOString().slice(0,10);
-      const done = JSON.parse(localStorage.getItem('pos-learned') || '{}');
-      done[today] = true;
-      localStorage.setItem('pos-learned', JSON.stringify(done));
-    } catch(e) {}
-  }
-</script>
+<script src="../assets/reading.js" defer></script>
 </body>
 </html>
