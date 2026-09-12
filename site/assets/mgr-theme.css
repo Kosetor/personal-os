@@ -1,0 +1,135 @@
+/* Graphic Realism v1.1 theme
+   Source: https://github.com/Kosetor/graphic-realism-design (MIT)
+   MGR Geometry assets are credited in README.md. */
+:root {
+  --mgr-bg-void:#0b0c0e;
+  --mgr-bg-base:#12141a;
+  --mgr-bg-panel:#1a1d24;
+  --mgr-bg-elevated:#242832;
+  --mgr-ink-on-dark:#f4f5f7;
+  --mgr-ink-muted:#8b919c;
+  --mgr-ink-faint:#5a606c;
+  --mgr-line:#2e3440;
+  --mgr-line-strong:#4a5160;
+  --mgr-accent-volt:#c8f542;
+  --mgr-accent-cyan:#3de0ff;
+  --mgr-accent-amber:#ffb020;
+  --mgr-accent-signal:#ff3b4a;
+  --mgr-font-ui:"Inter","IBM Plex Sans","Helvetica Neue",system-ui,sans-serif;
+  --mgr-font-display:"Space Grotesk","Chakra Petch","Arial Narrow",sans-serif;
+  --mgr-font-mono:"IBM Plex Mono","JetBrains Mono","Roboto Mono",ui-monospace,monospace;
+  --mgr-radius-sm:2px;
+  --mgr-radius-md:4px;
+  --mgr-radius-lg:8px;
+  --mgr-hit:44px;
+  --mgr-dur-ui:180ms;
+  --bg:var(--mgr-bg-void);
+  --fg:var(--mgr-ink-on-dark);
+  --muted:var(--mgr-ink-muted);
+  --line:var(--mgr-line);
+  --accent:var(--mgr-accent-volt);
+  --blue:var(--mgr-accent-cyan);
+}
+
+html { color-scheme:dark; }
+body {
+  background-color:var(--mgr-bg-void);
+  background-image:
+    linear-gradient(rgba(61,224,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61,224,255,.035) 1px, transparent 1px);
+  background-size:32px 32px;
+  color:var(--mgr-ink-on-dark);
+  font-family:var(--mgr-font-ui);
+}
+h1,h2,h3,h4 { font-family:var(--mgr-font-display); }
+h1 { letter-spacing:-.02em; }
+.tag,.top,.card h2,.player-label {
+  color:var(--mgr-accent-cyan);
+  font-family:var(--mgr-font-mono);
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.08em;
+}
+time,.meta,.summary { font-family:var(--mgr-font-mono); font-variant-numeric:tabular-nums; }
+
+.card,.player,.takeaway,#graph {
+  background:var(--mgr-bg-panel);
+  border-color:var(--mgr-line);
+  border-radius:var(--mgr-radius-md);
+}
+.card { position:relative; overflow:hidden; }
+.card::before {
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:3px;
+  background:var(--mgr-line-strong);
+}
+.today::before { background:var(--mgr-accent-volt); }
+.today::after {
+  content:"";
+  position:absolute;
+  right:12px;
+  top:12px;
+  width:72px;
+  height:72px;
+  background:url("mgr/ic-crosshair-square.svg") center/contain no-repeat;
+  opacity:.06;
+  pointer-events:none;
+}
+.today .block { color:var(--mgr-accent-cyan); font-family:var(--mgr-font-mono); }
+.today a.read,.btn {
+  min-height:var(--mgr-hit);
+  border:2px solid var(--mgr-accent-volt);
+  border-radius:var(--mgr-radius-sm);
+  background:var(--mgr-accent-volt);
+  color:var(--mgr-bg-void);
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  transition:background var(--mgr-dur-ui),color var(--mgr-dur-ui),border-color var(--mgr-dur-ui);
+}
+.today a.audio,button {
+  min-height:var(--mgr-hit);
+  border-radius:var(--mgr-radius-sm);
+  border-color:var(--mgr-line-strong);
+}
+.today a.audio { display:inline-flex; align-items:center; }
+.today a.read:hover,.btn:hover { background:#d8ff70; }
+.btn.done { background:var(--mgr-accent-cyan); border-color:var(--mgr-accent-cyan); }
+a { color:var(--mgr-accent-cyan); }
+a:hover { color:var(--mgr-accent-volt); }
+a:focus-visible,button:focus-visible,.node:focus { outline:2px solid var(--mgr-accent-cyan); outline-offset:3px; }
+.arch-link,.back { min-height:var(--mgr-hit); display:inline-flex; align-items:center; }
+.links a { min-height:var(--mgr-hit); display:flex; align-items:center; }
+.notice,.msg,.topics span,p { color:#c8ccd4; }
+.legend span { display:inline-flex; align-items:center; min-height:28px; }
+.legend span::before { border-radius:var(--mgr-radius-sm); }
+.g::before { background:var(--mgr-accent-volt); }
+.y::before { background:var(--mgr-accent-amber); }
+.r::before { background:var(--mgr-accent-signal); }
+.gr::before { background:var(--mgr-ink-faint); }
+.diagram { position:relative; }
+.diagram::after {
+  content:"";
+  position:absolute;
+  right:16px;
+  top:72px;
+  width:96px;
+  height:96px;
+  background:url("mgr/ic-circle-grid.svg") center/contain no-repeat;
+  opacity:.05;
+  pointer-events:none;
+}
+.info-img { border-radius:var(--mgr-radius-md); }
+.norm { border-radius:var(--mgr-radius-sm); font-family:var(--mgr-font-mono); }
+code { border-radius:var(--mgr-radius-sm); }
+
+@media (max-width:700px) {
+  .wrap { padding-left:16px; padding-right:16px; }
+  h1 { font-size:clamp(24px,8vw,30px); }
+  .today a.read,.today a.audio,.btn { width:100%; justify-content:center; text-align:center; margin-right:0; }
+}
+@media (prefers-reduced-motion:reduce) {
+  :root { --mgr-dur-ui:0ms; }
+  *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; transition-duration:0ms!important; }
+}
