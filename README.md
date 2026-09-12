@@ -39,6 +39,11 @@ CI проверяет ссылки, наличие медиа, согласов�
 После изменения генератора на приватном устройстве нужно перенести в него
 актуальные шаблоны сайта. Порядок восстановления — в `AGENTS.md`, раздел 6.2.
 
+Визуальные правила описаны в `GRAPHIC-REALISM.md`. Токены и адаптация находятся
+в `site/assets/mgr-theme.css`. Использованы `ic-crosshair-square.svg` и
+`ic-circle-grid.svg` из [Graphic Realism Design System](https://github.com/Kosetor/graphic-realism-design)
+по лицензии MIT; исходные файлы находятся в `icons/mgr-geometry/` того репозитория.
+
 Правила работы — в `AGENTS.md` (hermes_a) и `AGENTS-HERMES-B.md` (hermes_b).
 
 ## История

@@ -32,6 +32,9 @@ def check():
     pages = {p: Page(p.read_text(encoding='utf-8')) for p in SITE.rglob('*.html')}
     for path, page in pages.items():
         text = path.read_text(encoding='utf-8')
+        theme_ref = 'assets/mgr-theme.css' if path == SITE / 'index.html' else '../assets/mgr-theme.css'
+        if theme_ref not in page.refs:
+            errors.append(f'{path.name}: Graphic Realism theme is not connected')
         if re.search(r'<p>#{1,6}\s', text):
             errors.append(f'{path.name}: unrendered Markdown heading')
         if 'тест уже ждёт' in text or 'onclick="markLearned()"' in text:
@@ -58,6 +61,9 @@ def check():
         for asset in [SITE / 'assets/audio' / (article.stem + '.mp3'), SITE / 'assets' / ('info-' + article.stem + '.svg')]:
             if not asset.is_file() or asset.stat().st_size == 0:
                 errors.append(f'{article.name}: missing or empty media: {asset.name}')
+    for asset in [SITE / 'assets/mgr-theme.css', SITE / 'assets/mgr/ic-crosshair-square.svg', SITE / 'assets/mgr/ic-circle-grid.svg']:
+        if not asset.is_file() or asset.stat().st_size == 0:
+            errors.append(f'Missing Graphic Realism asset: {asset.name}')
     graph = json.loads((SITE / 'data/knowledge-graph.json').read_text(encoding='utf-8'))
     progress = json.loads((SITE / 'data/progress-public.json').read_text(encoding='utf-8'))
     nodes = graph['nodes']
