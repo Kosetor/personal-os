@@ -11,6 +11,9 @@
   .wrap { max-width:760px; margin:0 auto; padding:28px 20px 60px; }
   h1 { font-size:26px; margin:8px 0 18px; }
   h2 { font-size:20px; margin:28px 0 10px; color:var(--accent); }
+  h4 { font-size:16px; margin:18px 0 8px; }
+  a:focus-visible, button:focus-visible { outline:3px solid #79c0ff; outline-offset:4px; }
+  .back { color:#79c0ff !important; }
   h3 { font-size:17px; margin:20px 0 8px; }
   p { margin:10px 0; color:#c9d1d9; }
   ul { margin:10px 0 10px 24px; color:#c9d1d9; }
@@ -49,6 +52,7 @@
 </head>
 <body>
 <div class="wrap">
+  <nav aria-label="Навигация по статье"><a class="back" href="../index.html">← Все статьи</a> · <a class="back" href="#podcast">Слушать подкаст ↓</a></nav>
   <div class="top">PERSONAL OS LEARNING · статья дня</div>
   <h2>Стратегический анализ и форсайт: инструменты государственного управления будущим</h2>
 <p>Государственная служба в Российской Федерации сегодня требует от сотрудников не просто исполнительской дисциплины, но и способности видеть долгосрочные тренды, оценивать риски и проектировать образ будущего. Эту задачу решают стратегический анализ и форсайт — взаимосвязанные подходы, которые лежат в основе современного стратегического мышления. Понимание их логики необходимо каждому госслужащему, участвующему в подготовке решений, влияющих на развитие отрасли, региона или страны в целом.</p>
@@ -93,32 +97,20 @@
 <li>Главная ценность форсайта на госслужбе — переход от реактивного управления к управлению изменениями.</li>
 </ol></div>
 
-  <div class="player">
+  <div class="player" id="podcast">
     <div class="player-label">🎧 Подкаст (читать или слушать)</div>
     <audio controls preload="none" src="../assets/audio/strategicheskiy-analiz-i-forsayt.mp3"></audio>
   </div>
 
-  <img class="info-img" src="../assets/info-strategicheskiy-analiz-i-forsayt.svg" alt="Инфографика по статье">
+  <a href="../assets/info-strategicheskiy-analiz-i-forsayt.svg" target="_blank" rel="noopener noreferrer" aria-label="Открыть инфографику в полном размере"><img class="info-img" src="../assets/info-strategicheskiy-analiz-i-forsayt.svg" alt="Инфографика по статье"></a>
+  <p><a class="back" href="../assets/info-strategicheskiy-analiz-i-forsayt.svg" target="_blank" rel="noopener noreferrer">Открыть инфографику в полном размере ↗</a></p>
 
-  <button class="btn" id="learnBtn" onclick="markLearned()">✓ Я изучил материал</button>
-  <div class="msg" id="learnMsg"></div>
+  <button class="btn" id="learnBtn" type="button" aria-pressed="false">Отметить как прочитанное</button>
+  <div class="msg" id="learnMsg" role="status">Отметка о чтении сохраняется только в этом браузере. Тест на сайте пока недоступен.</div>
+  <noscript>Для сохранения отметки о чтении включите JavaScript.</noscript>
 
   <a class="back" href="../index.html">← На главную</a>
 </div>
-<script>
-  function markLearned() {
-    const btn = document.getElementById('learnBtn');
-    const msg = document.getElementById('learnMsg');
-    btn.classList.add('done');
-    btn.textContent = '✓ Материал изучен';
-    msg.textContent = 'Спасибо! Сегодняшний тест уже ждёт тебя на главной.';
-    try {
-      const today = new Date().toISOString().slice(0,10);
-      const done = JSON.parse(localStorage.getItem('pos-learned') || '{}');
-      done[today] = true;
-      localStorage.setItem('pos-learned', JSON.stringify(done));
-    } catch(e) {}
-  }
-</script>
+<script src="../assets/reading.js" defer></script>
 </body>
 </html>
