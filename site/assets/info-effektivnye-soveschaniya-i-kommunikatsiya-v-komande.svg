@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 334" font-family="system-ui,sans-serif">
+<rect width="700" height="334" fill="#0d1117"/>
+<text x="350.0" y="34" fill="#8b949e" font-size="11" font-weight="700" letter-spacing="3" text-anchor="middle">PERSONAL OS · КЛЮЧЕВЫЕ ТЕЗИСЫ</text>
+<text x="350.0" y="52" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Эффективные совещания и коммуникация в команде</text>
+<rect x="28" y="68" width="644" height="46" rx="10" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<rect x="28" y="68" width="6" height="46" fill="#3fb950" rx="3"/>
+<circle cx="58" cy="91.0" r="13" fill="none" stroke="#3fb950" stroke-width="1.5"/>
+<text x="58" y="95.5" fill="#3fb950" font-size="13" font-weight="700" text-anchor="middle">1</text>
+<text x="84" y="95.0" fill="#c9d1d9" font-size="13.5">Прочитайте статью дня целиком.</text>
+<rect x="28" y="126" width="644" height="46" rx="10" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<rect x="28" y="126" width="6" height="46" fill="#1f6feb" rx="3"/>
+<circle cx="58" cy="149.0" r="13" fill="none" stroke="#1f6feb" stroke-width="1.5"/>
+<text x="58" y="153.5" fill="#1f6feb" font-size="13" font-weight="700" text-anchor="middle">2</text>
+<text x="84" y="153.0" fill="#c9d1d9" font-size="13.5">Выполните практическое задание (15–30 минут).</text>
+<rect x="28" y="184" width="644" height="46" rx="10" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<rect x="28" y="184" width="6" height="46" fill="#d4a017" rx="3"/>
+<circle cx="58" cy="207.0" r="13" fill="none" stroke="#d4a017" stroke-width="1.5"/>
+<text x="58" y="211.5" fill="#d4a017" font-size="13" font-weight="700" text-anchor="middle">3</text>
+<text x="84" y="211.0" fill="#c9d1d9" font-size="13.5">Отметьте материал изученным и пройдите тест.</text>
+<rect x="28" y="242" width="644" height="46" rx="10" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<rect x="28" y="242" width="6" height="46" fill="#bc8cff" rx="3"/>
+<circle cx="58" cy="265.0" r="13" fill="none" stroke="#bc8cff" stroke-width="1.5"/>
+<text x="58" y="269.5" fill="#bc8cff" font-size="13" font-weight="700" text-anchor="middle">4</text>
+<text x="84" y="269.0" fill="#c9d1d9" font-size="13.5">Повторение по графику закрепит знание.</text>
+<text x="350.0" y="324" fill="#8b949e" font-size="11" text-anchor="middle">Personal OS Learning · управленческие навыки госслужащего</text>
+</svg>
