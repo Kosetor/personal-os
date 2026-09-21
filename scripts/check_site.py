@@ -32,7 +32,7 @@ def check():
     pages = {p: Page(p.read_text(encoding='utf-8')) for p in SITE.rglob('*.html')}
     for path, page in pages.items():
         text = path.read_text(encoding='utf-8')
-        theme_ref = 'assets/mgr-theme.css' if path == SITE / 'index.html' else '../assets/mgr-theme.css'
+        theme_ref = 'assets/mgr-theme.css' if path.parent == SITE else '../assets/mgr-theme.css'
         if theme_ref not in page.refs:
             errors.append(f'{path.name}: Graphic Realism theme is not connected')
         if re.search(r'<p>#{1,6}\s', text):
@@ -91,6 +91,39 @@ def check():
     for path in SITE.rglob('*'):
         if path.is_file() and (path.suffix in {'.db', '.sqlite', '.log', '.key', '.pem'} or path.name.startswith('.env')):
             errors.append(f'Private file cannot be deployed: {path.name}')
+    # --- тесты на сайте: страница, скрипт и банк вопросов ---
+    quiz_page = SITE / 'test.html'
+    quiz_js = SITE / 'assets/quiz.js'
+    if not quiz_page.is_file() or quiz_page.stat().st_size == 0:
+        errors.append('Missing site test page: test.html')
+    if not quiz_js.is_file() or quiz_js.stat().st_size == 0:
+        errors.append('Missing site test script: assets/quiz.js')
+    tests_index = SITE / 'data/tests/index.json'
+    if not tests_index.is_file():
+        errors.append('Missing test index: data/tests/index.json')
+    else:
+        index_data = json.loads(tests_index.read_text(encoding='utf-8'))
+        listed = index_data.get('tests', [])
+        if not listed:
+            errors.append('Test index lists no topics')
+        for item in listed:
+            slug = item.get('slug', '')
+            qfile = SITE / 'data' / 'tests' / f'{slug}.json'
+            if not qfile.is_file():
+                errors.append(f'Test data missing for {slug}')
+                continue
+            data = json.loads(qfile.read_text(encoding='utf-8'))
+            questions = data.get('questions', [])
+            if len(questions) < 3:
+                errors.append(f'{slug}: fewer than 3 questions')
+            for q in questions:
+                options = q.get('options') or []
+                answer = q.get('answer')
+                if len(options) < 3 or not isinstance(answer, int) or not (0 <= answer < len(options)):
+                    errors.append(f'{slug}: question without valid options/answer')
+                    break
+            if item.get('count') != len(questions):
+                errors.append(f'{slug}: index count disagrees with question file')
     for error in errors:
         print('ERROR:', error)
     print(f'Checked {len(pages)} pages, {len(articles)} articles with media, {len(nodes)} topics. Errors: {len(errors)}')

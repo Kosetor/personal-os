@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тест — Personal OS Learning</title>
+<style>
+  :root { --bg:#0d1117; --fg:#e6edf3; --muted:#8b949e; --accent:#3fb950; --line:#30363d; --blue:#79c0ff; --amber:#d29922; }
+  * { margin:0; box-sizing:border-box; }
+  body { font-family:system-ui,sans-serif; background:var(--bg); color:var(--fg); line-height:1.6; }
+  .wrap { max-width:760px; margin:0 auto; padding:28px 20px 80px; }
+  .top { color:var(--muted); font-size:13px; margin-bottom:10px; }
+  .top a { color:var(--blue); text-decoration:none; }
+  h1 { font-size:26px; margin:6px 0 6px; }
+  .sub { color:var(--muted); font-size:14px; margin-bottom:20px; }
+  .card { background:#161b22; border:1px solid var(--line); border-radius:12px; padding:20px; margin-bottom:16px; }
+  .card h2 { font-size:13px; text-transform:uppercase; letter-spacing:.14em; color:var(--muted); margin-bottom:12px; }
+  select, button { font-family:inherit; }
+  select { width:100%; background:#0d1117; color:var(--fg); border:1px solid var(--line); border-radius:8px;
+           padding:12px; font-size:15px; min-height:44px; }
+  .q { margin:18px 0 6px; font-size:16px; font-weight:600; }
+  .q .num { color:var(--accent); margin-right:6px; }
+  label.opt { display:flex; gap:10px; align-items:flex-start; padding:11px 12px; border:1px solid var(--line);
+              border-radius:8px; margin:8px 0; cursor:pointer; min-height:44px; }
+  label.opt:hover { border-color:var(--muted); }
+  label.opt input { margin-top:4px; accent-color:var(--accent); }
+  label.opt.correct { border-color:var(--accent); background:rgba(63,185,80,.10); }
+  label.opt.wrong { border-color:#f85149; background:rgba(248,81,73,.10); }
+  .explain { color:#c9d1d9; font-size:14px; border-left:3px solid var(--line); padding-left:12px; margin:8px 0 4px; }
+  .btn { display:inline-block; background:var(--accent); color:#0d1117; border:none; font-size:15px; font-weight:700;
+         padding:12px 22px; border-radius:8px; cursor:pointer; min-height:44px; margin-top:14px; }
+  .btn.ghost { background:transparent; color:var(--fg); border:1px solid var(--line); font-weight:500; }
+  .btn:focus-visible, select:focus-visible, label.opt:focus-within { outline:3px solid var(--blue); outline-offset:3px; }
+  .score { font-size:30px; font-weight:800; }
+  .score.ok { color:var(--accent); } .score.mid { color:var(--amber); } .score.bad { color:#f85149; }
+  .note { color:var(--muted); font-size:13px; margin-top:10px; }
+  .history li { padding:8px 0; border-bottom:1px solid #21262d; font-size:14px; color:#c9d1d9; list-style:none; }
+  .history { padding:0; margin:0; }
+  .badge { font-size:12px; padding:2px 8px; border-radius:99px; border:1px solid var(--line); color:var(--muted); }
+  footer { margin-top:36px; color:var(--muted); font-size:13px; text-align:center; }
+</style>
+<link rel="stylesheet" href="assets/mgr-theme.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="index.html">← Personal OS Learning</a></div>
+  <h1>Проверь себя</h1>
+  <p class="sub">Тест по прочитанной теме. Результат сохраняется в этом браузере, а кнопкой ниже отправляется
+     в локальную базу обучения — там он обновляет график повторений (FSRS).</p>
+
+  <section class="card">
+    <h2>Выбор темы</h2>
+    <select id="topic-select" aria-label="Тема теста"></select>
+    <p class="note" id="topic-note"></p>
+  </section>
+
+  <section class="card" id="quiz-card" hidden>
+    <h2 id="quiz-title">Вопросы</h2>
+    <div id="questions"></div>
+    <button class="btn" id="submit">Проверить ответы</button>
+  </section>
+
+  <section class="card" id="result-card" hidden>
+    <h2>Результат</h2>
+    <p><span class="score" id="score">—</span> <span class="note" id="score-note"></span></p>
+    <div id="feedback"></div>
+    <button class="btn" id="send">Отправить результат в базу</button>
+    <button class="btn ghost" id="copy">Скопировать отчёт</button>
+    <button class="btn ghost" id="retry">Пройти заново</button>
+    <p class="note" id="send-note">Отправка идёт в Telegram-бот одним сообщением — оттуда результат попадает в локальную базу.</p>
+  </section>
+
+  <section class="card">
+    <h2>Пройденные тесты в этом браузере</h2>
+    <ul class="history" id="history"><li class="note">Пока пусто.</li></ul>
+  </section>
+
+  <footer>Personal OS Learning · тест проверяет понимание статьи, а не прохождение курса</footer>
+</div>
+<script src="assets/quiz.js"></script>
+</body>
+</html>

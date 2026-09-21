@@ -1,0 +1,80 @@
+{
+ "updated": "2026-09-22",
+ "tests": [
+  {
+   "slug": "analiz-riskov",
+   "title": "Анализ рисков как база управленческого решения: инструкция для госслужащего",
+   "count": 5
+  },
+  {
+   "slug": "effektivnye-soveschaniya-i-kommunikatsiya-v-komande",
+   "title": "Эффективные совещания и коммуникация в команде — Personal OS Learning",
+   "count": 5
+  },
+  {
+   "slug": "emotsionalnyy-intellekt-rukovoditelya",
+   "title": "Эмоциональный интеллект руководителя: ключевая компетенция эффективного госслужащего",
+   "count": 5
+  },
+  {
+   "slug": "gosstrategiya-i-dokumenty-tselepolaganiya",
+   "title": "Навигация по стратегии: как госслужащему работать с документами целеполагания РФ",
+   "count": 5
+  },
+  {
+   "slug": "liderstvo-vs-menedzhment-v-gossektore",
+   "title": "Лидерство vs Менеджмент в Госсекторе: Две Опоры Одной Системы",
+   "count": 5
+  },
+  {
+   "slug": "metody-prinyatiya-resheniy",
+   "title": "Методы принятия решений: от интуиции к системе в условиях госслужбы",
+   "count": 5
+  },
+  {
+   "slug": "motivatsiya-i-razvitie-podchinennyh",
+   "title": "Мотивация и развитие подчинённых: от контроля к вовлечённости",
+   "count": 5
+  },
+  {
+   "slug": "postanovka-tseley-i-kpi-po-goszadacham",
+   "title": "Постановка целей и KPI по госзадачам: как перестать «осваивать бюджет» и начать менять жизнь людей",
+   "count": 5
+  },
+  {
+   "slug": "rabota-v-usloviyah-neopredelennosti",
+   "title": "Работа в условиях неопределённости: как госслужащему сохранять эффективность, когда нет чётких инструкций",
+   "count": 5
+  },
+  {
+   "slug": "resheniya-v-usloviyah-ogranichennyh-resursov",
+   "title": "Решения в условиях ограниченных ресурсов",
+   "count": 5
+  },
+  {
+   "slug": "strategicheskiy-analiz-i-forsayt",
+   "title": "Стратегический анализ и форсайт — Personal OS Learning",
+   "count": 5
+  },
+  {
+   "slug": "taym-menedzhment-i-prioritizatsiya",
+   "title": "Тайм-менеджмент и приоритизация — Personal OS Learning",
+   "count": 5
+  },
+  {
+   "slug": "upravlenie-izmeneniyami",
+   "title": "Управление изменениями: как госслужащему не просто адаптироваться, а быть проводником нового",
+   "count": 5
+  },
+  {
+   "slug": "upravlenie-komandoy-i-roli",
+   "title": "Управление командой и роли: как руководителю в органах власти превратить группу сотрудников в эффективную команду",
+   "count": 5
+  },
+  {
+   "slug": "upravlenie-stressom-i-rabochaya-nagruzka",
+   "title": "Управление стрессом и рабочая нагрузка: инструменты для госслужащего",
+   "count": 5
+  }
+ ]
+}
