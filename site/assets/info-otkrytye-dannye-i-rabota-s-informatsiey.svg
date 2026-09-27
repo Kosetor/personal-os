@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 566" font-family="system-ui,sans-serif">
+<rect width="700" height="566" fill="#0d1117"/>
+<text x="350.0" y="34" fill="#8b949e" font-size="11" font-weight="700" letter-spacing="3" text-anchor="middle">PERSONAL OS · КЛЮЧЕВЫЕ ТЕЗИСЫ</text>
+<text x="350.0" y="52" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Открытые данные и работа с информацией</text>
+<rect x="28" y="68" width="644" height="62" rx="10" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<rect x="28" y="68" width="6" height="62" fill="#3fb950" rx="3"/>
+<circle cx="58" cy="99.0" r="13" fill="none" stroke="#3fb950" stroke-width="1.5"/>
+<text x="58" y="103.5" fill="#3fb950" font-size="13" font-weight="700" text-anchor="middle">1</text>
+<text x="84" y="93.0" fill="#c9d1d9" font-size="13.5">Открытые данные ≠ просто публикация информации. Это машиночитаемые массивы</text>
+<text x="84" y="113.0" fill="#c9d1d9" font-size="13.5">(CSV, JSON), которые можно автоматически обрабатывать и анализировать.</text>
+<rect x="28" y="142" width="644" height="82" rx="10" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<rect x="28" y="142" width="6" height="82" fill="#1f6feb" rx="3"/>
+<circle cx="58" cy="183.0" r="13" fill="none" stroke="#1f6feb" stroke-width="1.5"/>
+<text x="58" y="187.5" fill="#1f6feb" font-size="13" font-weight="700" text-anchor="middle">2</text>
+<text x="84" y="167.0" fill="#c9d1d9" font-size="13.5">Правовая база: Федеральный закон № 8-ФЗ обязывает размещать информацию, а</text>
+<text x="84" y="187.0" fill="#c9d1d9" font-size="13.5">Постановление Правительства № 583 — делать это в виде формализованных наборов</text>
+<text x="84" y="207.0" fill="#c9d1d9" font-size="13.5">данных.</text>
+<rect x="28" y="236" width="644" height="62" rx="10" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<rect x="28" y="236" width="6" height="62" fill="#d4a017" rx="3"/>
+<circle cx="58" cy="267.0" r="13" fill="none" stroke="#d4a017" stroke-width="1.5"/>
+<text x="58" y="271.5" fill="#d4a017" font-size="13" font-weight="700" text-anchor="middle">3</text>
+<text x="84" y="261.0" fill="#c9d1d9" font-size="13.5">Качество информации начинается с паспорта набора. Внятное описание структуры и</text>
+<text x="84" y="281.0" fill="#c9d1d9" font-size="13.5">форматов устраняет двусмысленность при использовании данных.</text>
+<rect x="28" y="310" width="644" height="62" rx="10" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<rect x="28" y="310" width="6" height="62" fill="#bc8cff" rx="3"/>
+<circle cx="58" cy="341.0" r="13" fill="none" stroke="#bc8cff" stroke-width="1.5"/>
+<text x="58" y="345.5" fill="#bc8cff" font-size="13" font-weight="700" text-anchor="middle">4</text>
+<text x="84" y="335.0" fill="#c9d1d9" font-size="13.5">Куратор открытых данных — управленческая функция, а не техническая.</text>
+<text x="84" y="355.0" fill="#c9d1d9" font-size="13.5">Ответственность за содержание несёт профильный специалист, а не программист.</text>
+<rect x="28" y="384" width="644" height="62" rx="10" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<rect x="28" y="384" width="6" height="62" fill="#f0883e" rx="3"/>
+<circle cx="58" cy="415.0" r="13" fill="none" stroke="#f0883e" stroke-width="1.5"/>
+<text x="58" y="419.5" fill="#f0883e" font-size="13" font-weight="700" text-anchor="middle">5</text>
+<text x="84" y="409.0" fill="#c9d1d9" font-size="13.5">Открытость требует фильтров безопасности. Персональные данные, гостайна и</text>
+<text x="84" y="429.0" fill="#c9d1d9" font-size="13.5">коммерческая тайна должны быть исключены из публичного пространства.</text>
+<rect x="28" y="458" width="644" height="62" rx="10" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<rect x="28" y="458" width="6" height="62" fill="#39c5cf" rx="3"/>
+<circle cx="58" cy="489.0" r="13" fill="none" stroke="#39c5cf" stroke-width="1.5"/>
+<text x="58" y="493.5" fill="#39c5cf" font-size="13" font-weight="700" text-anchor="middle">6</text>
+<text x="84" y="483.0" fill="#c9d1d9" font-size="13.5">Данные нужны не для отчёта, а для принятия решений. Анализ собственных и</text>
+<text x="84" y="503.0" fill="#c9d1d9" font-size="13.5">внешних открытых наборов — инструмент прогнозирования и контроля.</text>
+<text x="350.0" y="556" fill="#8b949e" font-size="11" text-anchor="middle">Personal OS Learning · управленческие навыки госслужащего</text>
+</svg>
