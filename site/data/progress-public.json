@@ -1,10 +1,10 @@
 {
- "updated": "2026-09-28",
+ "updated": "2026-09-30",
  "total_topics": 25,
- "studied": 22,
+ "studied": 23,
  "by_status": {
-  "yellow": 22,
-  "grey": 3
+  "yellow": 23,
+  "grey": 2
  },
  "next_review_count": 1,
  "upcoming": [
